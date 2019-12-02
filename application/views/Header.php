@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title><?=$title?></title>
+  <title><?=strtoupper($title)?></title>
 	<link rel="icon" href="<?=base_url('Favicon.ico')?>" type="image/x-icon">
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -38,7 +38,7 @@
       <!-- Messages Dropdown Menu -->
       <li class="nav-item dropdown">
         <a class="nav-link" data-toggle="dropdown" href="#">
-          <i class="fas fa-lock"><span class="text-primary"> SIGN OUT</span></i>
+          <i class="fas fa-user-lock"><span class="text-primary"> SIGN OUT</span></i>
         </a>
       </li>
     </ul>
@@ -106,6 +106,22 @@
             } ?>">
               <i class="nav-icon fas fa-book"></i>
               <p><b>Rekening</b></p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="<?=base_url("User")?>" class="nav-link <?php if ($title == "User") {
+              echo "active";
+            } ?>">
+              <i class="nav-icon fas fa-user"></i>
+              <p><b>User</b></p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="<?=base_url("WajibPajak")?>" class="nav-link <?php if ($title == "Daftar WP") {
+              echo "active";
+            } ?>">
+              <i class="nav-icon fas fa-users"></i>
+              <p><b>Daftar WP</b></p>
             </a>
           </li>
         </ul>

@@ -4,8 +4,8 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <i class="fas fa-book mr-1"></i>
-          <b>REKENING</b>
+          <i class="fas fa-users mr-1"></i>
+          <b>WAJIB PAJAK</b>
         </div>
       </div>
     </div><!-- /.container-fluid -->
@@ -21,7 +21,11 @@
                 <table>
                   <tr>
                     <td>
-                      <a href="#" data-toggle="modal" data-target="#ModalRekening" class="btn btn-primary font-weight-bold"><li class="fa fa-plus"></li> Rekening</a>
+                      <a href="#" data-toggle="modal" data-target="#ModalWP" class="btn btn-primary font-weight-bold"><li class="fa fa-plus"></li> WAJIB PAJAK</a>
+                    </td>
+                    <td>&emsp;
+                      <a href="" class="btn btn-danger"><i class="fas fa-print"></i>
+                      <b>Print</b></a>
                     </td>
                   </tr>
                 </table>
@@ -34,19 +38,25 @@
               <thead class="bg-primary">
               <tr>
                 <th style="width:10px;">No</th>
-                <th style="width:30%;">Jenis Pajak</th>
-                <th style="width:30%;">Sub Jenis Pajak</th>
-                <th>Nomor Rekening</th>
+                <th style="width:20%;">NPWPD</th>
+                <th style="width:20%;">Tempat</th>
+                <th>Jenis Pajak</th>
+                <th>Jam Operasional</th>
+                <th>Status</th>
                 <th style="width:10px;">Action</th>
               </tr>
               </thead>
               <tbody>
-                <?php for ($i=1; $i < 21; $i++) {?>
+                <?php for ($i=1; $i < 7; $i++) {?>
                   <tr>
                     <td><?=$i?></td>
-                    <td>Jenis WP</td>
-                    <td>Sub Jenis WP</td>
-                    <td><?="4.1.1 ".rand(1000,9999)?></td>
+                    <td><?="1507.".rand(100,999).".".rand(100,999)?></td>
+                    <td>Alamat WP</td>
+                    <td>Jenis Usaha</td>
+                    <td>07.00 - 21.00</td>
+                    <td style="width:10px;" class="align-middle">
+                      <a href="#" class="btn btn-primary"><i class="fas fa-smile"></i></a>
+                    </td>
                     <td class="align-middle">
                       <div class="btn-group btn-group-sm">
                         <a href="#" class="btn btn-warning"><i class="fas fa-edit"></i></a>
@@ -69,11 +79,11 @@
   <!-- /.content -->
 </div>
 </div>
-<div class="modal fade" id="ModalRekening">
+<div class="modal fade" id="ModalWP">
   <div class="modal-dialog">
     <div class="modal-content bg-primary">
       <div class="modal-header">
-        <h5 class="modal-title font-weight-bold">Data Rekening</h5>
+        <h5 class="modal-title font-weight-bold">Data Wajib Pajak</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span></button>
       </div>
@@ -81,30 +91,37 @@
         <div class="card-body">
           <div class="input-group">
             <div class="input-group-prepend">
-              <span class="input-group-text bg-primary"><b>Nomor Rekening</b></span>
-              <span class="input-group-text"><b>4.1.1</b></span>
+              <span class="input-group-text bg-primary"><b>NPWPD</b></span>
             </div>
-            <input type="text" class="form-control" data-inputmask='"mask": "99-99"' data-mask value="<?php if (!empty($_GET['NomorRekening'])) {
-              echo $_GET['NomorRekening'];
-            }?>">
+            <input type="text" class="form-control" data-inputmask='"mask": "9999.999.999999"' data-mask>
           </div>
           <br>
           <div class="input-group">
             <div class="input-group-prepend">
-              <span class="input-group-text bg-primary"><b>Jenis Pajak</b></i></span>
+              <span class="input-group-text bg-primary"><b>Nama WP</b></i></span>
             </div>
-            <input class="form-control" type="text" value="<?php if (!empty($_GET['JenisPajak'])) {
-              echo $_GET['JenisPajak'];
-            }?>">
+            <input class="form-control" type="text">
           </div>
           <br>
           <div class="input-group">
             <div class="input-group-prepend">
-              <span class="input-group-text bg-primary"><b>Sub Jenis Pajak</b></i></span>
+              <span class="input-group-text bg-primary"><b>Alamat</b></i></span>
             </div>
-            <input class="form-control" type="text" value="<?php if (!empty($_GET['SubJenisPajak'])) {
-              echo $_GET['SubJenisPajak'];
-            }?>">
+            <input class="form-control" type="text">
+          </div>
+          <br>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text bg-primary"><b>Nomor Rekening</b></i></span>
+            </div>
+            <input class="form-control" type="text">
+          </div>
+          <br>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text bg-primary"><b>Jam Operasional</b></i></span>
+            </div>
+            <input type="text" class="form-control" data-inputmask='"mask": "99.99-99.99"' data-mask>
           </div>
         </div>
       </div>

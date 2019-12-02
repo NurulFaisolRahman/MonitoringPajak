@@ -16,8 +16,8 @@
           <div class="col-12">
             <div class="card">
               <div class="card-header">
-                <div class="row mb-2">
-                  <div class="col-8">
+                <div class="row">
+                  <div class="col-12">
                     <table>
                       <tr>
                         <td class="font-weight-bold text-primary">Bulan :&nbsp;</td>
@@ -39,11 +39,11 @@
                           </select>
                         </td>
                         <td>&emsp;
-                          <a href=""><i class="fas fa-file-pdf"></i>
+                          <a href="" class="btn btn-danger"><i class="fas fa-file-pdf"></i>
                           <b>PDF</b></a>
                         </td>
                         <td>&emsp;
-                          <a href=""><i class="fas fa-file-excel"></i>
+                          <a href="" class="btn btn-success"><i class="fas fa-file-excel"></i>
                           <b>Excel</b></a>
                         </td>
                       </tr>
@@ -52,7 +52,7 @@
                 </div>
               </div>
               <!-- /.card-header -->
-              <div class="card-body h-50">
+              <div class="card-body">
                 <table id="example1" class="table table-bordered table-striped">
                   <thead class="bg-primary">
                   <tr>
@@ -67,32 +67,23 @@
                   </tr>
                   </thead>
                   <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td>15</td>
-                    <td>15</td>
-                    <td>15</td>
-                    <td>15</td>
-                    <td>15</td>
-                    <td>15</td>
-                    <td>
-                      <a href=""><i class="fas fa-file-pdf"></i></a>
-                      <a href=""><i class="fas fa-file-excel"></i></a>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>1</td>
-                    <td>15</td>
-                    <td>15</td>
-                    <td>15</td>
-                    <td>15</td>
-                    <td>15</td>
-                    <td>15</td>
-                    <td>
-                      <a href=""><i class="fas fa-print"></i></a>
-                      <a href=""><i class="fas fa-file-excel"></i></a>
-                    </td>
-                  </tr>
+                    <?php for ($i=1; $i < 21; $i++) {?>
+                      <tr>
+                        <td><?=$i?></td>
+                        <td>Nama WP</td>
+                        <td><?=rand(15,1000)?></td>
+                        <td><?=rand(15,1000)?></td>
+                        <td><?=rand(15,1000)?></td>
+                        <td><?=rand(15,1000)?></td>
+                        <td><?=rand(15,1000)?></td>
+                        <td class="align-middle">
+                          <div class="btn-group btn-group-sm">
+                            <a href="#" class="btn btn-danger"><i class="fas fa-file-pdf"></i></a>
+                            <a href="#" class="btn btn-success"><i class="fas fa-file-excel"></i></a>
+                          </div>
+                        </td>
+                      </tr>
+                  <?php } ?>
                   </tbody>
                   <tfoot class="bg-success">
                   <tr>
@@ -130,15 +121,13 @@
   <!-- AdminLTE App -->
   <script src="../dist/js/adminlte.min.js"></script>
   <script>
-    $(function () {
-      $("#example1").DataTable();
-      $('#example2').DataTable({
-        "paging": true,
-        "lengthChange": false,
-        "searching": false,
-        "ordering": true,
-        "info": true,
-        "autoWidth": false,
+    $(document).ready(function() {
+      $('#example1').DataTable( {
+          "scrollY": "50vh",
+          "scrollCollapse": true,
+          "paging": false,
+          "ordering": true,
+          "autoWidth": true,
       });
     });
   </script>
