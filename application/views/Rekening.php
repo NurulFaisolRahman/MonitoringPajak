@@ -29,14 +29,14 @@
             </div>
           </div>
           <!-- /.card-header -->
-          <div class="card-body">
+          <div class="card-body table-responsive">
             <table id="example1" class="table table-bordered table-striped">
               <thead class="bg-primary">
               <tr>
                 <th style="width:10px;">No</th>
+                <th>Nomor Rekening</th>
                 <th style="width:30%;">Jenis Pajak</th>
                 <th style="width:30%;">Sub Jenis Pajak</th>
-                <th>Nomor Rekening</th>
                 <th style="width:10px;">Action</th>
               </tr>
               </thead>
@@ -44,9 +44,9 @@
                 <?php for ($i=1; $i < 21; $i++) {?>
                   <tr>
                     <td><?=$i?></td>
+                    <td><?="4.1.1 ".rand(1000,9999)?></td>
                     <td>Jenis WP</td>
                     <td>Sub Jenis WP</td>
-                    <td><?="4.1.1 ".rand(1000,9999)?></td>
                     <td class="align-middle">
                       <div class="btn-group btn-group-sm">
                         <a href="#" class="btn btn-warning"><i class="fas fa-edit"></i></a>

@@ -24,8 +24,12 @@
                       <a href="#" data-toggle="modal" data-target="#ModalWP" class="btn btn-primary font-weight-bold"><li class="fa fa-plus"></li> WAJIB PAJAK</a>
                     </td>
                     <td>&emsp;
-                      <a href="" class="btn btn-danger"><i class="fas fa-print"></i>
-                      <b>Print</b></a>
+                      <a href="" class="btn btn-danger"><i class="fas fa-file-pdf"></i>
+                      <b>PDF</b></a>
+                    </td>
+                    <td>&emsp;
+                      <a href="" class="btn btn-success"><i class="fas fa-file-excel"></i>
+                      <b>Excel</b></a>
                     </td>
                   </tr>
                 </table>
@@ -33,17 +37,18 @@
             </div>
           </div>
           <!-- /.card-header -->
-          <div class="card-body">
+          <div class="card-body table-responsive">
             <table id="example1" class="table table-bordered table-striped">
               <thead class="bg-primary">
               <tr>
-                <th style="width:10px;">No</th>
-                <th style="width:20%;">NPWPD</th>
-                <th style="width:20%;">Tempat</th>
+                <th style="width: 10px;">No</th>
+                <th>NPWPD</th>
+                <th>Nomor Rekening</th>
+                <th>Tempat</th>
                 <th>Jenis Pajak</th>
-                <th>Jam Operasional</th>
-                <th>Status</th>
-                <th style="width:10px;">Action</th>
+                <th style="width: 120px;">Jam Operasional</th>
+                <th style="width: 125px;">Status</th>
+                <th style="width: 10px;">Action</th>
               </tr>
               </thead>
               <tbody>
@@ -51,13 +56,15 @@
                   <tr>
                     <td><?=$i?></td>
                     <td><?="1507.".rand(100,999).".".rand(100,999)?></td>
+                    <td><?="4.1.1 ".rand(100,999).".".rand(100,999)?></td>
                     <td>Alamat WP</td>
                     <td>Jenis Usaha</td>
                     <td>07.00 - 21.00</td>
-                    <td style="width:10px;" class="align-middle">
+                    <td>
                       <a href="#" class="btn btn-primary"><i class="fas fa-smile"></i></a>
+                      <input type="checkbox" name="my-checkbox" checked data-bootstrap-switch data-off-color="danger" data-on-color="success">
                     </td>
-                    <td class="align-middle">
+                    <td>
                       <div class="btn-group btn-group-sm">
                         <a href="#" class="btn btn-warning"><i class="fas fa-edit"></i></a>
                         <a href="#" class="btn btn-danger"><i class="fas fa-trash"></i></a>
@@ -98,28 +105,28 @@
           <br>
           <div class="input-group">
             <div class="input-group-prepend">
-              <span class="input-group-text bg-primary"><b>Nama WP</b></i></span>
+              <span class="input-group-text bg-primary"><b>Nama WP</b></span>
             </div>
             <input class="form-control" type="text">
           </div>
           <br>
           <div class="input-group">
             <div class="input-group-prepend">
-              <span class="input-group-text bg-primary"><b>Alamat</b></i></span>
+              <span class="input-group-text bg-primary"><b>Alamat</b></span>
             </div>
             <input class="form-control" type="text">
           </div>
           <br>
           <div class="input-group">
             <div class="input-group-prepend">
-              <span class="input-group-text bg-primary"><b>Nomor Rekening</b></i></span>
+              <span class="input-group-text bg-primary"><b>Nomor Rekening</b></span>
             </div>
             <input class="form-control" type="text">
           </div>
           <br>
           <div class="input-group">
             <div class="input-group-prepend">
-              <span class="input-group-text bg-primary"><b>Jam Operasional</b></i></span>
+              <span class="input-group-text bg-primary"><b>Jam Operasional</b></span>
             </div>
             <input type="text" class="form-control" data-inputmask='"mask": "99.99-99.99"' data-mask>
           </div>
@@ -150,6 +157,8 @@
 <!-- DataTables -->
 <script src="plugins/datatables/jquery.dataTables.js"></script>
 <script src="plugins/datatables-bs4/js/dataTables.bootstrap4.js"></script>
+<!-- Bootstrap Switch -->
+<script src="plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
 <!-- AdminLTE App -->
 <script src="dist/js/adminlte.min.js"></script>
 <script>
@@ -163,6 +172,10 @@
     });
     $(function () {
       $('[data-mask]').inputmask()
+      // Switch ON OFF
+      $("input[data-bootstrap-switch]").each(function(){
+        $(this).bootstrapSwitch('state', $(this).prop('checked'));
+      });
     })
   });
 </script>

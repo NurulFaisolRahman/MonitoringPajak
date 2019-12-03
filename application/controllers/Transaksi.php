@@ -30,11 +30,4 @@ class Transaksi extends CI_Controller {
 		$this->load->view('Header',$Data);
 		$this->load->view('Transaksi/Harian');
 	}
-
-	public function Rincian(){
-		$Data['title'] = "Transaksi";
-		$Data['submenu'] = "Rincian";
-		$this->load->view('Header',$Data);
-		$this->load->view('Transaksi/Rincian');
-	}
 }

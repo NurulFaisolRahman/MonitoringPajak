@@ -9,6 +9,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="<?=base_url('plugins/fontawesome-free/css/all.min.css')?>">
+  <!-- daterange picker -->
+  <link rel="stylesheet" href="<?=base_url('plugins/daterangepicker/daterangepicker.css')?>">
   <!-- overlayScrollbars -->
   <link rel="stylesheet" href="<?=base_url('plugins/overlayScrollbars/css/OverlayScrollbars.min.css')?>">
   <!-- DataTables -->
@@ -35,12 +37,9 @@
 
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
-      <!-- Messages Dropdown Menu -->
-      <li class="nav-item dropdown">
-        <a class="nav-link" data-toggle="dropdown" href="#">
-          <i class="fas fa-user-lock"><span class="text-primary"> SIGN OUT</span></i>
-        </a>
-      </li>
+      <a class="nav-link" href="<?=base_url('Autentikasi/SignOut')?>">
+        <i class="fas fa-user-lock"><span class="text-primary"> SIGN OUT</span></i>
+      </a>
     </ul>
   </nav>
   <!-- /.navbar -->
@@ -84,7 +83,7 @@
               </p>
             </a>
             <?php
-              $DataTransaksi = array("Tahunan","Bulanan","Harian","Rincian");
+              $DataTransaksi = array("Tahunan","Bulanan","Harian");
               $Icon = array("calendar","calendar-check","calendar-alt","calendar-minus");
             ?>
             <?php for ($i=0; $i < count($DataTransaksi); $i++) {?>
