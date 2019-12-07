@@ -26,4 +26,14 @@ class Autentikasi extends CI_Controller {
 		$this->session->sess_destroy();
 		redirect(base_url());
 	}
+
+	public function AutentikasiWajibPajak(){
+		$NPWPD = $_GET['NPWPD'];
+		if ($NPWPD == "15") {
+			echo json_encode(array("respon" => "sukses"));
+		}
+		else{
+			echo json_encode(array("respon" => "gagal"));
+		}
+	}
 }

@@ -5,12 +5,12 @@ $active_group = 'default';
 $query_builder = TRUE;
 
 $db['default'] = array(
-	'dsn'	=> '',
+	'dsn' => 'pgsql:host=localhost;port=5432;dbname=econk',
 	'hostname' => 'localhost',
-	'username' => 'root',
-	'password' => '',
-	'database' => 'MonitoringPajak',
-	'dbdriver' => 'mysqli',
+	'username' => 'econk',
+	'password' => 'iyonk',
+	'database' => 'econk',
+	'dbdriver' => 'pdo',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
 	'db_debug' => (ENVIRONMENT !== 'production'),

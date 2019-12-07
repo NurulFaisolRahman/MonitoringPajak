@@ -1,3 +1,4 @@
+<script>var BaseURL = '<?=base_url()?>';</script>
 <div class="content-wrapper">
   <!-- Content Header (Page header) -->
   <section class="content-header">
@@ -41,20 +42,20 @@
               </tr>
               </thead>
               <tbody>
-                <?php for ($i=1; $i < 21; $i++) {?>
+                <?php $Nomor = 1; foreach ($DataRekening as $key){ ?>
                   <tr>
-                    <td><?=$i?></td>
-                    <td><?="4.1.1 ".rand(1000,9999)?></td>
-                    <td>Jenis WP</td>
-                    <td>Sub Jenis WP</td>
+                    <td><?=$Nomor?></td>
+                    <td><?="4.1.1.".$key['NomorRekening']?></td>
+                    <td><?=$key['JenisPajak']?></td>
+                    <td><?=$key['SubJenisPajak']?></td>
                     <td class="align-middle">
                       <div class="btn-group btn-group-sm">
-                        <a href="#" class="btn btn-warning"><i class="fas fa-edit"></i></a>
-                        <a href="#" class="btn btn-danger"><i class="fas fa-trash"></i></a>
+                        <a href="#" EditRekening="<?=$key['NomorRekening']."|".$key['JenisPajak']."|".$key['SubJenisPajak']?>" class="btn btn-warning EditRekening"><i class="fas fa-edit"></i></a>
+                        <a href="#" HapusRekening="<?=$key['NomorRekening'];?>" class="btn btn-danger HapusRekening"><i class="fas fa-trash"></i></a>
                       </div>
                     </td>
                   </tr>
-              <?php } ?>
+                <?php $Nomor++; } ?>
               </tbody>
             </table>
           </div>
@@ -69,6 +70,7 @@
   <!-- /.content -->
 </div>
 </div>
+<form action="<?=base_url('Rekening/Tambah')?>" method="post">
 <div class="modal fade" id="ModalRekening">
   <div class="modal-dialog">
     <div class="modal-content bg-primary">
@@ -84,39 +86,78 @@
               <span class="input-group-text bg-primary"><b>Nomor Rekening</b></span>
               <span class="input-group-text"><b>4.1.1</b></span>
             </div>
-            <input type="text" class="form-control" data-inputmask='"mask": "99-99"' data-mask value="<?php if (!empty($_GET['NomorRekening'])) {
-              echo $_GET['NomorRekening'];
-            }?>">
+            <input type="text" name="NomorRekening" class="form-control" data-inputmask='"mask": "99.99"' data-mask required>
           </div>
           <br>
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text bg-primary"><b>Jenis Pajak</b></i></span>
             </div>
-            <input class="form-control" type="text" value="<?php if (!empty($_GET['JenisPajak'])) {
-              echo $_GET['JenisPajak'];
-            }?>">
+            <input name="JenisPajak" class="form-control" type="text" required>
           </div>
           <br>
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text bg-primary"><b>Sub Jenis Pajak</b></i></span>
             </div>
-            <input class="form-control" type="text" value="<?php if (!empty($_GET['SubJenisPajak'])) {
-              echo $_GET['SubJenisPajak'];
-            }?>">
+            <input name="SubJenisPajak" class="form-control" type="text" required>
           </div>
         </div>
       </div>
       <div class="modal-footer justify-content-between">
         <button type="button" class="btn btn-outline-light" data-dismiss="modal"><b>Tutup</b></button>
-        <button type="button" class="btn btn-outline-light"><b>Simpan</b></button>
+        <button type="submit" class="btn btn-outline-light"><b>Simpan</b></button>
       </div>
     </div>
     <!-- /.modal-content -->
   </div>
   <!-- /.modal-dialog -->
 </div>
+</form>
+<form action="<?=base_url('Rekening/Edit')?>" method="post">
+<div class="modal fade" id="ModalEditRekening">
+  <div class="modal-dialog">
+    <div class="modal-content bg-primary">
+      <div class="modal-header">
+        <h5 class="modal-title font-weight-bold">Data Rekening</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body">
+        <div class="card-body">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text bg-primary"><b>Nomor Rekening</b></span>
+              <span class="input-group-text"><b>4.1.1</b></span>
+            </div>
+            <input disabled type="text" name="EditNomorRekening" id="EditNomorRekening" class="form-control" data-inputmask='"mask": "99.99"' data-mask required>
+          </div>
+          <br>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text bg-primary"><b>Jenis Pajak</b></i></span>
+            </div>
+            <input name="EditJenisPajak" id="EditJenisPajak" class="form-control" type="text" required>
+          </div>
+          <br>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text bg-primary"><b>Sub Jenis Pajak</b></i></span>
+            </div>
+            <input name="EditSubJenisPajak" id="EditSubJenisPajak" class="form-control" type="text" required>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-outline-light" data-dismiss="modal"><b>Tutup</b></button>
+        <button type="submit" class="btn btn-outline-light"><b>Simpan</b></button>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+</form>
 <!-- /.modal -->
 <!-- jQuery -->
 <script src="plugins/jquery/jquery.min.js"></script>
@@ -144,9 +185,31 @@
         "ordering": true,
         "autoWidth": true,
     });
+
     $(function () {
       $('[data-mask]').inputmask()
     })
+
+    $(document).on("click",".EditRekening",function(){
+      var Data = $(this).attr('EditRekening');
+      var Pisah = Data.split("|");
+      document.getElementById('EditNomorRekening').value = Pisah[0];
+      document.getElementById('EditJenisPajak').value = Pisah[1];
+      document.getElementById('EditSubJenisPajak').value = Pisah[2];
+      $('#ModalEditRekening').modal("show");
+    });
+
+    $(document).on("click",".HapusRekening",function(){
+      var HapusRekening = { NomorRekening: $(this).attr('HapusRekening')};
+      var Konfirmasi = confirm("Yakin Ingin Menghapus Data?");
+      if (Konfirmasi == true) {
+        $.post(BaseURL+"/Rekening/Hapus", HapusRekening).done(function(Respon) {
+          if (Respon == 'ok') {
+            window.location = BaseURL + '/Rekening';
+          }
+        });
+      }
+    });
   });
 </script>
 </body>
