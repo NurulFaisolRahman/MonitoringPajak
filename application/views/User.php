@@ -1,3 +1,4 @@
+<script>var BaseURL = '<?=base_url()?>';</script>
 <div class="content-wrapper">
   <!-- Content Header (Page header) -->
   <section class="content-header">
@@ -36,19 +37,21 @@
                 <th style="width:10px;">No</th>
                 <th>Username</th>
                 <th>Password</th>
-                <th style="width:10px;">Action</th>
+                <?php if($this->session->userdata('Admin')){ ?>
+                  <th style="width:10px;">Action</th>
+                <?php }; ?>
               </tr>
               </thead>
               <tbody>
-                <?php for ($i=1; $i < 7; $i++) {?>
+                <?php $Nomor = 1; foreach ($DataUser as $key){ ?>
                   <tr>
-                    <td><?=$i?></td>
-                    <td><?="Nama User"?></td>
-                    <td><?=rand(1000,99999)?></td>
+                    <td><?=$Nomor?></td>
+                    <td><?=$key['Username']?></td>
+                    <td><?=$key['Password']?></td>
                     <td class="align-middle">
                       <div class="btn-group btn-group-sm">
-                        <a href="#" class="btn btn-warning"><i class="fas fa-edit"></i></a>
-                        <a href="#" class="btn btn-danger"><i class="fas fa-trash"></i></a>
+                        <a href="#" EditUser="<?=$key['Username']."|".$key['Password'];?>" class="btn btn-warning EditUser"><i class="fas fa-edit"></i></a>
+                        <a href="#" HapusUser="<?=$key['Username'];?>" class="btn btn-danger HapusUser"><i class="fas fa-trash"></i></a>
                       </div>
                     </td>
                   </tr>
@@ -67,6 +70,7 @@
   <!-- /.content -->
 </div>
 </div>
+<form action="<?=base_url('User/Tambah')?>" method="post">
 <div class="modal fade" id="ModalUser">
   <div class="modal-dialog">
     <div class="modal-content bg-primary">
@@ -81,26 +85,63 @@
             <div class="input-group-prepend">
               <span class="input-group-text bg-primary"><b>Username</b></i></span>
             </div>
-            <input class="form-control" type="text">
+            <input class="form-control" type="text" name="Username" required>
           </div>
           <br>
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text bg-primary"><b>Password</b></i></span>
             </div>
-            <input class="form-control" type="text">
+            <input class="form-control" type="password" name="Password" required>
           </div>
         </div>
       </div>
       <div class="modal-footer justify-content-between">
         <button type="button" class="btn btn-outline-light" data-dismiss="modal"><b>Tutup</b></button>
-        <button type="button" class="btn btn-outline-light"><b>Simpan</b></button>
+        <button type="submit" class="btn btn-outline-light"><b>Simpan</b></button>
       </div>
     </div>
     <!-- /.modal-content -->
   </div>
   <!-- /.modal-dialog -->
 </div>
+</form>
+<form action="<?=base_url('User/Edit')?>" method="post">
+<div class="modal fade" id="ModalEditUser">
+  <div class="modal-dialog">
+    <div class="modal-content bg-primary">
+      <div class="modal-header">
+        <h5 class="modal-title font-weight-bold">Data User</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body">
+        <div class="card-body">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text bg-primary"><b>Username</b></i></span>
+            </div>
+            <input class="form-control" type="text" name="EditUsername" id="EditUsername" readonly>
+          </div>
+          <br>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text bg-primary"><b>Password</b></i></span>
+            </div>
+            <input class="form-control" type="password" name="EditPassword" id="EditPassword" required>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-outline-light" data-dismiss="modal"><b>Tutup</b></button>
+        <button type="submit" class="btn btn-outline-light"><b>Simpan</b></button>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+</form>
 <!-- /.modal -->
 <!-- jQuery -->
 <script src="plugins/jquery/jquery.min.js"></script>
@@ -108,12 +149,6 @@
 <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- overlayScrollbars -->
 <script src="plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
-<!-- Select2 -->
-<script src="plugins/select2/js/select2.full.min.js"></script>
-<!-- Bootstrap4 Duallistbox -->
-<script src="plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>
-<!-- InputMask -->
-<script src="plugins/inputmask/min/jquery.inputmask.bundle.min.js"></script>
 <!-- DataTables -->
 <script src="plugins/datatables/jquery.dataTables.js"></script>
 <script src="plugins/datatables-bs4/js/dataTables.bootstrap4.js"></script>
@@ -128,9 +163,26 @@
         "ordering": true,
         "autoWidth": true,
     });
-    $(function () {
-      $('[data-mask]').inputmask()
-    })
+
+    $(document).on("click",".EditUser",function(){
+      var Data = $(this).attr('EditUser');
+      var Pisah = Data.split("|");
+      document.getElementById('EditUsername').value = Pisah[0];
+      document.getElementById('EditPassword').value = Pisah[1];
+      $('#ModalEditUser').modal("show");
+    });
+
+    $(document).on("click",".HapusUser",function(){
+      var HapusUser = { Username: $(this).attr('HapusUser')};
+      var Konfirmasi = confirm("Yakin Ingin Menghapus Data?");
+      if (Konfirmasi == true) {
+        $.post(BaseURL+"/User/Hapus", HapusUser).done(function(Respon) {
+          if (Respon == 'ok') {
+            window.location = BaseURL + '/User';
+          }
+        });
+      }
+    });
   });
 </script>
 </body>

@@ -38,7 +38,9 @@
                 <th>Nomor Rekening</th>
                 <th style="width:30%;">Jenis Pajak</th>
                 <th style="width:30%;">Sub Jenis Pajak</th>
-                <th style="width:10px;">Action</th>
+                <?php if($this->session->userdata('Admin')){ ?>
+                  <th style="width:10px;">Action</th>
+                <?php }; ?>
               </tr>
               </thead>
               <tbody>
@@ -48,12 +50,14 @@
                     <td><?="4.1.1.".$key['NomorRekening']?></td>
                     <td><?=$key['JenisPajak']?></td>
                     <td><?=$key['SubJenisPajak']?></td>
-                    <td class="align-middle">
-                      <div class="btn-group btn-group-sm">
-                        <a href="#" EditRekening="<?=$key['NomorRekening']."|".$key['JenisPajak']."|".$key['SubJenisPajak']?>" class="btn btn-warning EditRekening"><i class="fas fa-edit"></i></a>
-                        <a href="#" HapusRekening="<?=$key['NomorRekening'];?>" class="btn btn-danger HapusRekening"><i class="fas fa-trash"></i></a>
-                      </div>
-                    </td>
+                    <?php if($this->session->userdata('Admin')){ ?>
+                      <td class="align-middle">
+                        <div class="btn-group btn-group-sm">
+                          <a href="#" EditRekening="<?=$key['NomorRekening']."|".$key['JenisPajak']."|".$key['SubJenisPajak']?>" class="btn btn-warning EditRekening"><i class="fas fa-edit"></i></a>
+                          <a href="#" HapusRekening="<?=$key['NomorRekening'];?>" class="btn btn-danger HapusRekening"><i class="fas fa-trash"></i></a>
+                        </div>
+                      </td>
+                    <?php }; ?>
                   </tr>
                 <?php $Nomor++; } ?>
               </tbody>
@@ -130,7 +134,7 @@
               <span class="input-group-text bg-primary"><b>Nomor Rekening</b></span>
               <span class="input-group-text"><b>4.1.1</b></span>
             </div>
-            <input disabled type="text" name="EditNomorRekening" id="EditNomorRekening" class="form-control" data-inputmask='"mask": "99.99"' data-mask required>
+            <input type="text" name="EditNomorRekening" id="EditNomorRekening" class="form-control" data-inputmask='"mask": "99.99"' data-mask readonly>
           </div>
           <br>
           <div class="input-group">
@@ -165,10 +169,6 @@
 <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- overlayScrollbars -->
 <script src="plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
-<!-- Select2 -->
-<script src="plugins/select2/js/select2.full.min.js"></script>
-<!-- Bootstrap4 Duallistbox -->
-<script src="plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>
 <!-- InputMask -->
 <script src="plugins/inputmask/min/jquery.inputmask.bundle.min.js"></script>
 <!-- DataTables -->

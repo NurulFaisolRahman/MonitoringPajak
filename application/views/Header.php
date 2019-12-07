@@ -107,14 +107,16 @@
               <p><b>Rekening</b></p>
             </a>
           </li>
-          <li class="nav-item">
-            <a href="<?=base_url("User")?>" class="nav-link <?php if ($title == "User") {
-              echo "active";
-            } ?>">
-              <i class="nav-icon fas fa-user"></i>
-              <p><b>User</b></p>
-            </a>
-          </li>
+          <?php if($this->session->userdata('Admin')){ ?>
+            <li class="nav-item">
+              <a href="<?=base_url("User")?>" class="nav-link <?php if ($title == "User") {
+                echo "active";
+              } ?>">
+                <i class="nav-icon fas fa-user"></i>
+                <p><b>User</b></p>
+              </a>
+            </li>
+          <?php }; ?>
           <li class="nav-item">
             <a href="<?=base_url("WajibPajak")?>" class="nav-link <?php if ($title == "Daftar WP") {
               echo "active";

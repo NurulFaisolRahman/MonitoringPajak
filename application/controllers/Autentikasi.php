@@ -16,9 +16,18 @@ class Autentikasi extends CI_Controller {
   		echo "Username / Password Salah";
   	}
   	else{
-			$DataSession = array('Status' => "Login");
-			$this->session->set_userdata($DataSession);
-  		echo 'OK';
+			foreach ($CekLogin->result_array() as $key) {
+				$DataSession = array();
+				if ($key['JenisAkun'] == 1) {
+					$DataSession = array('Status' => "Login", 'Admin' => true);
+					$this->session->set_userdata($DataSession);
+		  		echo 'OK';
+				} else {
+					$DataSession = array('Status' => "Login", 'Admin' => false);
+					$this->session->set_userdata($DataSession);
+					echo 'OK';
+				}
+			}
   	}
 	}
 
