@@ -21,14 +21,24 @@ class WajibPajak extends CI_Controller {
 
 	public function Tambah(){
 		$Pisah = explode("|", $_POST['DataRekening']);
-		$this->db->insert('WajibPajak',
-									array('NPWPD' => $_POST['NPWPD'],
-												'NamaWP' => $_POST['NamaWP'],
-												'AlamatWP' => $_POST['AlamatWP'],
-											 	'NomorRekening' => $Pisah[0],
-												'JenisPajak' => $Pisah[1],
-												'SubJenisPajak' => $Pisah[2],
-												'JamOperasional' => $_POST['JamOperasional']));
+		for ($i=21; $i < 31; $i++) {
+			$this->db->insert('WajibPajak',
+										array('NPWPD' => $i,
+													'NamaWP' => $_POST['NamaWP'],
+													'AlamatWP' => $_POST['AlamatWP'],
+												 	'NomorRekening' => $Pisah[0],
+													'JenisPajak' => $Pisah[1],
+													'SubJenisPajak' => $Pisah[2],
+													'JamOperasional' => $_POST['JamOperasional']));
+		}
+		// $this->db->insert('WajibPajak',
+		// 							array('NPWPD' => $_POST['NPWPD'],
+		// 										'NamaWP' => $_POST['NamaWP'],
+		// 										'AlamatWP' => $_POST['AlamatWP'],
+		// 									 	'NomorRekening' => $Pisah[0],
+		// 										'JenisPajak' => $Pisah[1],
+		// 										'SubJenisPajak' => $Pisah[2],
+		// 										'JamOperasional' => $_POST['JamOperasional']));
 		redirect(base_url('WajibPajak'));
 	}
 
@@ -49,5 +59,15 @@ class WajibPajak extends CI_Controller {
 	public function Hapus(){
 		$this->db->delete('WajibPajak', array('NPWPD' => $_POST['NPWPD']));
 		echo "ok";
+	}
+
+	public function PDF(){
+		$Data['DataWajibPajak'] = $this->db->get('WajibPajak')->result_array();
+		$this->load->view('WajibPajakPDF',$Data);
+	}
+
+	public function Excel(){
+		$Data['DataWajibPajak'] = $this->db->get('WajibPajak')->result_array();
+		$this->load->view('WajibPajakExcel',$Data);
 	}
 }

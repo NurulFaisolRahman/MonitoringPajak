@@ -25,11 +25,11 @@
                       <a href="#" data-toggle="modal" data-target="#ModalWP" class="btn btn-primary font-weight-bold"><li class="fa fa-plus"></li> WAJIB PAJAK</a>
                     </td>
                     <td>&emsp;
-                      <a href="" class="btn btn-danger"><i class="fas fa-file-pdf"></i>
+                      <a href="<?=base_url('WajibPajak/PDF')?>" class="btn btn-danger"><i class="fas fa-file-pdf"></i>
                       <b>PDF</b></a>
                     </td>
                     <td>&emsp;
-                      <a href="" class="btn btn-success"><i class="fas fa-file-excel"></i>
+                      <a href="<?=base_url('WajibPajak/Excel')?>" class="btn btn-success"><i class="fas fa-file-excel"></i>
                       <b>Excel</b></a>
                     </td>
                   </tr>
@@ -39,17 +39,18 @@
           </div>
           <!-- /.card-header -->
           <div class="card-body table-responsive">
+            <!-- <?php echo "Today is " . date("Y/m/d") . " " . date("h:i:s") ?> -->
             <table id="example1" class="table table-bordered table-striped">
               <thead class="bg-primary">
               <tr>
                 <th style="width: 10px;">No</th>
-                <th>NPWPD</th>
+                <th style="width: 70px;">NPWPD</th>
                 <th>Alamat</th>
-                <th>Nomor Rekening</th>
-                <th>Jenis Pajak</th>
+                <th style="width: 120px;">Nomor Rekening</th>
+                <th style="width: 80px;">Jenis Pajak</th>
                 <th style="width: 120px;">Jam Operasional</th>
                 <?php if($this->session->userdata('Admin')){ ?>
-                  <th style="width: 125px;">Status</th>
+                  <th style="width: 10px;">Status</th>
                   <th style="width: 10px;">Action</th>
                 <?php }; ?>
               </tr>
@@ -65,8 +66,7 @@
                     <td><?=$key['JamOperasional']?></td>
                     <?php if($this->session->userdata('Admin')){ ?>
                       <td>
-                        <a href="#" class="btn btn-primary"><i class="fas fa-smile"></i></a>
-                        <input type="checkbox" name="my-checkbox" checked data-bootstrap-switch data-off-color="danger" data-on-color="success">
+                        <a href="#" StatusWP="<?=$key['Status']."|".$key['Riwayat']?>" class="btn btn-primary StatusWP"><i class="fas fa-smile"></i></a>
                       </td>
                       <td class="align-middle">
                         <div class="btn-group btn-group-sm">
@@ -127,7 +127,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text bg-primary"><b>Nomor Rekening</b></span>
             </div>
-            <select class="form-control btn btn-outline-warning" name="DataRekening">
+            <select class="form-control btn btn-light" name="DataRekening">
               <?php foreach ($DataRekening as $key): ?>
                 <option value="<?=$key['NomorRekening']."|".$key['JenisPajak']."|".$key['SubJenisPajak']?>"><b><?="4.1.1.".$key['NomorRekening']?></b></option>
               <?php endforeach; ?>
@@ -214,6 +214,34 @@
 </div>
 </form>
 <!-- /.modal -->
+<div class="modal fade" id="StatusWP">
+  <div class="modal-dialog">
+    <div class="modal-content bg-warning">
+      <div class="modal-header">
+        <h5 class="modal-title font-weight-bold text-danger">Status Wajib Pajak</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-12 d-flex justify-content-center">
+              <div class="input-group input-group-sm">
+                <div class="input-group-prepend">
+                  <span class="input-group-text bg-success font-weight-bold text-primary" id="Status"></span>
+                </div>
+                <input type="text" class="form-control text-center font-weight-bold" id="Riwayat" readonly>
+                <input type="checkbox" name="my-checkbox" checked data-bootstrap-switch data-off-color="danger" data-on-color="primary">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
 <!-- jQuery -->
 <script src="plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap 4 -->
@@ -270,6 +298,14 @@
             }
           });
         }
+      });
+
+      $(document).on("click",".StatusWP",function(){
+        var Data = $(this).attr('StatusWP');
+        var Pisah = Data.split("|");
+        document.getElementById('Status').innerHTML = Pisah[0];
+        document.getElementById('Riwayat').value = Pisah[1];
+        $('#StatusWP').modal("show");
       });
     })
   });
