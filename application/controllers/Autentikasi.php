@@ -10,7 +10,6 @@ class Autentikasi extends CI_Controller {
 	public function SignIn(){
   	$Username = $_POST['Username'];
   	$Password = $_POST['Password'];
-	$this->load->database();
 	$CekLogin = $this->db->get_where('Akun', array('Username' => $Username,'Password' => $Password));
 	if($CekLogin->num_rows() == 0){
 		echo "Username / Password Salah";
@@ -37,13 +36,28 @@ class Autentikasi extends CI_Controller {
 	}
 
 	public function AutentikasiWajibPajak(){
-		$this->load->database();
-		$CekLogin = $this->db->get_where('WajibPajak', array('NPWPD' => $_POST['NPWPD']));
+		$CekLogin = $this->db->select('*')    
+                    ->from('WajibPajak')
+                    ->where('NPWPD', $_POST['NPWPD'])
+                    ->where('Status != ', 'Disable')
+                    ->get();
 		if($CekLogin->num_rows() == 1){
-			echo json_encode(array("respon" => "sukses"));
+			$this->db->where('NPWPD', $_POST['NPWPD']);
+			$this->db->update('WajibPajak', array('Status' => 'Online'));
+			echo "ok";
 	  	}
 		else{
-			echo json_encode(array("respon" => "gagal"));
+			echo "ko";
 		}
+	}
+
+	public function InputTransaksiWajibPajak(){
+		$inputJSON = file_get_contents('php://input');
+		$Data = json_decode($inputJSON);
+		foreach ($Data as $key => $value) {
+			$Data[$key] = (array) $value;
+		}
+		$this->db->insert_batch("Transaksi", $Data);
+		echo "ok";
 	}
 }

@@ -8,7 +8,6 @@ class Rekening extends CI_Controller {
 		if($this->session->userdata('Status') != "Login"){
 			redirect(base_url());
 		}
-		$this->load->database();
 	}
 
 	public function index(){

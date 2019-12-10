@@ -45,12 +45,12 @@
               <tr>
                 <th style="width: 10px;">No</th>
                 <th style="width: 70px;">NPWPD</th>
-                <th>Alamat</th>
-                <th style="width: 120px;">Nomor Rekening</th>
+                <th style="width: 90px;">Alamat</th>
+                <th style="width: 130px;">Nomor Rekening</th>
                 <th style="width: 80px;">Jenis Pajak</th>
                 <th style="width: 120px;">Jam Operasional</th>
                 <?php if($this->session->userdata('Admin')){ ?>
-                  <th style="width: 10px;">Status</th>
+                  <th style="width: 100px;">Status</th>
                   <th style="width: 10px;">Action</th>
                 <?php }; ?>
               </tr>
@@ -66,7 +66,15 @@
                     <td><?=$key['JamOperasional']?></td>
                     <?php if($this->session->userdata('Admin')){ ?>
                       <td>
-                        <a href="#" StatusWP="<?=$key['Status']."|".$key['Riwayat']?>" class="btn btn-primary StatusWP"><i class="fas fa-smile"></i></a>
+                        <?php if (empty($key['Status'])) {?>
+                          <?="Belum Aktivasi"?>
+                        <?php } else if ($key['Status'] != "Disable") {?>
+                          <a href="#" StatusWP="<?=$key['NPWPD']?>" class="btn btn-primary StatusWP"><i class="fas fa-smile"></i></a>
+                          <input type="checkbox" StatusWP="<?=$key['NPWPD']?>" id="WPStatus" data-toggle="toggle" data-on="ON" data-off="OFF" data-onstyle="success" data-offstyle="danger" data-width="70" checked>
+                        <?php } else {?>
+                          <a href="#" StatusWP="<?=$key['NPWPD']?>" class="btn btn-primary StatusWP"><i class="fas fa-smile"></i></a>
+                          <input type="checkbox" StatusWP="<?=$key['NPWPD']?>" id="WPStatus" data-toggle="toggle" data-on="ON" data-off="OFF" data-onstyle="success" data-offstyle="danger" data-width="70">
+                        <?php } ?>
                       </td>
                       <td class="align-middle">
                         <div class="btn-group btn-group-sm">
@@ -225,13 +233,12 @@
       <div class="modal-body">
         <div class="card-body">
           <div class="row">
-            <div class="col-12 d-flex justify-content-center">
-              <div class="input-group input-group-sm">
+            <div class="col-12">
+              <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                  <span class="input-group-text bg-success font-weight-bold text-primary" id="Status"></span>
+                  <span class="input-group-text bg-primary font-weight-bold text-white" id="Status"></span>
                 </div>
                 <input type="text" class="form-control text-center font-weight-bold" id="Riwayat" readonly>
-                <input type="checkbox" name="my-checkbox" checked data-bootstrap-switch data-off-color="danger" data-on-color="primary">
               </div>
             </div>
           </div>
@@ -257,8 +264,8 @@
 <!-- DataTables -->
 <script src="plugins/datatables/jquery.dataTables.js"></script>
 <script src="plugins/datatables-bs4/js/dataTables.bootstrap4.js"></script>
-<!-- Bootstrap Switch -->
-<script src="plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
+<!-- Bootstrap Toggle -->
+<script src="plugins/bootstrap-toggle/js/bootstrap-toggle.min.js"></script>
 <!-- AdminLTE App -->
 <script src="dist/js/adminlte.min.js"></script>
 <script>
@@ -272,10 +279,6 @@
     });
     $(function () {
       $('[data-mask]').inputmask()
-      // Switch ON OFF
-      $("input[data-bootstrap-switch]").each(function(){
-        $(this).bootstrapSwitch('state', $(this).prop('checked'));
-      });
 
       $(document).on("click",".EditWP",function(){
         var Data = $(this).attr('EditWP');
@@ -301,11 +304,37 @@
       });
 
       $(document).on("click",".StatusWP",function(){
-        var Data = $(this).attr('StatusWP');
-        var Pisah = Data.split("|");
-        document.getElementById('Status').innerHTML = Pisah[0];
-        document.getElementById('Riwayat').value = Pisah[1];
-        $('#StatusWP').modal("show");
+        var Status = { NPWPD: $(this).attr('StatusWP') };
+        $.post(BaseURL+"/WajibPajak/Status", Status).done(function(Respon) {
+          var Data = JSON.parse(Respon);
+          var WPstatus
+          if (Data.Status == "Disable") {
+            WPstatus = "Offline"
+          } else if (Data.Status == "Enable"){
+            WPstatus = "Online"
+          } else if (Data.Status == "Offline"){
+            WPstatus = "Offline"
+          } else if (Data.Status == "Online"){
+            WPstatus = "Online"
+          }
+          document.getElementById('Status').innerHTML = WPstatus;
+          document.getElementById('Riwayat').value = Data.Riwayat;
+          if (Data.Riwayat == '') {
+            document.getElementById('Riwayat').value = 'Belum Ada Data';
+          }
+          $('#StatusWP').modal("show");
+        });
+      });
+
+      $('input[type="checkbox"]').on('change', function(e){
+        var StatusWP
+        if ($('#WPStatus').is(":checked")) {
+          StatusWP = "Enable"
+        } else {
+          StatusWP = "Disable"
+        }
+        var GantiStatus = { NPWPD: $(this).attr('StatusWP'), WPStatus: StatusWP };
+        $.post(BaseURL+"/WajibPajak/GantiStatus", GantiStatus)
       });
     })
   });

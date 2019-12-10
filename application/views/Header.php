@@ -15,6 +15,8 @@
   <link rel="stylesheet" href="<?=base_url('plugins/overlayScrollbars/css/OverlayScrollbars.min.css')?>">
   <!-- DataTables -->
   <link rel="stylesheet" href="<?=base_url('plugins/datatables-bs4/css/dataTables.bootstrap4.css')?>">
+  <!-- bootstrap-toggle -->
+  <link rel="stylesheet" href="<?=base_url('plugins/bootstrap-toggle/css/bootstrap-toggle.min.css')?>">
   <!-- Theme style -->
   <link rel="stylesheet" href="<?=base_url('dist/css/adminlte.min.css')?>">
   <!-- Google Font: Source Sans Pro -->

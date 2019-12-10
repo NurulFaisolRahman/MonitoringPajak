@@ -21,24 +21,14 @@ class WajibPajak extends CI_Controller {
 
 	public function Tambah(){
 		$Pisah = explode("|", $_POST['DataRekening']);
-		for ($i=21; $i < 31; $i++) {
-			$this->db->insert('WajibPajak',
-										array('NPWPD' => $i,
-													'NamaWP' => $_POST['NamaWP'],
-													'AlamatWP' => $_POST['AlamatWP'],
-												 	'NomorRekening' => $Pisah[0],
-													'JenisPajak' => $Pisah[1],
-													'SubJenisPajak' => $Pisah[2],
-													'JamOperasional' => $_POST['JamOperasional']));
-		}
-		// $this->db->insert('WajibPajak',
-		// 							array('NPWPD' => $_POST['NPWPD'],
-		// 										'NamaWP' => $_POST['NamaWP'],
-		// 										'AlamatWP' => $_POST['AlamatWP'],
-		// 									 	'NomorRekening' => $Pisah[0],
-		// 										'JenisPajak' => $Pisah[1],
-		// 										'SubJenisPajak' => $Pisah[2],
-		// 										'JamOperasional' => $_POST['JamOperasional']));
+		$this->db->insert('WajibPajak',
+				    array('NPWPD' => $_POST['NPWPD'],
+						  'NamaWP' => $_POST['NamaWP'],
+					      'AlamatWP' => $_POST['AlamatWP'],
+					 	  'NomorRekening' => $Pisah[0],
+						  'JenisPajak' => $Pisah[1],
+						  'SubJenisPajak' => $Pisah[2],
+						  'JamOperasional' => $_POST['JamOperasional']));
 		redirect(base_url('WajibPajak'));
 	}
 
@@ -46,19 +36,32 @@ class WajibPajak extends CI_Controller {
 		$Pisah = explode("|", $_POST['EditDataRekening']);
 		$this->db->where('NPWPD', $_POST['EditNPWPD']);
 		$this->db->update('WajibPajak',
-									array('NPWPD' => $_POST['EditNPWPD'],
-												'NamaWP' => $_POST['EditNamaWP'],
-												'AlamatWP' => $_POST['EditAlamatWP'],
-											 	'NomorRekening' => $Pisah[0],
-												'JenisPajak' => $Pisah[1],
-												'SubJenisPajak' => $Pisah[2],
-												'JamOperasional' => $_POST['EditJamOperasional']));
+					array('NPWPD' => $_POST['EditNPWPD'],
+						  'NamaWP' => $_POST['EditNamaWP'],
+						  'AlamatWP' => $_POST['EditAlamatWP'],
+						  'NomorRekening' => $Pisah[0],
+						  'JenisPajak' => $Pisah[1],
+						  'SubJenisPajak' => $Pisah[2],
+						  'JamOperasional' => $_POST['EditJamOperasional']));
 		redirect(base_url('WajibPajak'));
 	}
 
 	public function Hapus(){
 		$this->db->delete('WajibPajak', array('NPWPD' => $_POST['NPWPD']));
 		echo "ok";
+	}
+
+	public function Status(){
+		$Status = $this->db->select('Status,Riwayat')    
+                    ->from('WajibPajak')
+                    ->where('NPWPD', $_POST['NPWPD'])
+                    ->get()->result_array();
+		echo json_encode($Status[0]);
+	}
+
+	public function GantiStatus(){
+		$this->db->where('NPWPD', $_POST['NPWPD']);
+		$this->db->update('WajibPajak', array('Status' => $_POST['WPStatus']));
 	}
 
 	public function PDF(){
