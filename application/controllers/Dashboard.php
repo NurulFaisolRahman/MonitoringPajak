@@ -11,9 +11,24 @@ class Dashboard extends CI_Controller {
 	}
 
 	public function index(){
+		$Bulan = date("Y-m");
+		$Query = "SELECT * FROM ".'"Transaksi"'." WHERE ".'"WaktuTransaksi"::text like '."'%$Bulan%'";
+		$Transaksi  = $this->db->query($Query)->result_array();
+		$TotalPajakBulan = $TotalTransaksiBulan = 0;
+		foreach ($Transaksi as $key) {
+			$TotalPajakBulan += $key['Pajak'];
+			$TotalTransaksiBulan += $key['TotalTransaksi'];
+		}
+		$Data['TotalPajakBulan'] = $this->Rupiah($TotalPajakBulan);
+		$Data['TotalTransaksiBulan'] = $this->Rupiah($TotalTransaksiBulan);
 		$Data['title'] = "Dashboard";
 		$Data['submenu'] = "";
 		$this->load->view('Header',$Data);
 		$this->load->view('Dashboard');
+	}
+
+	function Rupiah($Angka){
+	   $hasil_rupiah = "Rp " . number_format($Angka,2,',','.');
+	   return $hasil_rupiah;
 	}
 }

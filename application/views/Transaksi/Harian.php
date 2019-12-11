@@ -1,3 +1,9 @@
+<?php 
+  function Rupiah($Angka){
+    $hasil_rupiah = "Rp " . number_format($Angka,2,',','.');
+    return $hasil_rupiah;
+  }
+ ?>
     <div class="content-wrapper">
       <!-- Content Header (Page header) -->
       <section class="content-header">
@@ -19,18 +25,27 @@
                 <div class="card-header">
                   <table>
                     <tr>
-                      <td>
-                        <button type="button" class="btn btn-outline-primary float-right" id="reservation">
-                          <i class="far fa-calendar-alt"></i> &nbsp;Rentang Hari
-                          <i class="fas fa-caret-down"></i>
-                        </button>
-                      </td>
-                      <td class="font-weight-bold text-primary">&emsp;Bidang Pajak :&nbsp;</td>
-                      <td>
-                        <select class="form-control btn btn-outline-primary" name="tahun">
-                          <option>Semua Bidang</option>
-                        </select>
-                      </td>
+                      <form action="<?=base_url('Transaksi/Harian')?>" method="post">
+                        <td>
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text bg-primary">
+                                <i class="far fa-calendar-alt"></i>
+                              </span>
+                            </div>
+                            <input type="text" class="form-control btn btn-outline-primary float-right" name="Hari" id="reservation" value="<?php if(!empty($hari)) echo $hari ?>">
+                          </div>
+                        </td>
+                        <td class="font-weight-bold text-primary">&emsp;Bidang Pajak :&nbsp;</td>
+                        <td>
+                          <select class="form-control btn btn-outline-primary" name="tahun">
+                            <option>Semua Bidang</option>
+                          </select>
+                        </td>
+                        <td>&emsp;
+                          <button type="submit" class="btn btn-primary" id="Filter"><b>FILTER</b></button>
+                        </td>
+                      </form>
                       <td>&emsp;
                         <a href="" class="btn btn-danger"><i class="fas fa-file-pdf"></i>
                         <b>PDF</b></a>
@@ -46,8 +61,8 @@
                   <table id="example1" class="table table-bordered table-striped">
                     <thead class="bg-primary">
                     <tr>
-                      <th style="width:10px;">No</th>
-                      <th style="width:25%;">Tempat</th>
+                      <th>No</th>
+                      <th>NPWPD</th>
                       <th>(n)Receipt (Rp)</th>
                       <th>Subtotal (Rp)</th>
                       <th>Service (Rp)</th>
@@ -56,26 +71,34 @@
                     </tr>
                     </thead>
                     <tbody>
-                      <?php for ($i=1; $i < 21; $i++) {?>
+                      <?php 
+                          $TotalSubNominal = $TotalService = $TotalPajak = $Total = 0;
+                       ?>
+                      <?php $Nomor = 1; foreach ($Transaksi as $key){ ?>
                         <tr>
-                          <td><?=$i?></td>
-                          <td>Nama WP</td>
-                          <td><?=rand(15,1000)?></td>
-                          <td><?=rand(15,1000)?></td>
-                          <td><?=rand(15,1000)?></td>
-                          <td><?=rand(15,1000)?></td>
-                          <td><?=rand(15,1000)?></td>
+                          <td><?=$Nomor?></td>
+                          <td><?=$key['NPWPD']?></td>
+                          <td><?=$key['NomorTransaksi']?></td>
+                          <td><?=Rupiah($key['SubNominal'])?></td>
+                          <td><?=Rupiah($key['Service'])?></td>
+                          <td><?=Rupiah($key['Pajak'])?></td>
+                          <td><?=Rupiah($key['TotalTransaksi'])?></td>
                         </tr>
-                    <?php } ?>
+                        <?php 
+                          $TotalSubNominal += $key['SubNominal'];
+                          $TotalService += $key['Service'];
+                          $TotalPajak += $key['Pajak'];
+                          $Total += $key['TotalTransaksi'];
+                         ?>
+                      <?php $Nomor++; } ?>
                     </tbody>
                     <tfoot class="bg-success">
                     <tr>
-                      <th colspan="2" class="text-right">Total</th>
-                      <th>Rp 123</th>
-                      <th>Rp 123</th>
-                      <th>Rp 123</th>
-                      <th>Rp 123</th>
-                      <th>Rp 123</th>
+                      <th colspan="3" class="text-right">Total</th>
+                      <th><?=Rupiah($TotalSubNominal)?></th>
+                      <th><?=Rupiah($TotalService)?></th>
+                      <th><?=Rupiah($TotalPajak)?></th>
+                      <th><?=Rupiah($Total)?></th>
                     </tr>
                     </tfoot>
                   </table>

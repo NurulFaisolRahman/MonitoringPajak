@@ -17,24 +17,40 @@
 
       <div class="container-fluid">
         <div class="row align-items-center">
-          <div class="col-sm-3">
-            <b>Tahun :</b>&emsp;
-            <select class="form-control btn btn-outline-primary" name="tahun" style="width: 80px;">
-              <option>2019</option>
-            </select>
-          </div>
-          <div class="col-sm-3 py-2">
-            <b>Bulan :</b>&emsp;
-            <select class="form-control btn btn-outline-primary" name="tahun" style="width: 120px;">
-              <option>Desember</option>
-            </select>
-          </div>
-          <div class="col-sm-3 pb-2">
-            <b>Bidang Pajak :</b>
-            &emsp;<select class="form-control btn btn-outline-primary" name="tahun" style="width: 140px;">
-              <option>Semua Bidang</option>
-            </select>
-          </div>
+          <div class="card ml-2">
+              <div class="card-header">
+                <table>
+                  <tr>
+                    <td class="font-weight-bold text-primary">Bulan :&nbsp;</td>
+                    <td>
+                      <select class="form-control btn btn-outline-primary" name="tahun">
+                        <option>Desember</option>
+                      </select>
+                    </td>
+                    <td class="font-weight-bold text-primary">&emsp;Tahun :&nbsp;</td>
+                    <td>
+                      <select class="form-control btn btn-outline-primary" name="tahun">
+                        <option>2019</option>
+                      </select>
+                    </td>
+                    <td class="font-weight-bold text-primary">&emsp;Bidang Pajak :&nbsp;</td>
+                    <td>
+                      <select class="form-control btn btn-outline-primary" name="tahun">
+                        <option>Semua Bidang</option>
+                      </select>
+                    </td>
+                    <td>&emsp;
+                      <a href="" class="btn btn-danger"><i class="fas fa-file-pdf"></i>
+                      <b>PDF</b></a>
+                    </td>
+                    <td>&emsp;
+                      <a href="" class="btn btn-success"><i class="fas fa-file-excel"></i>
+                      <b>Excel</b></a>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
         </div>
         <div class="row">
           <div class="col-12 col-sm-6 col-md-3">
@@ -42,7 +58,7 @@
               <div class="info-box-content">
                 <span class="info-box-text text-white font-weight-bold">TOTAL TRANSAKSI BULAN</span>
                 <span class="info-box-number font-weight-bold">
-                  Rp 15
+                  <?=$TotalTransaksiBulan?>
                 </span>
               </div>
             </div>
@@ -52,7 +68,7 @@
               <div class="info-box-content">
                 <span class="info-box-text text-white font-weight-bold">TOTAL PAJAK BULAN</span>
                 <span class="info-box-number text-white font-weight-bold">
-                  Rp 15
+                  <?=$TotalPajakBulan?>
                 </span>
               </div>
             </div>

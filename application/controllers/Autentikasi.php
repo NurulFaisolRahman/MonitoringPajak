@@ -36,15 +36,18 @@ class Autentikasi extends CI_Controller {
 	}
 
 	public function AutentikasiWajibPajak(){
-		$CekLogin = $this->db->select('*')    
+		$CekLogin = $this->db->select('Status')    
                     ->from('WajibPajak')
                     ->where('NPWPD', $_POST['NPWPD'])
-                    ->where('Status != ', 'Disable')
                     ->get();
 		if($CekLogin->num_rows() == 1){
-			$this->db->where('NPWPD', $_POST['NPWPD']);
-			$this->db->update('WajibPajak', array('Status' => 'Online'));
-			echo "ok";
+			if ($CekLogin->result_array()[0]['Status'] != 'Disable') {
+				$this->db->where('NPWPD', $_POST['NPWPD']);
+				$this->db->update('WajibPajak', array('Status' => 'Online'));
+				echo "ok";			
+			} else {
+				echo "Disable";
+			}
 	  	}
 		else{
 			echo "ko";
@@ -54,10 +57,14 @@ class Autentikasi extends CI_Controller {
 	public function InputTransaksiWajibPajak(){
 		$inputJSON = file_get_contents('php://input');
 		$Data = json_decode($inputJSON);
+		$NPWPD = "";
 		foreach ($Data as $key => $value) {
 			$Data[$key] = (array) $value;
 		}
+		$NPWPD = $Data[0]['NPWPD'];
 		$this->db->insert_batch("Transaksi", $Data);
+		$this->db->where('NPWPD', $NPWPD);
+		$this->db->update('WajibPajak', array('Riwayat' => date("d-m-Y h:i:s A")));
 		echo "ok";
 	}
 }
