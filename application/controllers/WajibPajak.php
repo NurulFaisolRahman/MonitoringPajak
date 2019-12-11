@@ -47,8 +47,13 @@ class WajibPajak extends CI_Controller {
 	}
 
 	public function Hapus(){
-		$this->db->delete('WajibPajak', array('NPWPD' => $_POST['NPWPD']));
+		$tes = $this->db->delete('WajibPajak', array('NPWPD' => $_POST['NPWPD']));
 		echo "ok";
+	}
+
+	public function IndexRekening(){
+		$Data = $this->db->get('Rekening')->result_array();
+		echo json_encode($Data);
 	}
 
 	public function Status(){

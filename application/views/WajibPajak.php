@@ -39,18 +39,17 @@
           </div>
           <!-- /.card-header -->
           <div class="card-body table-responsive">
-            <!-- <?php echo "Today is " . date("Y/m/d") . " " . date("h:i:s") ?> -->
             <table id="example1" class="table table-bordered table-striped">
               <thead class="bg-primary">
               <tr>
                 <th style="width: 10px;">No</th>
-                <th style="width: 70px;">NPWPD</th>
-                <th style="width: 90px;">Alamat</th>
-                <th style="width: 130px;">Nomor Rekening</th>
-                <th style="width: 80px;">Jenis Pajak</th>
-                <th style="width: 120px;">Jam Operasional</th>
+                <th>NPWPD</th>
+                <th>Alamat</th>
+                <th>Nomor Rekening</th>
+                <th>Jenis Pajak</th>
+                <th>Jam Operasional</th>
                 <?php if($this->session->userdata('Admin')){ ?>
-                  <th style="width: 100px;">Status</th>
+                  <th>Status</th>
                   <th style="width: 10px;">Action</th>
                 <?php }; ?>
               </tr>
@@ -78,13 +77,13 @@
                       </td>
                       <td class="align-middle">
                         <div class="btn-group btn-group-sm">
-                          <a href="#" EditWP="<?=$key['NPWPD']."|".$key['NamaWP']."|".$key['AlamatWP']."|".($Nomor--)."|".$key['JamOperasional'];?>" class="btn btn-warning EditWP"><i class="fas fa-edit"></i></a>
+                          <a href="#" EditWP="<?=$key['NPWPD']."|".$key['NamaWP']."|".$key['AlamatWP']."|".$key['NomorRekening']."|".$key['JamOperasional'];?>" class="btn btn-warning EditWP"><i class="fas fa-edit"></i></a>
                           <a href="#" HapusWP="<?=$key['NPWPD'];?>" class="btn btn-danger HapusWP"><i class="fas fa-trash"></i></a>
                         </div>
                       </td>
                     <?php }; ?>
                   </tr>
-              <?php } ?>
+              <?php $Nomor++; } ?>
               </tbody>
             </table>
           </div>
@@ -135,7 +134,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text bg-primary"><b>Nomor Rekening</b></span>
             </div>
-            <select class="form-control btn btn-light" name="DataRekening">
+            <select class="form-control btn btn-light" name="DataRekening" required>
               <?php foreach ($DataRekening as $key): ?>
                 <option value="<?=$key['NomorRekening']."|".$key['JenisPajak']."|".$key['SubJenisPajak']?>"><b><?="4.1.1.".$key['NomorRekening']?></b></option>
               <?php endforeach; ?>
@@ -196,7 +195,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text bg-primary"><b>Nomor Rekening</b></span>
             </div>
-            <select class="form-control btn btn-outline-warning" name="EditDataRekening" id="EditDataRekening">
+            <select class="form-control btn btn-light" name="EditDataRekening" id="EditDataRekening" required>
               <?php foreach ($DataRekening as $key): ?>
                 <option value="<?=$key['NomorRekening']."|".$key['JenisPajak']."|".$key['SubJenisPajak']?>"><b><?="4.1.1.".$key['NomorRekening']?></b></option>
               <?php endforeach; ?>
@@ -278,7 +277,16 @@
         "autoWidth": true,
     });
     $(function () {
-      $('[data-mask]').inputmask()
+      $('[data-mask]').inputmask();
+
+      var IndexRekening = [];
+      $.post(BaseURL+"/WajibPajak/IndexRekening").done(function(Respon) {
+        var ParseData = JSON.parse(Respon);
+        for (var i = 0; i < ParseData.length; i++){
+            var key = ParseData[i].NomorRekening.toString();
+            IndexRekening[key] = i;
+        }
+      });
 
       $(document).on("click",".EditWP",function(){
         var Data = $(this).attr('EditWP');
@@ -286,7 +294,7 @@
         document.getElementById('EditNPWPD').value = Pisah[0];
         document.getElementById('EditNamaWP').value = Pisah[1];
         document.getElementById('EditAlamatWP').value = Pisah[2];
-        document.getElementById('EditDataRekening').selectedIndex = Pisah[3];
+        document.getElementById('EditDataRekening').selectedIndex = IndexRekening[Pisah[3]];
         document.getElementById('EditJamOperasional').value = Pisah[4];
         $('#ModalEditWP').modal("show");
       });

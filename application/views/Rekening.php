@@ -36,8 +36,8 @@
               <tr>
                 <th style="width:10px;">No</th>
                 <th>Nomor Rekening</th>
-                <th style="width:30%;">Jenis Pajak</th>
-                <th style="width:30%;">Sub Jenis Pajak</th>
+                <th>Jenis Pajak</th>
+                <th>Sub Jenis Pajak</th>
                 <?php if($this->session->userdata('Admin')){ ?>
                   <th style="width:10px;">Action</th>
                 <?php }; ?>

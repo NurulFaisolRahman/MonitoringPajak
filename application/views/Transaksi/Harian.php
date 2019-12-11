@@ -38,8 +38,15 @@
                         </td>
                         <td class="font-weight-bold text-primary">&emsp;Bidang Pajak :&nbsp;</td>
                         <td>
-                          <select class="form-control btn btn-outline-primary" name="tahun">
-                            <option>Semua Bidang</option>
+                          <select class="form-control btn btn-outline-primary" name="BidangPajak" id="BidangPajak">
+                          <option value="All" <?php if ($bidangpajak == 'All') {
+                            echo "selected";
+                          } ?>><?="All"?></option>
+                          <?php foreach ($DataRekening as $key){ ?>
+                            <option value="<?=$key['JenisPajak']?>" <?php if ($bidangpajak == $key['JenisPajak']) {
+                            echo "selected";
+                          } ?>><?=$key['JenisPajak']?></option>
+                          <?php } ?>
                           </select>
                         </td>
                         <td>&emsp;
@@ -47,12 +54,12 @@
                         </td>
                       </form>
                       <td>&emsp;
-                        <a href="" class="btn btn-danger"><i class="fas fa-file-pdf"></i>
-                        <b>PDF</b></a>
+                        <button id="PDF" class="btn btn-danger"><i class="fas fa-file-pdf"></i>
+                        <b>PDF</b></button>
                       </td>
                       <td>&emsp;
-                        <a href="" class="btn btn-success"><i class="fas fa-file-excel"></i>
-                        <b>Excel</b></a>
+                        <button id="Excel" href="#" class="btn btn-success"><i class="fas fa-file-excel"></i>
+                        <b>Excel</b></button>
                       </td>
                     </tr>
                   </table>
@@ -137,6 +144,15 @@
       });
       $(function () {
         $('#reservation').daterangepicker()
+
+        $(document).on("click","#PDF",function(){
+          
+        });
+        
+        $(document).on("click","#Excel",function(){
+          var Hari = $('#reservation').val()
+          var BidangPajak = $('#BidangPajak').val()
+        });
       })
     });
   </script>

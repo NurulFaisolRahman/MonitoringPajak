@@ -32,8 +32,15 @@
                         </td>
                         <td class="font-weight-bold text-primary">&emsp;Bidang Pajak :&nbsp;</td>
                         <td>
-                          <select class="form-control btn btn-outline-primary" name="tahun">
-                            <option>Semua Bidang</option>
+                          <select class="form-control btn btn-outline-primary" name="BidangPajak">
+                          <option value="All" <?php if ($bidangpajak == 'All') {
+                            echo "selected";
+                          } ?>><?="All"?></option>
+                          <?php foreach ($DataRekening as $key){ ?>
+                            <option value="<?=$key['JenisPajak']?>" <?php if ($bidangpajak == $key['JenisPajak']) {
+                            echo "selected";
+                          } ?>><?=$key['JenisPajak']?></option>
+                          <?php } ?>
                           </select>
                         </td>
                         <td>&emsp;

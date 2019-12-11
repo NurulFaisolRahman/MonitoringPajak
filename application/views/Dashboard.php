@@ -22,23 +22,27 @@
                 <table>
                   <tr>
                     <td class="font-weight-bold text-primary">Bulan :&nbsp;</td>
-                    <td>
-                      <select class="form-control btn btn-outline-primary" name="tahun">
-                        <option>Desember</option>
-                      </select>
-                    </td>
-                    <td class="font-weight-bold text-primary">&emsp;Tahun :&nbsp;</td>
-                    <td>
-                      <select class="form-control btn btn-outline-primary" name="tahun">
-                        <option>2019</option>
-                      </select>
-                    </td>
-                    <td class="font-weight-bold text-primary">&emsp;Bidang Pajak :&nbsp;</td>
-                    <td>
-                      <select class="form-control btn btn-outline-primary" name="tahun">
-                        <option>Semua Bidang</option>
-                      </select>
-                    </td>
+                      <form action="<?=base_url('Dashboard')?>" method="post">
+                        <td>
+                          <input class="form-control btn btn-outline-primary" type="date" name="Bulan" value="<?php if(!empty($bulan)) echo $bulan ?>" required>
+                        </td>
+                        <td class="font-weight-bold text-primary">&emsp;Bidang Pajak :&nbsp;</td>
+                        <td>
+                          <select class="form-control btn btn-outline-primary" name="BidangPajak">
+                          <option value="All" <?php if ($bidangpajak == 'All') {
+                            echo "selected";
+                          } ?>><?="All"?></option>
+                          <?php foreach ($DataRekening as $key){ ?>
+                            <option value="<?=$key['JenisPajak']?>" <?php if ($bidangpajak == $key['JenisPajak']) {
+                            echo "selected";
+                          } ?>><?=$key['JenisPajak']?></option>
+                          <?php } ?>
+                          </select>
+                        </td>
+                        <td>&emsp;
+                          <button type="submit" class="btn btn-primary" id="Filter"><b>FILTER</b></button>
+                        </td>
+                      </form>
                     <td>&emsp;
                       <a href="" class="btn btn-danger"><i class="fas fa-file-pdf"></i>
                       <b>PDF</b></a>
@@ -78,7 +82,7 @@
               <div class="info-box-content">
                 <span class="info-box-text text-white font-weight-bold">TOTAL TRANSAKSI TAHUN</span>
                 <span class="info-box-number font-weight-bold">
-                  Rp 15
+                  <?=$TotalTransaksiTahun?>
                 </span>
               </div>
             </div>
@@ -88,7 +92,7 @@
               <div class="info-box-content">
                 <span class="info-box-text text-white font-weight-bold">TOTAL PAJAK TAHUN</span>
                 <span class="info-box-number font-weight-bold">
-                  Rp 15
+                  <?=$TotalPajakTahun?>
                 </span>
               </div>
             </div>
@@ -191,7 +195,7 @@ $(function () {
   var tanggal = []
   var DataTransaksi = []
   var DataPajak = []
-  for (var i = 0; i < 31; i++) {
+  for (var i = 1; i < 31; i++) {
     tanggal[i] = i.toString();
     DataTransaksi[i] = Math.floor(Math.random() * 1000);
     DataPajak[i] = Math.floor(Math.random() * 1000);
