@@ -48,7 +48,7 @@ class Dashboard extends CI_Controller {
 		$Data['TotalPajakTahun'] = $this->Rupiah($TotalPajakTahun);
 		$Data['TotalTransaksiTahun'] = $this->Rupiah($TotalTransaksiTahun);
 		$Data['DataRekening'] = $this->db->get('Rekening')->result_array();
-		$JumlahHari = cal_days_in_month(CAL_GREGORIAN,$Bulan,$Tahun);
+		$JumlahHari = cal_days_in_month(CAL_GREGORIAN,date("m"),date("Y"));
 		$Data['title'] = "Dashboard";
 		$Data['submenu'] = "";
 		$this->load->view('Header',$Data);

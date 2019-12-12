@@ -67,4 +67,9 @@ class Autentikasi extends CI_Controller {
 		$this->db->update('WajibPajak', array('Riwayat' => date("d-m-Y h:i:s A")));
 		echo "ok";
 	}
+
+	public function api(){
+		$Data = $this->db->get_where('Transaksi', array('NPWPD' => '1507.199.607'))->result_array();
+		echo json_encode($Data);
+	}
 }

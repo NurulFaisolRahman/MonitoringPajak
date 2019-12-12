@@ -3,7 +3,7 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <div class="container-fluid">
-        <div class="row mb-2">
+        <div class="row mb-1">
           <div class="col-sm-6">
 						<i class="fas fa-home mr-1"></i>
             <b>DASHBOARD</b>
@@ -43,14 +43,6 @@
                           <button type="submit" class="btn btn-primary" id="Filter"><b>FILTER</b></button>
                         </td>
                       </form>
-                    <td>&emsp;
-                      <a href="" class="btn btn-danger"><i class="fas fa-file-pdf"></i>
-                      <b>PDF</b></a>
-                    </td>
-                    <td>&emsp;
-                      <a href="" class="btn btn-success"><i class="fas fa-file-excel"></i>
-                      <b>Excel</b></a>
-                    </td>
                   </tr>
                 </table>
               </div>

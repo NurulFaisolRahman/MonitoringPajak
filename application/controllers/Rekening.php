@@ -19,19 +19,45 @@ class Rekening extends CI_Controller {
 	}
 
 	public function Tambah(){
-		$this->db->insert('Rekening',
-									array('NomorRekening' => $_POST['NomorRekening'],
-												'JenisPajak' => $_POST['JenisPajak'],
-												'SubJenisPajak' => $_POST['SubJenisPajak']));
-		redirect(base_url('Rekening'));
+		$NomorRekening = $_POST['NomorRekening'];
+		if ($NomorRekening[strlen($NomorRekening)-1] == '_') {
+			$NomorRekening = substr($NomorRekening, 0, -3);
+		}
+		if ($this->db->get_where('Rekening', array('NomorRekening' => $NomorRekening))->num_rows() === 0) {
+			$Simpan = $this->db->insert('Rekening',
+							array('NomorRekening' => $NomorRekening,
+										'JenisPajak' => $_POST['JenisPajak'],
+										'SubJenisPajak' => $_POST['SubJenisPajak']));		
+			echo "ok";
+		} else {
+			echo "ko";
+		}
 	}
 
 	public function Edit(){
-		$this->db->where('NomorRekening', $_POST['EditNomorRekening']);
-		$this->db->update('Rekening',
-									array('JenisPajak' => $_POST['EditJenisPajak'],
-												'SubJenisPajak' => $_POST['EditSubJenisPajak']));
-		redirect(base_url('Rekening'));
+		$NomorRekening = $_POST['EditNomorRekening'];
+		if ($NomorRekening[strlen($NomorRekening)-1] == '_') {
+			$NomorRekening = substr($NomorRekening, 0, -3);
+		}
+		if ($NomorRekening != $_POST['EditNomorRekeningLama']) {
+			if ($this->db->get_where('Rekening', array('NomorRekening' => $NomorRekening))->num_rows() === 0) {
+			$this->db->where('NomorRekening', $_POST['EditNomorRekeningLama']);
+			$this->db->update('Rekening',
+								array('NomorRekening' => $NomorRekening,
+									  'JenisPajak' => $_POST['EditJenisPajak'],
+									  'SubJenisPajak' => $_POST['EditSubJenisPajak']));
+				echo "ok";
+			} else {
+				echo "ko";
+			}
+		} else {
+			$this->db->where('NomorRekening', $_POST['EditNomorRekeningLama']);
+			$this->db->update('Rekening',
+								array('NomorRekening' => $NomorRekening,
+									  'JenisPajak' => $_POST['EditJenisPajak'],
+									  'SubJenisPajak' => $_POST['EditSubJenisPajak']));
+			echo "ok";
+		}
 	}
 
 	public function Hapus(){

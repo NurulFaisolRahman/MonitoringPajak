@@ -152,6 +152,11 @@
         $(document).on("click","#Excel",function(){
           var Hari = $('#reservation').val()
           var BidangPajak = $('#BidangPajak').val()
+          if (true) {
+
+          } else {
+            
+          }
         });
       })
     });

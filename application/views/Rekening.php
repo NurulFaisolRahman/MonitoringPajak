@@ -74,7 +74,7 @@
   <!-- /.content -->
 </div>
 </div>
-<form action="<?=base_url('Rekening/Tambah')?>" method="post">
+<form onsubmit="event.preventDefault();">
 <div class="modal fade" id="ModalRekening">
   <div class="modal-dialog">
     <div class="modal-content bg-primary">
@@ -90,27 +90,27 @@
               <span class="input-group-text bg-primary"><b>Nomor Rekening</b></span>
               <span class="input-group-text"><b>4.1.1</b></span>
             </div>
-            <input type="text" name="NomorRekening" class="form-control" data-inputmask='"mask": "99.99"' data-mask required>
+            <input type="text" id="NomorRekening" class="form-control" data-inputmask='"mask": "99.99.99"' data-mask required>
           </div>
           <br>
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text bg-primary"><b>Jenis Pajak</b></i></span>
             </div>
-            <input name="JenisPajak" class="form-control" type="text" required>
+            <input id="JenisPajak" class="form-control" type="text" required>
           </div>
           <br>
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text bg-primary"><b>Sub Jenis Pajak</b></i></span>
             </div>
-            <input name="SubJenisPajak" class="form-control" type="text" required>
+            <input id="SubJenisPajak" class="form-control" type="text" required>
           </div>
         </div>
       </div>
       <div class="modal-footer justify-content-between">
         <button type="button" class="btn btn-outline-light" data-dismiss="modal"><b>Tutup</b></button>
-        <button type="submit" class="btn btn-outline-light"><b>Simpan</b></button>
+        <button type="button" class="btn btn-outline-light" id="TambahRekening"><b>Simpan</b></button>
       </div>
     </div>
     <!-- /.modal-content -->
@@ -118,7 +118,7 @@
   <!-- /.modal-dialog -->
 </div>
 </form>
-<form action="<?=base_url('Rekening/Edit')?>" method="post">
+<form onsubmit="event.preventDefault();">
 <div class="modal fade" id="ModalEditRekening">
   <div class="modal-dialog">
     <div class="modal-content bg-primary">
@@ -134,27 +134,28 @@
               <span class="input-group-text bg-primary"><b>Nomor Rekening</b></span>
               <span class="input-group-text"><b>4.1.1</b></span>
             </div>
-            <input type="text" name="EditNomorRekening" id="EditNomorRekening" class="form-control" data-inputmask='"mask": "99.99"' data-mask readonly>
+            <input type="hidden" id="EditNomorRekeningLama" class="form-control">
+            <input type="text" id="EditNomorRekening" class="form-control" data-inputmask='"mask": "99.99.99"' data-mask>
           </div>
           <br>
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text bg-primary"><b>Jenis Pajak</b></i></span>
             </div>
-            <input name="EditJenisPajak" id="EditJenisPajak" class="form-control" type="text" required>
+            <input id="EditJenisPajak" class="form-control" type="text" required>
           </div>
           <br>
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text bg-primary"><b>Sub Jenis Pajak</b></i></span>
             </div>
-            <input name="EditSubJenisPajak" id="EditSubJenisPajak" class="form-control" type="text" required>
+            <input id="EditSubJenisPajak" class="form-control" type="text" required>
           </div>
         </div>
       </div>
       <div class="modal-footer justify-content-between">
         <button type="button" class="btn btn-outline-light" data-dismiss="modal"><b>Tutup</b></button>
-        <button type="submit" class="btn btn-outline-light"><b>Simpan</b></button>
+        <button type="button" class="btn btn-outline-light" id="EditRekening"><b>Simpan</b></button>
       </div>
     </div>
     <!-- /.modal-content -->
@@ -190,9 +191,37 @@
       $('[data-mask]').inputmask()
     })
 
+    $(document).on("click","#TambahRekening",function(){
+      var Data = { NomorRekening: $('#NomorRekening').val(),
+                   JenisPajak: $('#JenisPajak').val(),
+                   SubJenisPajak: $('#SubJenisPajak').val()};
+      $.post(BaseURL+"/Rekening/Tambah", Data).done(function(Respon) {
+        if (Respon == 'ok') {
+          window.location = BaseURL + '/Rekening';
+        } else {
+          alert('Nomor Rekening Telah Ada')
+        }
+      });
+    });
+
+    $(document).on("click","#EditRekening",function(){      
+      var Data = { EditNomorRekeningLama: $('#EditNomorRekeningLama').val(),
+                   EditNomorRekening: $('#EditNomorRekening').val(),
+                   EditJenisPajak: $('#EditJenisPajak').val(),
+                   EditSubJenisPajak: $('#EditSubJenisPajak').val()};
+      $.post(BaseURL+"/Rekening/Edit", Data).done(function(Respon) {
+        if (Respon == 'ok') {
+          window.location = BaseURL + '/Rekening';
+        } else {
+          alert('Nomor Rekening Telah Ada')
+        }
+      });
+    });
+
     $(document).on("click",".EditRekening",function(){
       var Data = $(this).attr('EditRekening');
       var Pisah = Data.split("|");
+      document.getElementById('EditNomorRekeningLama').value = Pisah[0];
       document.getElementById('EditNomorRekening').value = Pisah[0];
       document.getElementById('EditJenisPajak').value = Pisah[1];
       document.getElementById('EditSubJenisPajak').value = Pisah[2];
