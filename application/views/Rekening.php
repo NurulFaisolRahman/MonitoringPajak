@@ -218,6 +218,20 @@
       });
     });
 
+    $(document).on("click",".HapusRekening",function(){
+      var HapusRekening = { NomorRekening: $(this).attr('HapusRekening')};
+      var Konfirmasi = confirm("Yakin Ingin Menghapus Data?");
+      if (Konfirmasi == true) {
+        $.post(BaseURL+"/Rekening/Hapus", HapusRekening).done(function(Respon) {
+          if (Respon == 'ok') {
+            window.location = BaseURL + '/Rekening';
+          } else {
+            alert('Nomor Rekening Digunakan Pada Tabel Wajib Pajak')
+          }
+        });
+      }
+    });
+
     $(document).on("click",".EditRekening",function(){
       var Data = $(this).attr('EditRekening');
       var Pisah = Data.split("|");
@@ -226,18 +240,6 @@
       document.getElementById('EditJenisPajak').value = Pisah[1];
       document.getElementById('EditSubJenisPajak').value = Pisah[2];
       $('#ModalEditRekening').modal("show");
-    });
-
-    $(document).on("click",".HapusRekening",function(){
-      var HapusRekening = { NomorRekening: $(this).attr('HapusRekening')};
-      var Konfirmasi = confirm("Yakin Ingin Menghapus Data?");
-      if (Konfirmasi == true) {
-        $.post(BaseURL+"/Rekening/Hapus", HapusRekening).done(function(Respon) {
-          if (Respon == 'ok') {
-            window.location = BaseURL + '/Rekening';
-          }
-        });
-      }
     });
   });
 </script>

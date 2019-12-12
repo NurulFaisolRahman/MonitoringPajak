@@ -61,7 +61,11 @@ class Rekening extends CI_Controller {
 	}
 
 	public function Hapus(){
-		$this->db->delete('Rekening', array('NomorRekening' => $_POST['NomorRekening']));
-		echo "ok";
+		if ($this->db->get_where('WajibPajak', array('NomorRekening' => $_POST['NomorRekening']))->num_rows() === 0) {
+			$this->db->delete('Rekening', array('NomorRekening' => $_POST['NomorRekening']));
+			echo "ok";
+		} else {
+			echo "ko";
+		}
 	}
 }
