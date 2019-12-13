@@ -1,3 +1,9 @@
+  <?php 
+  function Rupiah($Angka){
+    $hasil_rupiah = "Rp " . number_format($Angka,2,',','.');
+    return $hasil_rupiah;
+  }
+ ?>
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -52,7 +58,7 @@
           <div class="col-12 col-sm-6 col-md-3">
             <div class="info-box bg-primary">
               <div class="info-box-content">
-                <span class="info-box-text text-white font-weight-bold">TOTAL TRANSAKSI BULAN</span>
+                <span style="font-size: 14px;" class="info-box-text text-white font-weight-bold">TOTAL TRANSAKSI <?=strtoupper($Bulan)." ".$Tahun?></span>
                 <span class="info-box-number font-weight-bold">
                   <?=$TotalTransaksiBulan?>
                 </span>
@@ -62,7 +68,7 @@
 					<div class="col-12 col-sm-6 col-md-3">
             <div class="info-box bg-warning">
               <div class="info-box-content">
-                <span class="info-box-text text-white font-weight-bold">TOTAL PAJAK BULAN</span>
+                <span style="font-size: 14px;" class="info-box-text text-white font-weight-bold">TOTAL PAJAK <?=strtoupper($Bulan)." ".$Tahun?></span>
                 <span class="info-box-number text-white font-weight-bold">
                   <?=$TotalPajakBulan?>
                 </span>
@@ -72,7 +78,7 @@
 					<div class="col-12 col-sm-6 col-md-3">
             <div class="info-box bg-success">
               <div class="info-box-content">
-                <span class="info-box-text text-white font-weight-bold">TOTAL TRANSAKSI TAHUN</span>
+                <span style="font-size: 14px;" class="info-box-text text-white font-weight-bold">TOTAL TRANSAKSI TAHUN <?=$Tahun?></span>
                 <span class="info-box-number font-weight-bold">
                   <?=$TotalTransaksiTahun?>
                 </span>
@@ -82,7 +88,7 @@
 					<div class="col-12 col-sm-6 col-md-3">
             <div class="info-box bg-danger">
               <div class="info-box-content">
-                <span class="info-box-text text-white font-weight-bold">TOTAL PAJAK TAHUN</span>
+                <span style="font-size: 14px;" class="info-box-text text-white font-weight-bold">TOTAL PAJAK TAHUN <?=$Tahun?></span>
                 <span class="info-box-number font-weight-bold">
                   <?=$TotalPajakTahun?>
                 </span>
@@ -95,7 +101,7 @@
 						<div class="card">
               <div class="card-header border-0 bg-warning">
                 <div class="d-flex justify-content-between">
-                  <h3 class="card-title text-white font-weight-bold">GRAFIK WAJIB PAJAK</h3>
+                  <h3 class="card-title text-white font-weight-bold">GRAFIK WAJIB PAJAK BULAN <?=strtoupper($Bulan)." ".$Tahun?></h3>
                 </div>
               </div>
               <div class="card-body">
@@ -109,7 +115,7 @@
 						<div class="card">
               <div class="card-header border-0 bg-danger">
                 <div class="d-flex justify-content-between">
-                  <h3 class="card-title text-white font-weight-bold">TOP 5 WAJIB PAJAK</h3>
+                  <h3 class="card-title text-white font-weight-bold">TOP 5 WAJIB PAJAK BULAN <?=strtoupper($Bulan)." ".$Tahun?></h3>
                 </div>
               </div>
               <div class="card-body">
@@ -123,31 +129,16 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>1.</td>
-                      <td>Transaksi : <br>Pajak :</td>
-                      <td>Nama WP</td>
-                    </tr>
-                    <tr>
-                      <td>2.</td>
-                      <td>Transaksi : <br>Pajak :</td>
-                      <td>Nama WP</td>
-                    </tr>
-                    <tr>
-                      <td>3.</td>
-                      <td>Transaksi : <br>Pajak :</td>
-                      <td>Nama WP</td>
-                    </tr>
-                    <tr>
-                      <td>4.</td>
-                      <td>Transaksi : <br>Pajak :</td>
-                      <td>Nama WP</td>
-                    </tr>
-                    <tr>
-                      <td>5.</td>
-                      <td>Transaksi : <br>Pajak :</td>
-                      <td>Nama WP</td>
-                    </tr>
+                    <?php $Nomor = 1; foreach ($Top5 as $key) { ?>
+                      <?php 
+                        if ($Nomor < 6) {?>
+                          <tr>
+                            <td><?=$Nomor?></td>
+                            <td>Trx : <?=Rupiah($key['Transaksi'])?><br>Tax : <?=Rupiah($key['Pajak'])?></td>
+                            <td><?=$key['NamaWP']?></td>
+                          </tr>
+                       <?php } ?>
+                    <?php $Nomor++; } ?>
                   </tbody>
                 </table>
               </div>

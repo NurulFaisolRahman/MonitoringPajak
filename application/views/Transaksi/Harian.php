@@ -86,10 +86,10 @@
                           <td><?=$Nomor?></td>
                           <td><?=$key['NPWPD']?></td>
                           <td><?=$key['NomorTransaksi']?></td>
-                          <td><?=Rupiah($key['SubNominal'])?></td>
-                          <td><?=Rupiah($key['Service'])?></td>
-                          <td><?=Rupiah($key['Pajak'])?></td>
-                          <td><?=Rupiah($key['TotalTransaksi'])?></td>
+                          <td><?=$key['SubNominal']?></td>
+                          <td><?=$key['Service']?></td>
+                          <td><?=$key['Pajak']?></td>
+                          <td><?=$key['TotalTransaksi']?></td>
                         </tr>
                         <?php 
                           $TotalSubNominal += $key['SubNominal'];
