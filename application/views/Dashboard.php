@@ -185,13 +185,21 @@ $(function () {
   var mode      = 'index'
   var intersect = true
   var tanggal = []
-  var DataTransaksi = []
-  var DataPajak = []
-  for (var i = 1; i < 31; i++) {
+  var JumlahTanggal = "<?=$JumlahTanggal?>"
+  var Transaksi = <?= json_encode($GrafikTransaksi)?>;
+  var Pajak = <?= json_encode($GrafikPajak)?>;
+  var DataTransaksi = [];
+  var DataPajak = [];
+  Object.keys(Transaksi).forEach(function(key) {
+    DataTransaksi[Number(key)] = Number(Transaksi[key])
+  });
+  Object.keys(Pajak).forEach(function(key) {
+    DataPajak[Number(key)] = Number(Pajak[key])
+  });
+  for (var i = 1; i <= JumlahTanggal; i++) {
     tanggal[i] = i.toString();
-    DataTransaksi[i] = Math.floor(Math.random() * 1000);
-    DataPajak[i] = Math.floor(Math.random() * 1000);
   }
+  tanggal[0] = 'Tanggal';
   var grafik = document.getElementById("visitors-chart").getContext('2d');
   var myLineChart = new Chart(grafik, {
   type: 'line',

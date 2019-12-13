@@ -34,7 +34,11 @@ class Dashboard extends CI_Controller {
 		$Transaksi  = $this->db->query($Query)->result_array();
 		$TransaksiPerTahun = $this->db->query($Queri)->result_array();
 		$TotalPajakBulan = $TotalTransaksiBulan = 0;
+		$GrafikPajak = array();
+		$GrafikTransaksi = array();
 		foreach ($Transaksi as $key) {
+			$GrafikPajak[(int) substr($key['WaktuTransaksi'],8,2)] = (int) $key['Pajak'];
+			$GrafikTransaksi[(int) substr($key['WaktuTransaksi'],8,2)] = (int) $key['TotalTransaksi'];
 			$TotalPajakBulan += $key['Pajak'];
 			$TotalTransaksiBulan += $key['TotalTransaksi'];
 		}
@@ -43,12 +47,24 @@ class Dashboard extends CI_Controller {
 			$TotalPajakTahun += $key['Pajak'];
 			$TotalTransaksiTahun += $key['TotalTransaksi'];
 		}
+		$JumlahHari = cal_days_in_month(CAL_GREGORIAN,substr($Bulan, -2),$Tahun);
+		$Tanggal = 1;
+		for ($i=1; $i <= $JumlahHari; $i++) { 
+			if (empty($GrafikPajak[$i])) {
+				$GrafikPajak[$i] = 0;
+				$GrafikTransaksi[$i] = 0;
+			}
+		}
+		ksort($GrafikTransaksi);
+		ksort($GrafikPajak);
+		$Data['JumlahTanggal'] = $JumlahHari;
+		$Data['GrafikPajak'] = $GrafikPajak;
+		$Data['GrafikTransaksi'] = $GrafikTransaksi;
 		$Data['TotalPajakBulan'] = $this->Rupiah($TotalPajakBulan);
 		$Data['TotalTransaksiBulan'] = $this->Rupiah($TotalTransaksiBulan);
 		$Data['TotalPajakTahun'] = $this->Rupiah($TotalPajakTahun);
 		$Data['TotalTransaksiTahun'] = $this->Rupiah($TotalTransaksiTahun);
 		$Data['DataRekening'] = $this->db->get('Rekening')->result_array();
-		$JumlahHari = cal_days_in_month(CAL_GREGORIAN,date("m"),date("Y"));
 		$Data['title'] = "Dashboard";
 		$Data['submenu'] = "";
 		$this->load->view('Header',$Data);
