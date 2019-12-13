@@ -98,7 +98,7 @@
   <!-- /.content -->
 </div>
 </div>
-<form action="<?=base_url('WajibPajak/Tambah')?>" method="post">
+<form onsubmit="event.preventDefault();">
 <div class="modal fade" id="ModalWP">
   <div class="modal-dialog">
     <div class="modal-content bg-primary">
@@ -113,28 +113,28 @@
             <div class="input-group-prepend">
               <span class="input-group-text bg-primary"><b>NPWPD</b></span>
             </div>
-            <input type="text" name="NPWPD" class="form-control" data-inputmask='"mask": "9999.999.999"' data-mask required>
+            <input type="text" id="NPWPD" class="form-control" data-inputmask='"mask": "9999.999.999.999"' data-mask required>
           </div>
           <br>
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text bg-primary"><b>Nama Wajib Pajak</b></span>
             </div>
-            <input class="form-control" type="text" name="NamaWP" required>
+            <input class="form-control" type="text" id="NamaWP" required>
           </div>
           <br>
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text bg-primary"><b>Alamat</b></span>
             </div>
-            <input class="form-control" type="text" name="AlamatWP" required>
+            <input class="form-control" type="text" id="AlamatWP" required>
           </div>
           <br>
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text bg-primary"><b>Nomor Rekening</b></span>
             </div>
-            <select class="form-control btn btn-light" name="DataRekening" required>
+            <select class="form-control btn btn-light" id="DataRekening" required>
               <?php foreach ($DataRekening as $key): ?>
                 <option value="<?=$key['NomorRekening']."|".$key['JenisPajak']."|".$key['SubJenisPajak']?>"><b><?="4.1.1.".$key['NomorRekening']?></b></option>
               <?php endforeach; ?>
@@ -145,13 +145,13 @@
             <div class="input-group-prepend">
               <span class="input-group-text bg-primary"><b>Jam Operasional</b></span>
             </div>
-            <input type="text" name="JamOperasional" class="form-control" data-inputmask='"mask": "99.99-99.99"' data-mask required>
+            <input type="text" id="JamOperasional" class="form-control" data-inputmask='"mask": "99.99-99.99"' data-mask required>
           </div>
         </div>
       </div>
       <div class="modal-footer justify-content-between">
         <button type="button" class="btn btn-outline-light" data-dismiss="modal"><b>Tutup</b></button>
-        <button type="submit" class="btn btn-outline-light"><b>Simpan</b></button>
+        <button type="button" class="btn btn-outline-light" id="TambahWP"><b>Simpan</b></button>
       </div>
     </div>
     <!-- /.modal-content -->
@@ -159,7 +159,7 @@
   <!-- /.modal-dialog -->
 </div>
 </form>
-<form action="<?=base_url('WajibPajak/Edit')?>" method="post">
+<form onsubmit="event.preventDefault();">
 <div class="modal fade" id="ModalEditWP">
   <div class="modal-dialog">
     <div class="modal-content bg-primary">
@@ -174,28 +174,29 @@
             <div class="input-group-prepend">
               <span class="input-group-text bg-primary"><b>NPWPD</b></span>
             </div>
-            <input type="text" name="EditNPWPD" id="EditNPWPD" class="form-control" data-inputmask='"mask": "9999.999.999"' data-mask readonly>
+            <input type="hidden" id="EditNPWPDLama" class="form-control">
+            <input type="text" id="EditNPWPD" class="form-control" data-inputmask='"mask": "9999.999.999.999"' data-mask>
           </div>
           <br>
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text bg-primary"><b>Nama Wajib Pajak</b></span>
             </div>
-            <input class="form-control" type="text" name="EditNamaWP" id="EditNamaWP" required>
+            <input class="form-control" type="text" id="EditNamaWP" required>
           </div>
           <br>
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text bg-primary"><b>Alamat</b></span>
             </div>
-            <input class="form-control" type="text" name="EditAlamatWP" id="EditAlamatWP" required>
+            <input class="form-control" type="text" id="EditAlamatWP" required>
           </div>
           <br>
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text bg-primary"><b>Nomor Rekening</b></span>
             </div>
-            <select class="form-control btn btn-light" name="EditDataRekening" id="EditDataRekening" required>
+            <select class="form-control btn btn-light" id="EditDataRekening" required>
               <?php foreach ($DataRekening as $key): ?>
                 <option value="<?=$key['NomorRekening']."|".$key['JenisPajak']."|".$key['SubJenisPajak']?>"><b><?="4.1.1.".$key['NomorRekening']?></b></option>
               <?php endforeach; ?>
@@ -206,13 +207,13 @@
             <div class="input-group-prepend">
               <span class="input-group-text bg-primary"><b>Jam Operasional</b></span>
             </div>
-            <input type="text" name="EditJamOperasional" id="EditJamOperasional" class="form-control" data-inputmask='"mask": "99.99-99.99"' data-mask required>
+            <input type="text" id="EditJamOperasional" class="form-control" data-inputmask='"mask": "99.99-99.99"' data-mask required>
           </div>
         </div>
       </div>
       <div class="modal-footer justify-content-between">
         <button type="button" class="btn btn-outline-light" data-dismiss="modal"><b>Tutup</b></button>
-        <button type="submit" class="btn btn-outline-light"><b>Simpan</b></button>
+        <button type="button" class="btn btn-outline-light" id="EditWP"><b>Simpan</b></button>
       </div>
     </div>
     <!-- /.modal-content -->
@@ -277,7 +278,38 @@
         "autoWidth": true,
     });
     $(function () {
-      $('[data-mask]').inputmask();
+      $('[data-mask]').inputmask()
+
+      $(document).on("click","#TambahWP",function(){
+        var Data = { NPWPD: $('#NPWPD').val(),
+                     NamaWP: $('#NamaWP').val(),
+                     AlamatWP: $('#AlamatWP').val(),
+                     DataRekening: $('#DataRekening').val(),
+                     JamOperasional: $('#JamOperasional').val()};
+        $.post(BaseURL+"/WajibPajak/Tambah", Data).done(function(Respon) {
+          if (Respon == 'ok') {
+            window.location = BaseURL + '/WajibPajak';
+          } else {
+            alert('NPWPD Sudah Ada')
+          }
+        });
+      });
+
+      $(document).on("click","#EditWP",function(){
+        var Data = { EditNPWPDLama: $('#EditNPWPDLama').val(),
+                     EditNPWPD: $('#EditNPWPD').val(),
+                     EditNamaWP: $('#EditNamaWP').val(),
+                     EditAlamatWP: $('#EditAlamatWP').val(),
+                     EditDataRekening: $('#EditDataRekening').val(),
+                     EditJamOperasional: $('#EditJamOperasional').val()};
+        $.post(BaseURL+"/WajibPajak/Edit", Data).done(function(Respon) {
+          if (Respon == 'ok') {
+            window.location = BaseURL + '/WajibPajak';
+          } else {
+            alert('NPWPD Sudah Ada')
+          }
+        });
+      });
 
       var IndexRekening = [];
       $.post(BaseURL+"/WajibPajak/IndexRekening").done(function(Respon) {
@@ -291,6 +323,7 @@
       $(document).on("click",".EditWP",function(){
         var Data = $(this).attr('EditWP');
         var Pisah = Data.split("|");
+        document.getElementById('EditNPWPDLama').value = Pisah[0];
         document.getElementById('EditNPWPD').value = Pisah[0];
         document.getElementById('EditNamaWP').value = Pisah[1];
         document.getElementById('EditAlamatWP').value = Pisah[2];
@@ -306,6 +339,8 @@
           $.post(BaseURL+"/WajibPajak/Hapus", HapusWP).done(function(Respon) {
             if (Respon == 'ok') {
               window.location = BaseURL + '/WajibPajak';
+            } else {
+              alert('NPWPD Digunakan Pada Tabel Transaksi')
             }
           });
         }

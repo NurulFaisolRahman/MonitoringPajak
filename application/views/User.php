@@ -47,7 +47,12 @@
                   <tr>
                     <td><?=$Nomor?></td>
                     <td><?=$key['Username']?></td>
-                    <td><?=$key['Password']?></td>
+                    <td>
+                      <input type="password" id="<?=$key['Username']?>" value="<?=$key['Password']?>" readonly>
+                      <div class="btn-group btn-group-sm">
+                        <button class="fas fa-eye btn btn-success LihatPassword" LihatPassword=<?=$key['Username']?>> </button>
+                      </div>
+                    </td>
                     <td class="align-middle">
                       <div class="btn-group btn-group-sm">
                         <a href="#" EditUser="<?=$key['Username']."|".$key['Password'];?>" class="btn btn-warning EditUser"><i class="fas fa-edit"></i></a>
@@ -70,7 +75,7 @@
   <!-- /.content -->
 </div>
 </div>
-<form action="<?=base_url('User/Tambah')?>" method="post">
+<form onsubmit="event.preventDefault();">
 <div class="modal fade" id="ModalUser">
   <div class="modal-dialog">
     <div class="modal-content bg-primary">
@@ -85,20 +90,20 @@
             <div class="input-group-prepend">
               <span class="input-group-text bg-primary"><b>Username</b></i></span>
             </div>
-            <input class="form-control" type="text" name="Username" required>
+            <input class="form-control" type="text" id="Username" required>
           </div>
           <br>
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text bg-primary"><b>Password</b></i></span>
             </div>
-            <input class="form-control" type="password" name="Password" required>
+            <input class="form-control" type="password" id="Password" required>
           </div>
         </div>
       </div>
       <div class="modal-footer justify-content-between">
         <button type="button" class="btn btn-outline-light" data-dismiss="modal"><b>Tutup</b></button>
-        <button type="submit" class="btn btn-outline-light"><b>Simpan</b></button>
+        <button type="button" class="btn btn-outline-light" id="TambahUser"><b>Simpan</b></button>
       </div>
     </div>
     <!-- /.modal-content -->
@@ -106,7 +111,7 @@
   <!-- /.modal-dialog -->
 </div>
 </form>
-<form action="<?=base_url('User/Edit')?>" method="post">
+<form onsubmit="event.preventDefault();">
 <div class="modal fade" id="ModalEditUser">
   <div class="modal-dialog">
     <div class="modal-content bg-primary">
@@ -121,20 +126,21 @@
             <div class="input-group-prepend">
               <span class="input-group-text bg-primary"><b>Username</b></i></span>
             </div>
-            <input class="form-control" type="text" name="EditUsername" id="EditUsername" readonly>
+            <input class="form-control" type="hidden" id="EditUsernameLama">
+            <input class="form-control" type="text" id="EditUsername">
           </div>
           <br>
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text bg-primary"><b>Password</b></i></span>
             </div>
-            <input class="form-control" type="password" name="EditPassword" id="EditPassword" required>
+            <input class="form-control" type="password" id="EditPassword" required>
           </div>
         </div>
       </div>
       <div class="modal-footer justify-content-between">
         <button type="button" class="btn btn-outline-light" data-dismiss="modal"><b>Tutup</b></button>
-        <button type="submit" class="btn btn-outline-light"><b>Simpan</b></button>
+        <button type="button" class="btn btn-outline-light" id="EditUser"><b>Simpan</b></button>
       </div>
     </div>
     <!-- /.modal-content -->
@@ -164,9 +170,45 @@
         "autoWidth": true,
     });
 
+    $(document).on("click",".LihatPassword",function(){
+      var Username = $(this).attr('LihatPassword');
+      var Password = document.getElementById(Username);
+      if (Password.type === "password") {
+        Password.type = "text";
+      } else {
+        Password.type = "password";
+      }
+    });
+
+    $(document).on("click","#TambahUser",function(){
+      var Data = { Username: $('#Username').val(),
+                   Password: $('#Password').val()};
+      $.post(BaseURL+"/User/Tambah", Data).done(function(Respon) {
+        if (Respon == 'ok') {
+          window.location = BaseURL + '/User';
+        } else {
+          alert('Username Sudah Ada')
+        }
+      });
+    });
+
+    $(document).on("click","#EditUser",function(){
+      var Data = { EditUsernameLama: $('#EditUsernameLama').val(),
+                   EditUsername: $('#EditUsername').val(),
+                   EditPassword: $('#EditPassword').val()};
+      $.post(BaseURL+"/User/Edit", Data).done(function(Respon) {
+        if (Respon == 'ok') {
+          window.location = BaseURL + '/User';
+        } else {
+          alert('Username Sudah Ada')
+        }
+      });
+    });
+
     $(document).on("click",".EditUser",function(){
       var Data = $(this).attr('EditUser');
       var Pisah = Data.split("|");
+      document.getElementById('EditUsernameLama').value = Pisah[0];
       document.getElementById('EditUsername').value = Pisah[0];
       document.getElementById('EditPassword').value = Pisah[1];
       $('#ModalEditUser').modal("show");

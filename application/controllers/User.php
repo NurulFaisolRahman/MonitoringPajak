@@ -19,17 +19,33 @@ class User extends CI_Controller {
 	}
 
 	public function Tambah(){
-		$this->db->insert('Akun',
-									array('Username' => $_POST['Username'],
-												 'Password' => $_POST['Password'],
-												 'JenisAkun' => '2'));
-		redirect(base_url('User'));
+		if ($this->db->get_where('Akun', array('Username' => $_POST['Username']))->num_rows() === 0) {
+			$this->db->insert('Akun',
+						array('Username' => $_POST['Username'],
+							 'Password' => $_POST['Password'],
+							 'JenisAkun' => '2'));	
+			echo "ok";
+		} else {
+			echo "ko";
+		}
 	}
 
 	public function Edit(){
-		$this->db->where('Username', $_POST['EditUsername']);
-		$this->db->update('Akun', array('Password' => $_POST['EditPassword']));
-		redirect(base_url('User'));
+		if ($_POST['EditUsername'] != $_POST['EditUsernameLama']) {
+			if ($this->db->get_where('Akun', array('Username' => $_POST['EditUsername']))->num_rows() === 0) {
+			$this->db->where('Username', $_POST['EditUsernameLama']);
+			$this->db->update('Akun', array('Username' => $_POST['EditUsername'], 
+											'Password' => $_POST['EditPassword']));
+				echo "ok";
+			} else {
+				echo "ko";
+			}
+		} else {
+			$this->db->where('Username', $_POST['EditUsernameLama']);
+			$this->db->update('Akun', array('Username' => $_POST['EditUsername'], 
+											'Password' => $_POST['EditPassword']));
+			echo "ok";
+		}
 	}
 
 	public function Hapus(){

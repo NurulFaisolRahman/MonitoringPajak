@@ -110,7 +110,7 @@
       </div>
       <div class="modal-footer justify-content-between">
         <button type="button" class="btn btn-outline-light" data-dismiss="modal"><b>Tutup</b></button>
-        <button type="button" class="btn btn-outline-light" id="TambahRekening"><b>Simpan</b></button>
+        <button type="submit" class="btn btn-outline-light" id="TambahRekening"><b>Simpan</b></button>
       </div>
     </div>
     <!-- /.modal-content -->
@@ -155,7 +155,7 @@
       </div>
       <div class="modal-footer justify-content-between">
         <button type="button" class="btn btn-outline-light" data-dismiss="modal"><b>Tutup</b></button>
-        <button type="button" class="btn btn-outline-light" id="EditRekening"><b>Simpan</b></button>
+        <button type="submit" class="btn btn-outline-light" id="EditRekening"><b>Simpan</b></button>
       </div>
     </div>
     <!-- /.modal-content -->
@@ -199,7 +199,7 @@
         if (Respon == 'ok') {
           window.location = BaseURL + '/Rekening';
         } else {
-          alert('Nomor Rekening Telah Ada')
+          alert('Nomor Rekening Sudah Ada')
         }
       });
     });
@@ -213,7 +213,7 @@
         if (Respon == 'ok') {
           window.location = BaseURL + '/Rekening';
         } else {
-          alert('Nomor Rekening Telah Ada')
+          alert('Nomor Rekening Sudah Ada')
         }
       });
     });

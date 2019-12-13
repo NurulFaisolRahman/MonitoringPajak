@@ -10,6 +10,14 @@ class WajibPajak extends CI_Controller {
 		}
 	}
 
+	function NPWPD($Angka){
+	   for ($i=strlen($Angka)-1; $i >= 0; $i--) { 
+		   	if ($Angka[$i] != '_' && $Angka[$i] != '.') {
+		   		return substr($Angka, 0, $i+1);
+		   	} 
+	   }
+	}
+
 	public function index(){
 		$Data['DataWajibPajak'] = $this->db->get('WajibPajak')->result_array();
 		$Data['DataRekening'] = $this->db->get('Rekening')->result_array();
@@ -20,35 +28,62 @@ class WajibPajak extends CI_Controller {
 	}
 
 	public function Tambah(){
-		$Pisah = explode("|", $_POST['DataRekening']);
-		$this->db->insert('WajibPajak',
-				    array('NPWPD' => $_POST['NPWPD'],
-						  'NamaWP' => $_POST['NamaWP'],
-					      'AlamatWP' => $_POST['AlamatWP'],
-					 	  'NomorRekening' => $Pisah[0],
-						  'JenisPajak' => $Pisah[1],
-						  'SubJenisPajak' => $Pisah[2],
-						  'JamOperasional' => $_POST['JamOperasional']));
-		redirect(base_url('WajibPajak'));
+		if ($this->db->get_where('WajibPajak', array('NPWPD' => $this->NPWPD($_POST['NPWPD'])))->num_rows() === 0) {
+			$Pisah = explode("|", $_POST['DataRekening']);
+			$this->db->insert('WajibPajak',
+					    array('NPWPD' => $this->NPWPD($_POST['NPWPD']),
+							  'NamaWP' => $_POST['NamaWP'],
+						      'AlamatWP' => $_POST['AlamatWP'],
+						 	  'NomorRekening' => $Pisah[0],
+							  'JenisPajak' => $Pisah[1],
+							  'SubJenisPajak' => $Pisah[2],
+							  'JamOperasional' => $_POST['JamOperasional']));
+			echo "ok";
+		} else {
+			echo "ko";
+		}
 	}
 
 	public function Edit(){
-		$Pisah = explode("|", $_POST['EditDataRekening']);
-		$this->db->where('NPWPD', $_POST['EditNPWPD']);
-		$this->db->update('WajibPajak',
-					array('NPWPD' => $_POST['EditNPWPD'],
-						  'NamaWP' => $_POST['EditNamaWP'],
-						  'AlamatWP' => $_POST['EditAlamatWP'],
-						  'NomorRekening' => $Pisah[0],
-						  'JenisPajak' => $Pisah[1],
-						  'SubJenisPajak' => $Pisah[2],
-						  'JamOperasional' => $_POST['EditJamOperasional']));
-		redirect(base_url('WajibPajak'));
+		$NPWPD = $this->NPWPD($_POST['EditNPWPD']);
+		if ($NPWPD != $_POST['EditNPWPDLama']) {
+			if ($this->db->get_where('WajibPajak', array('NPWPD' => $NPWPD))->num_rows() === 0) {
+			$Pisah = explode("|", $_POST['EditDataRekening']);
+			$this->db->where('NPWPD', $_POST['EditNPWPDLama']);
+			$this->db->update('WajibPajak',
+						array('NPWPD' => $NPWPD,
+							  'NamaWP' => $_POST['EditNamaWP'],
+							  'AlamatWP' => $_POST['EditAlamatWP'],
+							  'NomorRekening' => $Pisah[0],
+							  'JenisPajak' => $Pisah[1],
+							  'SubJenisPajak' => $Pisah[2],
+							  'JamOperasional' => $_POST['EditJamOperasional']));
+				echo "ok";
+			} else {
+				echo "ko";
+			}
+		} else {
+			$Pisah = explode("|", $_POST['EditDataRekening']);
+			$this->db->where('NPWPD', $_POST['EditNPWPDLama']);
+			$this->db->update('WajibPajak',
+						array('NPWPD' => $NPWPD,
+							  'NamaWP' => $_POST['EditNamaWP'],
+							  'AlamatWP' => $_POST['EditAlamatWP'],
+							  'NomorRekening' => $Pisah[0],
+							  'JenisPajak' => $Pisah[1],
+							  'SubJenisPajak' => $Pisah[2],
+							  'JamOperasional' => $_POST['EditJamOperasional']));
+			echo "ok";
+		}
 	}
 
 	public function Hapus(){
-		$tes = $this->db->delete('WajibPajak', array('NPWPD' => $_POST['NPWPD']));
-		echo "ok";
+		if ($this->db->get_where('Transaksi', array('NPWPD' => $_POST['NPWPD']))->num_rows() === 0) {
+			$this->db->delete('WajibPajak', array('NPWPD' => $_POST['NPWPD']));
+			echo "ok";
+		} else {
+			echo "ko";
+		}
 	}
 
 	public function IndexRekening(){
@@ -70,6 +105,7 @@ class WajibPajak extends CI_Controller {
 	}
 
 	public function PDF(){
+		$this->load->library('Pdf');
 		$Data['DataWajibPajak'] = $this->db->get('WajibPajak')->result_array();
 		$this->load->view('WajibPajakPDF',$Data);
 	}
