@@ -65,7 +65,7 @@ class Transaksi extends CI_Controller {
 			$awal = explode("-",substr(str_replace("/","-",$Rentang[0]),0,10));
 			$akhir = explode("-",substr(str_replace("/","-",$Rentang[1]),1,11));
 			$Awal = $awal[1]."-".$awal[0]."-".$awal[2];
-			$Akhir = (int) ($akhir[1]+1)."-".$akhir[0]."-".$akhir[2];
+			$Akhir = (int) ($akhir[1])."-".$akhir[0]."-".$akhir[2];
 			$Data['hari'] = $_POST['Hari'];
 			$Bidang = $_POST['BidangPajak'];
 			$Data['bidangpajak'] = $_POST['BidangPajak'];
@@ -76,9 +76,7 @@ class Transaksi extends CI_Controller {
 			}
 		} else {
 			$Awal = date("d-m-Y");
-			$Tanggal = (int) substr($Awal,0,2) + 1;
-			$Akhir = $Tanggal."-".date("m-Y");
-			$Query = "SELECT * FROM ".'"Transaksi"'." WHERE ".'"WaktuTransaksi" >= '."'$Awal'"." AND ".'"WaktuTransaksi" <= '."'$Akhir'";
+			$Query = "SELECT * FROM ".'"Transaksi"'." WHERE ".'"WaktuTransaksi"::date >= '."'$Awal'"." AND ".'"WaktuTransaksi"::date <= '."'$Awal'";
 		}
 		$Data['Transaksi']  = $this->db->query($Query)->result_array();
 		$Data['DataRekening'] = $this->db->get('Rekening')->result_array();

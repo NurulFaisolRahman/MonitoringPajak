@@ -3,6 +3,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Autentikasi extends CI_Controller {
 
+	// function __construct(){
+	// 	parent::__construct();
+	// 	if($this->session->userdata('Status') == "Login"){
+	// 		redirect(base_url('Dashboard'));
+	// 	}
+	// }
+
 	public function index(){
 		$this->load->view('Autentikasi/SignIn');
 	}
@@ -36,7 +43,7 @@ class Autentikasi extends CI_Controller {
 	}
 
 	public function AutentikasiWajibPajak(){
-		$CekLogin = $this->db->select('Status')    
+		$CekLogin = $this->db->select('Status')
                     ->from('WajibPajak')
                     ->where('NPWPD', $_POST['NPWPD'])
                     ->get();
@@ -44,7 +51,7 @@ class Autentikasi extends CI_Controller {
 			if ($CekLogin->result_array()[0]['Status'] != 'Disable') {
 				$this->db->where('NPWPD', $_POST['NPWPD']);
 				$this->db->update('WajibPajak', array('Status' => 'Online'));
-				echo "ok";			
+				echo "ok";
 			} else {
 				echo "Disable";
 			}
