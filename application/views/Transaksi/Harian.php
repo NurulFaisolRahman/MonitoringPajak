@@ -4,6 +4,7 @@
     return $hasil_rupiah;
   }
  ?>
+ <script>var BaseURL = '<?=base_url()?>';</script>
     <div class="content-wrapper">
       <!-- Content Header (Page header) -->
       <section class="content-header">
@@ -54,11 +55,11 @@
                         </td>
                       </form>
                       <td>&emsp;
-                        <button id="PDF" class="btn btn-danger"><i class="fas fa-file-pdf"></i>
+                        <a href="<?=base_url('Transaksi/Pdf')?>" class="btn btn-danger"><i class="fas fa-file-pdf"></i>
                         <b>PDF</b></button>
                       </td>
                       <td>&emsp;
-                        <button id="Excel" href="#" class="btn btn-success"><i class="fas fa-file-excel"></i>
+                        <a href="<?=base_url('Transaksi/Excel')?>" class="btn btn-success"><i class="fas fa-file-excel"></i>
                         <b>Excel</b></button>
                       </td>
                     </tr>
@@ -69,8 +70,8 @@
                     <thead class="bg-primary">
                     <tr>
                       <th>No</th>
-                      <th>NPWPD</th>
-                      <th>(n)Receipt (Rp)</th>
+                      <th>Wajib Pajak</th>
+                      <th>(n)Receipt</th>
                       <th>Subtotal (Rp)</th>
                       <th>Service (Rp)</th>
                       <th>Tax (Rp)</th>
@@ -84,18 +85,18 @@
                       <?php $Nomor = 1; foreach ($Transaksi as $key){ ?>
                         <tr>
                           <td><?=$Nomor?></td>
-                          <td><?=$key['NPWPD']?></td>
-                          <td><?=$key['NomorTransaksi']?></td>
+                          <td><?=$key['NamaWP']?></td>
+                          <td><?=$key['Receipt']?></td>
                           <td><?=$key['SubNominal']?></td>
                           <td><?=$key['Service']?></td>
                           <td><?=$key['Pajak']?></td>
-                          <td><?=$key['TotalTransaksi']?></td>
+                          <td><?=$key['Transaksi']?></td>
                         </tr>
                         <?php 
                           $TotalSubNominal += $key['SubNominal'];
                           $TotalService += $key['Service'];
                           $TotalPajak += $key['Pajak'];
-                          $Total += $key['TotalTransaksi'];
+                          $Total += $key['Transaksi'];
                          ?>
                       <?php $Nomor++; } ?>
                     </tbody>
@@ -118,6 +119,9 @@
       <!-- /.content -->
     </div>
   </div>
+  <form style="display: hidden" action="<?=base_url('Transaksi/ExcelHarian')?>" method="POST" id="ExcelHarian">
+    <input type="hidden" name="DataTransaksiHarian" value="<?php print_r($Transaksi) ?>"/>
+  </form>
   <!-- jQuery -->
   <script src="../plugins/jquery/jquery.min.js"></script>
   <!-- Bootstrap 4 -->
@@ -150,13 +154,7 @@
         });
         
         $(document).on("click","#Excel",function(){
-          var Hari = $('#reservation').val()
-          var BidangPajak = $('#BidangPajak').val()
-          if (true) {
-
-          } else {
-            
-          }
+          
         });
       })
     });
