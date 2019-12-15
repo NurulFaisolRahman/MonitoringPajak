@@ -21,9 +21,11 @@
               <div class="col-8">
                 <table>
                   <tr>
+                    <?php if($this->session->userdata('Admin')){ ?>
                     <td>
                       <a href="#" data-toggle="modal" data-target="#ModalRekening" class="btn btn-primary font-weight-bold"><li class="fa fa-plus"></li> Rekening</a>
                     </td>
+                    <?php }; ?>
                   </tr>
                 </table>
               </div>
@@ -39,7 +41,7 @@
                 <th>Jenis Pajak</th>
                 <th>Sub Jenis Pajak</th>
                 <?php if($this->session->userdata('Admin')){ ?>
-                  <th style="width:10px;">Action</th>
+                  <th style="width:10px;">Aksi</th>
                 <?php }; ?>
               </tr>
               </thead>

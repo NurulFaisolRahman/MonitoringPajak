@@ -1,6 +1,6 @@
 <?php
-  $DataTransaksiHarian = $this->session->userdata('Transaksi');
-  $NamaFile = $this->session->userdata('NamaFile').".xls";
+  $DetailPerWP = $this->session->userdata('DetailPerWP');
+  $NamaFile = $this->session->userdata('NamaFilePerWP').".xls";
   header("Content-type: application/vnd-ms-excel");
   header("Content-Disposition: attachment; filename=".$NamaFile);
   function Rupiah($Angka){
@@ -11,17 +11,17 @@
     <table>
     <thead>
       <tr>
-        <td align="center" colspan="7"><?=$this->session->userdata('Judul')?></td>
+        <td align="center" colspan="7"><?=$this->session->userdata('JudulPerWP')?></td>
       </tr>
       <tr>
-        <td align="center" colspan="7">JENIS PAJAK : <?=$this->session->userdata('Bidang')?></td>
+        <td align="center" colspan="7"><?=$this->session->userdata('NamaWP')?></td>
       </tr>
       <tr>
-        <td align="center" colspan="7">PERIODE <?=$this->session->userdata('Periode')?></td>
+        <td align="center" colspan="7"><?=$this->session->userdata('PeriodeWP')?></td>
       </tr>
       <tr>
         <th>No</th>
-        <th>Wajib Pajak</th>
+        <th>Waktu Transaksi</th>
         <th>Receipt</th>
         <th>SubNominal</th>
         <th>Service</th>
@@ -32,21 +32,21 @@
     <tbody>
       <?php $TotalSubNominal = $TotalService = $TotalPajak = $Total = 0; ?>
       <?php $Nomor = 1; 
-            foreach ($DataTransaksiHarian as $key){ ?>
+            foreach ($DetailPerWP as $key){ ?>
         <tr>
           <td><?=$Nomor?></td>
-          <td><?=$key['NamaWP']?></td>
-          <td><?=$key['Receipt']?></td>
+          <td><?=$key['WaktuTransaksi']?></td>
+          <td><?=$key['NomorTransaksi']?></td>
           <td><?=$key['SubNominal']?></td>
           <td><?=$key['Service']?></td>
           <td><?=$key['Pajak']?></td>
-          <td><?=$key['Transaksi']?></td>
+          <td><?=$key['TotalTransaksi']?></td>
         </tr>
         <?php 
           $TotalSubNominal += $key['SubNominal'];
           $TotalService += $key['Service'];
           $TotalPajak += $key['Pajak'];
-          $Total += $key['Transaksi'];
+          $Total += $key['TotalTransaksi'];
          ?>
       <?php $Nomor++; } ?>
     </tbody>

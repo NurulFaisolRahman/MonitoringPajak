@@ -1,9 +1,10 @@
 <?php 
   function Rupiah($Angka){
-    $hasil_rupiah = "Rp " . number_format($Angka,2,',','.');
+    $hasil_rupiah = number_format($Angka,2,',','.');
     return $hasil_rupiah;
   }
  ?>
+ <script>var BaseURL = '<?=base_url()?>';</script>
     <div class="content-wrapper">
       <!-- Content Header (Page header) -->
       <section class="content-header">
@@ -28,7 +29,7 @@
                       <td class="font-weight-bold text-primary">Bulan :&nbsp;</td>
                       <form action="<?=base_url('Transaksi/Bulanan')?>" method="post">
                         <td>
-                          <input class="form-control btn btn-outline-primary" type="date" name="Bulan" value="<?php if(!empty($bulan)) echo $bulan ?>" required>
+                          <input class="form-control btn btn-outline-primary" type="date" id="Bulan" name="Bulan" value="<?php if(!empty($bulan)) echo $bulan ?>" required>
                         </td>
                         <td class="font-weight-bold text-primary">&emsp;Bidang Pajak :&nbsp;</td>
                         <td>
@@ -69,6 +70,7 @@
                       <th>Service (Rp)</th>
                       <th>Tax (Rp)</th>
                       <th>Total (Rp)</th>
+                      <th>Aksi</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -84,6 +86,14 @@
                           <td><?=$key['Service']?></td>
                           <td><?=$key['Pajak']?></td>
                           <td><?=$key['Transaksi']?></td>
+                          <?php if($this->session->userdata('Admin')){ ?>
+                          <td class="align-middle">
+                            <div class="btn-group btn-group-sm">
+                              <a href="#" PdfPerWP="<?=$key['NPWPD']?>" class="btn btn-danger PdfPerWP"><i class="fas fa-file-pdf"></i></a>
+                              <a href="#" ExcelPerWP="<?=$key['NPWPD']?>" class="btn btn-success ExcelPerWP"><i class="fas fa-file-excel"></i></a>
+                            </div>
+                          </td>
+                        <?php }; ?>
                         </tr>
                         <?php 
                           $TotalSubNominal += $key['SubNominal'];
@@ -100,6 +110,7 @@
                       <th><?=Rupiah($TotalService)?></th>
                       <th><?=Rupiah($TotalPajak)?></th>
                       <th><?=Rupiah($Total)?></th>
+                      <th></th>
                     </tr>
                     </tfoot>
                   </table>
@@ -125,12 +136,41 @@
   <script src="../dist/js/adminlte.min.js"></script>
   <script>
     $(document).ready(function() {
+
+      var d = new Date();
+      var bulan = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
+      if ($("#Bulan").val() == "") {
+        document.getElementById('Bulan').value = bulan;
+      }
+
       $('#example1').DataTable( {
           "scrollY": "50vh",
           "scrollCollapse": true,
           "paging": false,
           "ordering": true,
           "autoWidth": true,
+      });
+
+      $(document).on("click",".PdfPerWP",function(){
+        var Data = { NPWPD : $(this).attr('PdfPerWP'),
+                     Periode : $("#Bulan").val().substr(0,7),
+                     Judul : 'BULANAN', };
+        $.post(BaseURL+"/Transaksi/DetailPerWP", Data).done(function(Respon) {
+            if (Respon == 'ok') {
+              window.location = BaseURL + '/Transaksi/PdfPerWP';
+            }
+          });
+      });
+        
+      $(document).on("click",".ExcelPerWP",function(){
+        var Data = { NPWPD : $(this).attr('ExcelPerWP'),
+                     Periode : $("#Bulan").val().substr(0,7),
+                     Judul : 'BULANAN', };
+        $.post(BaseURL+"/Transaksi/DetailPerWP", Data).done(function(Respon) {
+            if (Respon == 'ok') {
+              window.location = BaseURL + '/Transaksi/ExcelPerWP';
+            }
+          });
       });
     });
   </script>

@@ -21,9 +21,11 @@
               <div class="col-8">
                 <table>
                   <tr>
+                    <?php if($this->session->userdata('Admin')){ ?>
                     <td>
                       <a href="#" data-toggle="modal" data-target="#ModalWP" class="btn btn-primary font-weight-bold"><li class="fa fa-plus"></li> WAJIB PAJAK</a>
                     </td>
+                    <?php }; ?>
                     <td>&emsp;
                       <a href="<?=base_url('WajibPajak/PDF')?>" class="btn btn-danger"><i class="fas fa-file-pdf"></i>
                       <b>PDF</b></a>
@@ -50,7 +52,7 @@
                 <th>Jam Operasional</th>
                 <?php if($this->session->userdata('Admin')){ ?>
                   <th>Status</th>
-                  <th style="width: 10px;">Action</th>
+                  <th style="width: 10px;">Aksi</th>
                 <?php }; ?>
               </tr>
               </thead>
