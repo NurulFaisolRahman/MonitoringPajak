@@ -46,38 +46,42 @@
               <tr>
                 <th style="width: 10px;">No</th>
                 <th>NPWPD</th>
+                <th>Wajib Pajak</th>
                 <th>Alamat</th>
-                <th>Nomor Rekening</th>
-                <th>Jenis Pajak</th>
-                <th>Jam Operasional</th>
+                <th style="width: 50px;">Nomor Rekening</th>
+                <th style="width: 50px;">Jenis Pajak</th>
+                <th style="width: 70px;">Sub Jenis Pajak</th>
+                <th style="width: 50px;">Jam Operasional</th>
                 <?php if($this->session->userdata('Admin')){ ?>
-                  <th>Status</th>
+                  <th style="width: 80px;">Status</th>
                   <th style="width: 10px;">Aksi</th>
                 <?php }; ?>
               </tr>
               </thead>
               <tbody>
                 <?php $Nomor = 1; foreach ($DataWajibPajak as $key){ ?>
-                  <tr>
-                    <td><?=$Nomor?></td>
+                  <tr valign="middle">
+                    <td align="center"><?=$Nomor?></td>
                     <td><?=$key['NPWPD']?></td>
+                    <td><?=$key['NamaWP']?></td>
                     <td><?=$key['AlamatWP']?></td>
                     <td><?="4.1.1.".$key['NomorRekening']?></td>
                     <td><?=$key['JenisPajak']?></td>
+                    <td><?=$key['SubJenisPajak']?></td>
                     <td><?=$key['JamOperasional']?></td>
                     <?php if($this->session->userdata('Admin')){ ?>
                       <td>
                         <?php if (empty($key['Status'])) {?>
                           <?="Belum Aktivasi"?>
                         <?php } else if ($key['Status'] != "Disable") {?>
-                          <a href="#" StatusWP="<?=$key['NPWPD']?>" class="btn btn-primary StatusWP"><i class="fas fa-smile"></i></a>
-                          <input type="checkbox" StatusWP="<?=$key['NPWPD']?>" id="WPStatus" data-toggle="toggle" data-on="ON" data-off="OFF" data-onstyle="success" data-offstyle="danger" data-width="70" checked>
+                          <a href="#" StatusWP="<?=$key['NPWPD']?>" class="btn btn-sm btn-primary StatusWP"><i class="fas fa-smile"></i></a>
+                          <input type="checkbox" data-size="mini" StatusWP="<?=$key['NPWPD']?>" id="WPStatus" data-toggle="toggle" data-on="ON" data-off="OFF" data-onstyle="success" data-offstyle="danger" data-width="70" checked>
                         <?php } else {?>
-                          <a href="#" StatusWP="<?=$key['NPWPD']?>" class="btn btn-primary StatusWP"><i class="fas fa-smile"></i></a>
-                          <input type="checkbox" StatusWP="<?=$key['NPWPD']?>" id="WPStatus" data-toggle="toggle" data-on="ON" data-off="OFF" data-onstyle="success" data-offstyle="danger" data-width="70">
+                          <a href="#" StatusWP="<?=$key['NPWPD']?>" class="btn btn-sm btn-primary StatusWP"><i class="fas fa-smile"></i></a>
+                          <input type="checkbox" data-size="mini" StatusWP="<?=$key['NPWPD']?>" id="WPStatus" data-toggle="toggle" data-on="ON" data-off="OFF" data-onstyle="success" data-offstyle="danger" data-width="70">
                         <?php } ?>
                       </td>
-                      <td class="align-middle">
+                      <td align="center">
                         <div class="btn-group btn-group-sm">
                           <a href="#" EditWP="<?=$key['NPWPD']."|".$key['NamaWP']."|".$key['AlamatWP']."|".$key['NomorRekening']."|".$key['JamOperasional'];?>" class="btn btn-warning EditWP"><i class="fas fa-edit"></i></a>
                           <a href="#" HapusWP="<?=$key['NPWPD'];?>" class="btn btn-danger HapusWP"><i class="fas fa-trash"></i></a>
@@ -278,6 +282,8 @@
         "paging": false,
         "ordering": true,
         "autoWidth": true,
+        "columnDefs": [{ "targets": [0,1,2,3,4,5], "searchable": true }]
+        // "columnDefs": [{"targets": [0], "orderable": false}]
     });
     $(function () {
       $('[data-mask]').inputmask()

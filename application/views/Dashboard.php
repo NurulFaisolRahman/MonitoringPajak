@@ -30,7 +30,7 @@
                     <td class="font-weight-bold text-primary">Bulan :&nbsp;</td>
                       <form action="<?=base_url('Dashboard')?>" method="post">
                         <td>
-                          <input class="form-control btn btn-outline-primary" type="date" name="Bulan" value="<?php if(!empty($bulan)) echo $bulan ?>" required>
+                          <input class="form-control btn btn-outline-primary" type="date" id="Bulan" name="Bulan" value="<?php if(!empty($bulan)) echo $bulan ?>" required>
                         </td>
                         <td class="font-weight-bold text-primary">&emsp;Bidang Pajak :&nbsp;</td>
                         <td>
@@ -168,13 +168,12 @@
 $(function () {
   'use strict'
 
-  var ticksStyle = {
-    fontColor: '#495057',
-    fontStyle: 'bold'
+  var d = new Date();
+  var bulan = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
+  if ($("#Bulan").val() == "") {
+    document.getElementById('Bulan').value = bulan;
   }
 
-  var mode      = 'index'
-  var intersect = true
   var tanggal = []
   var JumlahTanggal = "<?=$JumlahTanggal?>"
   var Transaksi = <?= json_encode($GrafikTransaksi)?>;
@@ -199,30 +198,33 @@ $(function () {
       datasets: [{
               label: "Total Transaksi",
               data: DataTransaksi,
-              backgroundColor: [
-                  'rgba(0, 0, 255, .3)',
-              ],
-              borderColor: [
-                  'rgba(0, 0, 255, .7)',
-              ],
+              borderColor         : '#0000ff',
+              pointBorderColor    : '#0000ff',
+              pointBackgroundColor: '#0000ff',
+              fill                : false,
               borderWidth: 2
           },
           {
               label: "Total Pajak",
               data: DataPajak,
-              backgroundColor: [
-                  'rgba(255, 255, 0, .3)',
-              ],
-              borderColor: [
-                  'rgba(255, 255, 0, .7)',
-              ],
+              borderColor         : '#ffff00',
+              pointBorderColor    : '#ffff00',
+              pointBackgroundColor: '#ffff00',
+              fill                : false,
               borderWidth: 2
           }
       ]
   },
   options: {
-      responsive: true
-  }
+      responsive: true,
+      tooltips: {
+        mode: 'index',
+        intersect: true
+      },
+      legend: {
+        display: false
+      }
+    }
   });
   })
 </script>

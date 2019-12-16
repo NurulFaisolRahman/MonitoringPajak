@@ -23,10 +23,10 @@ class Rekening extends CI_Controller {
 		if ($NomorRekening[strlen($NomorRekening)-1] == '_') {
 			$NomorRekening = substr($NomorRekening, 0, -3);
 		}
-		if ($this->db->get_where('Rekening', array('NomorRekening' => $NomorRekening))->num_rows() === 0) {
+		if ($this->db->get_where('Rekening', array('NomorRekening' => $_POST['JenisPajak'].'.'.$NomorRekening))->num_rows() === 0) {
 			$Simpan = $this->db->insert('Rekening',
-							array('NomorRekening' => $NomorRekening,
-										'JenisPajak' => $_POST['JenisPajak'],
+							array('NomorRekening' => $_POST['JenisPajak'].'.'.$NomorRekening,
+										'JenisPajak' => $_POST['NamaJenisPajak'],
 										'SubJenisPajak' => $_POST['SubJenisPajak']));		
 			echo "ok";
 		} else {
@@ -39,12 +39,12 @@ class Rekening extends CI_Controller {
 		if ($NomorRekening[strlen($NomorRekening)-1] == '_') {
 			$NomorRekening = substr($NomorRekening, 0, -3);
 		}
-		if ($NomorRekening != $_POST['EditNomorRekeningLama']) {
-			if ($this->db->get_where('Rekening', array('NomorRekening' => $NomorRekening))->num_rows() === 0) {
+		if ($_POST['EditJenisPajak'].'.'.$NomorRekening != $_POST['EditNomorRekeningLama']) {
+			if ($this->db->get_where('Rekening', array('NomorRekening' => $_POST['EditJenisPajak'].'.'.$NomorRekening))->num_rows() === 0) {
 			$this->db->where('NomorRekening', $_POST['EditNomorRekeningLama']);
 			$this->db->update('Rekening',
-								array('NomorRekening' => $NomorRekening,
-									  'JenisPajak' => $_POST['EditJenisPajak'],
+								array('NomorRekening' => $_POST['EditJenisPajak'].'.'.$NomorRekening,
+									  'JenisPajak' => $_POST['NamaJenisPajak'],
 									  'SubJenisPajak' => $_POST['EditSubJenisPajak']));
 				echo "ok";
 			} else {
@@ -52,10 +52,7 @@ class Rekening extends CI_Controller {
 			}
 		} else {
 			$this->db->where('NomorRekening', $_POST['EditNomorRekeningLama']);
-			$this->db->update('Rekening',
-								array('NomorRekening' => $NomorRekening,
-									  'JenisPajak' => $_POST['EditJenisPajak'],
-									  'SubJenisPajak' => $_POST['EditSubJenisPajak']));
+			$this->db->update('Rekening',array('SubJenisPajak' => $_POST['EditSubJenisPajak']));
 			echo "ok";
 		}
 	}

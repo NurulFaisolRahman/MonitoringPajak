@@ -15,26 +15,29 @@ class Autentikasi extends CI_Controller {
 	}
 
 	public function SignIn(){
-  	$Username = $_POST['Username'];
-  	$Password = $_POST['Password'];
-	$CekLogin = $this->db->get_where('Akun', array('Username' => $Username,'Password' => $Password));
-	if($CekLogin->num_rows() == 0){
-		echo "Username / Password Salah";
-  	}
-  	else{
-			foreach ($CekLogin->result_array() as $key) {
+	  	$Username = $_POST['Username'];
+	  	$Password = $_POST['Password'];
+		$CekLogin = $this->db->get_where('Akun', array('Username' => $Username));
+		if($CekLogin->num_rows() == 0){
+			echo "Username Salah";
+	  	}
+	  	else{
+	  		$Akun = $CekLogin->result_array();
+			if (password_verify($Password, $Akun[0]['Password'])) {
 				$DataSession = array();
-				if ($key['JenisAkun'] == 1) {
-					$DataSession = array('Status' => "Login", 'Admin' => true);
+				if ($Akun[0]['JenisAkun'] == 1) {
+					$DataSession = array('Status' => "Login", 'Admin' => true, 'NamaAdmin' => $Akun[0]['Username']);
 					$this->session->set_userdata($DataSession);
-		  		echo 'OK';
+			  		echo 'OK';
 				} else {
 					$DataSession = array('Status' => "Login", 'Admin' => false);
 					$this->session->set_userdata($DataSession);
 					echo 'OK';
 				}
+			} else {
+				echo "Password Salah";
 			}
-  	}
+		}
 	}
 
 	public function SignOut(){

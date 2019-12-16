@@ -22,8 +22,10 @@ class User extends CI_Controller {
 		if ($this->db->get_where('Akun', array('Username' => $_POST['Username']))->num_rows() === 0) {
 			$this->db->insert('Akun',
 						array('Username' => $_POST['Username'],
-							 'Password' => $_POST['Password'],
-							 'JenisAkun' => '2'));	
+							 'Password' => password_hash($_POST['Password'], PASSWORD_DEFAULT),
+							 'JenisAkun' => '2',
+							 'Pembuat' => $this->session->userdata('NamaAdmin'),
+							 'WaktuRegistrasi' => date("d-m-Y H:i:s")));	
 			echo "ok";
 		} else {
 			echo "ko";
@@ -33,18 +35,27 @@ class User extends CI_Controller {
 	public function Edit(){
 		if ($_POST['EditUsername'] != $_POST['EditUsernameLama']) {
 			if ($this->db->get_where('Akun', array('Username' => $_POST['EditUsername']))->num_rows() === 0) {
-			$this->db->where('Username', $_POST['EditUsernameLama']);
-			$this->db->update('Akun', array('Username' => $_POST['EditUsername'], 
-											'Password' => $_POST['EditPassword']));
-				echo "ok";
+				if (!empty($_POST['EditPassword'])) {
+					$this->db->where('Username', $_POST['EditUsernameLama']);
+					$this->db->update('Akun', array('Username' => $_POST['EditUsername'],
+													'Password' => password_hash($_POST['EditPassword'], PASSWORD_DEFAULT)));
+					echo "ok";
+				} else {
+					$this->db->where('Username', $_POST['EditUsernameLama']);
+					$this->db->update('Akun', array('Username' => $_POST['EditUsername']));
+					echo "ok";
+				}
 			} else {
 				echo "ko";
 			}
 		} else {
-			$this->db->where('Username', $_POST['EditUsernameLama']);
-			$this->db->update('Akun', array('Username' => $_POST['EditUsername'], 
-											'Password' => $_POST['EditPassword']));
-			echo "ok";
+			if (!empty($_POST['EditPassword'])) {
+				$this->db->where('Username', $_POST['EditUsername']);
+				$this->db->update('Akun', array('Password' => password_hash($_POST['EditPassword'], PASSWORD_DEFAULT)));
+				echo "ok";
+			} else {
+				echo "ok";
+			}
 		}
 	}
 

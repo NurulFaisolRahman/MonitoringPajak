@@ -47,15 +47,15 @@
               </thead>
               <tbody>
                 <?php $Nomor = 1; foreach ($DataRekening as $key){ ?>
-                  <tr>
-                    <td><?=$Nomor?></td>
+                  <tr valign="middle">
+                    <td align="center"><?=$Nomor?></td>
                     <td><?="4.1.1.".$key['NomorRekening']?></td>
                     <td><?=$key['JenisPajak']?></td>
                     <td><?=$key['SubJenisPajak']?></td>
                     <?php if($this->session->userdata('Admin')){ ?>
-                      <td class="align-middle">
+                      <td align="center">
                         <div class="btn-group btn-group-sm">
-                          <a href="#" EditRekening="<?=$key['NomorRekening']."|".$key['JenisPajak']."|".$key['SubJenisPajak']?>" class="btn btn-warning EditRekening"><i class="fas fa-edit"></i></a>
+                          <a href="#" EditRekening="<?=$key['NomorRekening']."|".$key['SubJenisPajak']?>" class="btn btn-warning EditRekening"><i class="fas fa-edit"></i></a>
                           <a href="#" HapusRekening="<?=$key['NomorRekening'];?>" class="btn btn-danger HapusRekening"><i class="fas fa-trash"></i></a>
                         </div>
                       </td>
@@ -92,21 +92,20 @@
               <span class="input-group-text bg-primary"><b>Nomor Rekening</b></span>
               <span class="input-group-text"><b>4.1.1</b></span>
             </div>
-            <input type="text" id="NomorRekening" class="form-control" data-inputmask='"mask": "99.99.99"' data-mask required>
-          </div>
-          <br>
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text bg-primary"><b>Jenis Pajak</b></i></span>
-            </div>
-            <input id="JenisPajak" class="form-control" type="text" required>
+            <select class="form-control btn btn-light" id="JenisPajak">
+              <option value="01"><?="Hotel"?></option>
+              <option value="02"><?="Restoran"?></option>
+              <option value="07"><?="Parkir"?></option>
+              <option value="03"><?="Hiburan"?></option>
+            </select>
+            <input type="text" id="NomorRekening" class="form-control" data-inputmask='"mask": "99.99"' data-mask>
           </div>
           <br>
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text bg-primary"><b>Sub Jenis Pajak</b></i></span>
             </div>
-            <input id="SubJenisPajak" class="form-control" type="text" required>
+            <input id="SubJenisPajak" class="form-control" type="text">
           </div>
         </div>
       </div>
@@ -137,21 +136,20 @@
               <span class="input-group-text"><b>4.1.1</b></span>
             </div>
             <input type="hidden" id="EditNomorRekeningLama" class="form-control">
-            <input type="text" id="EditNomorRekening" class="form-control" data-inputmask='"mask": "99.99.99"' data-mask>
-          </div>
-          <br>
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text bg-primary"><b>Jenis Pajak</b></i></span>
-            </div>
-            <input id="EditJenisPajak" class="form-control" type="text" required>
+            <select class="form-control btn btn-light" id="EditJenisPajak">
+              <option value="01"><?="Hotel"?></option>
+              <option value="02"><?="Restoran"?></option>
+              <option value="07"><?="Parkir"?></option>
+              <option value="03"><?="Hiburan"?></option>
+            </select>
+            <input type="text" id="EditNomorRekening" class="form-control" data-inputmask='"mask": "99.99"' data-mask>
           </div>
           <br>
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text bg-primary"><b>Sub Jenis Pajak</b></i></span>
             </div>
-            <input id="EditSubJenisPajak" class="form-control" type="text" required>
+            <input id="EditSubJenisPajak" class="form-control" type="text">
           </div>
         </div>
       </div>
@@ -193,31 +191,75 @@
       $('[data-mask]').inputmask()
     })
 
-    $(document).on("click","#TambahRekening",function(){
-      var Data = { NomorRekening: $('#NomorRekening').val(),
-                   JenisPajak: $('#JenisPajak').val(),
-                   SubJenisPajak: $('#SubJenisPajak').val()};
-      $.post(BaseURL+"/Rekening/Tambah", Data).done(function(Respon) {
-        if (Respon == 'ok') {
-          window.location = BaseURL + '/Rekening';
-        } else {
-          alert('Nomor Rekening Sudah Ada')
+    $(document).on("click","#TambahRekening",function(){ 
+      if ($('#NomorRekening').val() === '') {
+        alert('Mohon Input Nomor Rekening')
+      } else if ($('#SubJenisPajak').val() === '') {
+        alert('Mohon Input Sub Jenis Pajak')
+      } else {
+        var NamaJenisPajak;
+        if ($('#JenisPajak').val() == '01') {
+          NamaJenisPajak = 'Hotel'
+        } else if ($('#JenisPajak').val() == '02') {
+          NamaJenisPajak = 'Restoran'
+        } else if ($('#JenisPajak').val() == '07') {
+          NamaJenisPajak = 'Parkir'
+        } else if ($('#JenisPajak').val() == '03') {
+          NamaJenisPajak = 'Hiburan'
         }
-      });
+        var Data = { NomorRekening: $('#NomorRekening').val(),
+                     JenisPajak : $('#JenisPajak').val(),
+                     NamaJenisPajak: NamaJenisPajak,
+                     SubJenisPajak: $('#SubJenisPajak').val()};
+        $.post(BaseURL+"/Rekening/Tambah", Data).done(function(Respon) {
+          if (Respon == 'ok') {
+            window.location = BaseURL + '/Rekening';
+          } else {
+            alert('Nomor Rekening Sudah Ada')
+          }
+        });
+      }
     });
 
-    $(document).on("click","#EditRekening",function(){      
-      var Data = { EditNomorRekeningLama: $('#EditNomorRekeningLama').val(),
+    var IndexRekening = [];
+    $.post(BaseURL+"/WajibPajak/IndexRekening").done(function(Respon) {
+      var ParseData = JSON.parse(Respon);
+      for (var i = 0; i < ParseData.length; i++){
+          var key = ParseData[i].NomorRekening.toString();
+          var len = key.length;
+          IndexRekening[key.substr(0,2)] = i;
+      }
+    });
+
+    $(document).on("click","#EditRekening",function(){  
+      if ($('#EditNomorRekening').val() === '') {
+        alert('Mohon Input Nomor Rekening')
+      } else if ($('#EditSubJenisPajak').val() === '') {
+        alert('Mohon Input Sub Jenis Pajak')
+      } else {
+        var NamaJenisPajak;
+        if ($('#EditJenisPajak').val() == '01') {
+          NamaJenisPajak = 'Hotel'
+        } else if ($('#EditJenisPajak').val() == '02') {
+          NamaJenisPajak = 'Restoran'
+        } else if ($('#EditJenisPajak').val() == '07') {
+          NamaJenisPajak = 'Parkir'
+        } else if ($('#EditJenisPajak').val() == '03') {
+          NamaJenisPajak = 'Hiburan'
+        }
+        var Data = { EditNomorRekeningLama: $('#EditNomorRekeningLama').val(),
                    EditNomorRekening: $('#EditNomorRekening').val(),
                    EditJenisPajak: $('#EditJenisPajak').val(),
+                   NamaJenisPajak: NamaJenisPajak,
                    EditSubJenisPajak: $('#EditSubJenisPajak').val()};
-      $.post(BaseURL+"/Rekening/Edit", Data).done(function(Respon) {
-        if (Respon == 'ok') {
-          window.location = BaseURL + '/Rekening';
-        } else {
-          alert('Nomor Rekening Sudah Ada')
-        }
-      });
+        $.post(BaseURL+"/Rekening/Edit", Data).done(function(Respon) {
+          if (Respon == 'ok') {
+            window.location = BaseURL + '/Rekening';
+          } else {
+            alert('Nomor Rekening Sudah Ada')
+          }
+        });
+      }    
     });
 
     $(document).on("click",".HapusRekening",function(){
@@ -238,9 +280,9 @@
       var Data = $(this).attr('EditRekening');
       var Pisah = Data.split("|");
       document.getElementById('EditNomorRekeningLama').value = Pisah[0];
-      document.getElementById('EditNomorRekening').value = Pisah[0];
-      document.getElementById('EditJenisPajak').value = Pisah[1];
-      document.getElementById('EditSubJenisPajak').value = Pisah[2];
+      document.getElementById('EditNomorRekening').value = Pisah[0].substr(3, Pisah[0].length);
+      document.getElementById('EditJenisPajak').selectedIndex = IndexRekening[Pisah[0].substr(0,2)];
+      document.getElementById('EditSubJenisPajak').value = Pisah[1];
       $('#ModalEditRekening').modal("show");
     });
   });

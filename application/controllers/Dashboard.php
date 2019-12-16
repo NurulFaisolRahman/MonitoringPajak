@@ -63,8 +63,18 @@ class Dashboard extends CI_Controller {
 		$GrafikPajak = array();
 		$GrafikTransaksi = array();
 		foreach ($Transaksi as $key) {
-			$GrafikPajak[(int) substr($key['WaktuTransaksi'],8,2)] = (int) $key['Pajak'];
-			$GrafikTransaksi[(int) substr($key['WaktuTransaksi'],8,2)] = (int) $key['TotalTransaksi'];
+			if (!empty($GrafikPajak[(int) substr($key['WaktuTransaksi'],8,2)])) {
+				$GrafikPajak[(int) substr($key['WaktuTransaksi'],8,2)] += (int) $key['Pajak'];
+				
+			} else {
+				$GrafikPajak[(int) substr($key['WaktuTransaksi'],8,2)] = (int) $key['Pajak'];
+			}
+			if (!empty($GrafikTransaksi[(int) substr($key['WaktuTransaksi'],8,2)])) {
+				$GrafikTransaksi[(int) substr($key['WaktuTransaksi'],8,2)] += (int) $key['TotalTransaksi'];
+				
+			} else {
+				$GrafikTransaksi[(int) substr($key['WaktuTransaksi'],8,2)] = (int) $key['TotalTransaksi'];
+			}
 			$TotalPajakBulan += $key['Pajak'];
 			$TotalTransaksiBulan += $key['TotalTransaksi'];
 		}
@@ -79,7 +89,7 @@ class Dashboard extends CI_Controller {
 			if (empty($GrafikPajak[$i])) {
 				$GrafikPajak[$i] = 0;
 				$GrafikTransaksi[$i] = 0;
-			}
+			} 
 		}
 		ksort($GrafikTransaksi);
 		ksort($GrafikPajak);

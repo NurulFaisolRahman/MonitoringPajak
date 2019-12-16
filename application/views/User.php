@@ -36,7 +36,8 @@
               <tr>
                 <th style="width:10px;">No</th>
                 <th>Username</th>
-                <th>Password</th>
+                <th>Pembuat</th>
+                <th>Waktu Registrasi</th>
                 <?php if($this->session->userdata('Admin')){ ?>
                   <th style="width:10px;">Action</th>
                 <?php }; ?>
@@ -44,18 +45,14 @@
               </thead>
               <tbody>
                 <?php $Nomor = 1; foreach ($DataUser as $key){ ?>
-                  <tr>
-                    <td><?=$Nomor?></td>
+                  <tr valign="middle">
+                    <td align="center"><?=$Nomor?></td>
                     <td><?=$key['Username']?></td>
-                    <td>
-                      <input type="password" id="<?=$key['Username']?>" value="<?=$key['Password']?>" readonly>
+                    <td><?=$key['Pembuat']?></td>
+                    <td><?=$key['WaktuRegistrasi']?></td>
+                    <td align="center">
                       <div class="btn-group btn-group-sm">
-                        <button class="fas fa-eye btn btn-success LihatPassword" LihatPassword=<?=$key['Username']?>> </button>
-                      </div>
-                    </td>
-                    <td class="align-middle">
-                      <div class="btn-group btn-group-sm">
-                        <a href="#" EditUser="<?=$key['Username']."|".$key['Password'];?>" class="btn btn-warning EditUser"><i class="fas fa-edit"></i></a>
+                        <a href="#" EditUser="<?=$key['Username'];?>" class="btn btn-warning EditUser"><i class="fas fa-edit"></i></a>
                         <a href="#" HapusUser="<?=$key['Username'];?>" class="btn btn-danger HapusUser"><i class="fas fa-trash"></i></a>
                       </div>
                     </td>
@@ -90,20 +87,20 @@
             <div class="input-group-prepend">
               <span class="input-group-text bg-primary"><b>Username</b></i></span>
             </div>
-            <input class="form-control" type="text" id="Username" required>
+            <input class="form-control" type="text" id="Username">
           </div>
           <br>
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text bg-primary"><b>Password</b></i></span>
             </div>
-            <input class="form-control" type="password" id="Password" required>
+            <input class="form-control" type="password" id="Password">
           </div>
         </div>
       </div>
       <div class="modal-footer justify-content-between">
         <button type="button" class="btn btn-outline-light" data-dismiss="modal"><b>Tutup</b></button>
-        <button type="button" class="btn btn-outline-light" id="TambahUser"><b>Simpan</b></button>
+        <button type="submit" class="btn btn-outline-light" id="TambahUser"><b>Simpan</b></button>
       </div>
     </div>
     <!-- /.modal-content -->
@@ -140,7 +137,7 @@
       </div>
       <div class="modal-footer justify-content-between">
         <button type="button" class="btn btn-outline-light" data-dismiss="modal"><b>Tutup</b></button>
-        <button type="button" class="btn btn-outline-light" id="EditUser"><b>Simpan</b></button>
+        <button type="submit" class="btn btn-outline-light" id="EditUser"><b>Simpan</b></button>
       </div>
     </div>
     <!-- /.modal-content -->
@@ -170,47 +167,45 @@
         "autoWidth": true,
     });
 
-    $(document).on("click",".LihatPassword",function(){
-      var Username = $(this).attr('LihatPassword');
-      var Password = document.getElementById(Username);
-      if (Password.type === "password") {
-        Password.type = "text";
+    $(document).on("click","#TambahUser",function(){
+      if ($('#Username').val() === '' || $('#Username').val().indexOf(' ') >= 0) {
+        alert('Mohon Input Username Tanpa Spasi')
+      } else if($('#Password').val() === '') {
+        alert('Mohon Input Password')
       } else {
-        Password.type = "password";
+        var Data = { Username: $('#Username').val(),
+                   Password: $('#Password').val()};
+        $.post(BaseURL+"/User/Tambah", Data).done(function(Respon) {
+          if (Respon == 'ok') {
+            window.location = BaseURL + '/User';
+          } else {
+            alert('Username Sudah Ada')
+          }
+        });
       }
     });
 
-    $(document).on("click","#TambahUser",function(){
-      var Data = { Username: $('#Username').val(),
-                   Password: $('#Password').val()};
-      $.post(BaseURL+"/User/Tambah", Data).done(function(Respon) {
-        if (Respon == 'ok') {
-          window.location = BaseURL + '/User';
-        } else {
-          alert('Username Sudah Ada')
-        }
-      });
-    });
-
     $(document).on("click","#EditUser",function(){
-      var Data = { EditUsernameLama: $('#EditUsernameLama').val(),
+      if ($('#EditUsername').val() === '' || $('#EditUsername').val().indexOf(' ') >= 0) {
+        alert('Mohon Input Username Tanpa Spasi')
+      } else {
+        var Data = { EditUsernameLama: $('#EditUsernameLama').val(),
                    EditUsername: $('#EditUsername').val(),
                    EditPassword: $('#EditPassword').val()};
-      $.post(BaseURL+"/User/Edit", Data).done(function(Respon) {
-        if (Respon == 'ok') {
-          window.location = BaseURL + '/User';
-        } else {
-          alert('Username Sudah Ada')
-        }
-      });
+        $.post(BaseURL+"/User/Edit", Data).done(function(Respon) {
+          if (Respon == 'ok') {
+            window.location = BaseURL + '/User';
+          } else {
+            alert('Username Sudah Ada')
+          }
+        });
+      }
     });
 
     $(document).on("click",".EditUser",function(){
-      var Data = $(this).attr('EditUser');
-      var Pisah = Data.split("|");
-      document.getElementById('EditUsernameLama').value = Pisah[0];
-      document.getElementById('EditUsername').value = Pisah[0];
-      document.getElementById('EditPassword').value = Pisah[1];
+      var UsernameLama = $(this).attr('EditUser');
+      document.getElementById('EditUsernameLama').value = UsernameLama;
+      document.getElementById('EditUsername').value = UsernameLama;
       $('#ModalEditUser').modal("show");
     });
 
