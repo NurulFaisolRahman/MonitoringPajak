@@ -74,7 +74,7 @@ class Autentikasi extends CI_Controller {
 		$NPWPD = $Data[0]['NPWPD'];
 		$this->db->insert_batch("Transaksi", $Data);
 		$this->db->where('NPWPD', $NPWPD);
-		$this->db->update('WajibPajak', array('Riwayat' => date("d-m-Y h:i:s A")));
+		$this->db->update('WajibPajak', array('Riwayat' => date("d-m-Y H:i:s")));
 		echo "ok";
 	}
 

@@ -192,8 +192,8 @@ $(function () {
   tanggal[0] = 'Tanggal';
   var grafik = document.getElementById("visitors-chart").getContext('2d');
   var myLineChart = new Chart(grafik, {
-  type: 'line',
-  data: {
+    type: 'line',
+    data: {
       labels: tanggal,
       datasets: [{
               label: "Total Transaksi",
@@ -214,8 +214,8 @@ $(function () {
               borderWidth: 2
           }
       ]
-  },
-  options: {
+    },
+    options: {
       responsive: true,
       tooltips: {
         mode: 'index',

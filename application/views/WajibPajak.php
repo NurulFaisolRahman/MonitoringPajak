@@ -45,25 +45,23 @@
               <thead class="bg-primary">
               <tr>
                 <th style="width: 10px;">No</th>
-                <th>NPWPD</th>
-                <th>Wajib Pajak</th>
+                <th style="width: 170px;">Wajib   Pajak</th>
                 <th>Alamat</th>
                 <th style="width: 50px;">Nomor Rekening</th>
                 <th style="width: 50px;">Jenis Pajak</th>
                 <th style="width: 70px;">Sub Jenis Pajak</th>
-                <th style="width: 50px;">Jam Operasional</th>
+                <th style="width: 50px;">Jam Kerja</th>
                 <?php if($this->session->userdata('Admin')){ ?>
-                  <th style="width: 80px;">Status</th>
+                  <th style="width: 40px;">Status</th>
                   <th style="width: 10px;">Aksi</th>
                 <?php }; ?>
               </tr>
               </thead>
               <tbody>
                 <?php $Nomor = 1; foreach ($DataWajibPajak as $key){ ?>
-                  <tr valign="middle">
+                  <tr>
                     <td align="center"><?=$Nomor?></td>
-                    <td><?=$key['NPWPD']?></td>
-                    <td><?=$key['NamaWP']?></td>
+                    <td><?=$key['NPWPD']?><br><?=$key['NamaWP']?></td>
                     <td><?=$key['AlamatWP']?></td>
                     <td><?="4.1.1.".$key['NomorRekening']?></td>
                     <td><?=$key['JenisPajak']?></td>
@@ -74,10 +72,10 @@
                         <?php if (empty($key['Status'])) {?>
                           <?="Belum Aktivasi"?>
                         <?php } else if ($key['Status'] != "Disable") {?>
-                          <a href="#" StatusWP="<?=$key['NPWPD']?>" class="btn btn-sm btn-primary StatusWP"><i class="fas fa-smile"></i></a>
+                          <a href="#" StatusWP="<?=$key['NPWPD']?>" class="btn btn-sm btn-primary StatusWP"><i class="fas fa-smile"></i></a><br>
                           <input type="checkbox" data-size="mini" StatusWP="<?=$key['NPWPD']?>" id="WPStatus" data-toggle="toggle" data-on="ON" data-off="OFF" data-onstyle="success" data-offstyle="danger" data-width="70" checked>
                         <?php } else {?>
-                          <a href="#" StatusWP="<?=$key['NPWPD']?>" class="btn btn-sm btn-primary StatusWP"><i class="fas fa-smile"></i></a>
+                          <a href="#" StatusWP="<?=$key['NPWPD']?>" class="btn btn-sm btn-primary StatusWP"><i class="fas fa-smile"></i></a><br>
                           <input type="checkbox" data-size="mini" StatusWP="<?=$key['NPWPD']?>" id="WPStatus" data-toggle="toggle" data-on="ON" data-off="OFF" data-onstyle="success" data-offstyle="danger" data-width="70">
                         <?php } ?>
                       </td>
@@ -119,30 +117,30 @@
             <div class="input-group-prepend">
               <span class="input-group-text bg-primary"><b>NPWPD</b></span>
             </div>
-            <input type="text" id="NPWPD" class="form-control" data-inputmask='"mask": "9999.999.999.999"' data-mask required>
+          <input type="text" id="NPWPD" class="form-control" data-inputmask='"mask": "9999.999.999"' data-mask>
           </div>
           <br>
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text bg-primary"><b>Nama Wajib Pajak</b></span>
             </div>
-            <input class="form-control" type="text" id="NamaWP" required>
+            <input class="form-control" type="text" id="NamaWP">
           </div>
           <br>
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text bg-primary"><b>Alamat</b></span>
             </div>
-            <input class="form-control" type="text" id="AlamatWP" required>
+            <input class="form-control" type="text" id="AlamatWP">
           </div>
           <br>
           <div class="input-group">
             <div class="input-group-prepend">
-              <span class="input-group-text bg-primary"><b>Nomor Rekening</b></span>
+              <span class="input-group-text bg-primary"><b>Sub Jenis Pajak</b></span>
             </div>
-            <select class="form-control btn btn-light" id="DataRekening" required>
+            <select class="form-control btn btn-light" id="DataRekening">
               <?php foreach ($DataRekening as $key): ?>
-                <option value="<?=$key['NomorRekening']."|".$key['JenisPajak']."|".$key['SubJenisPajak']?>"><b><?="4.1.1.".$key['NomorRekening']?></b></option>
+                <option value="<?=$key['NomorRekening']."|".$key['JenisPajak']."|".$key['SubJenisPajak']?>"><b><?=$key['SubJenisPajak']?></b></option>
               <?php endforeach; ?>
             </select>
           </div>
@@ -151,13 +149,13 @@
             <div class="input-group-prepend">
               <span class="input-group-text bg-primary"><b>Jam Operasional</b></span>
             </div>
-            <input type="text" id="JamOperasional" class="form-control" data-inputmask='"mask": "99.99-99.99"' data-mask required>
+            <input type="text" id="JamOperasional" class="form-control" data-inputmask='"mask": "99.99-99.99"' data-mask>
           </div>
         </div>
       </div>
       <div class="modal-footer justify-content-between">
         <button type="button" class="btn btn-outline-light" data-dismiss="modal"><b>Tutup</b></button>
-        <button type="button" class="btn btn-outline-light" id="TambahWP"><b>Simpan</b></button>
+        <button type="submit" class="btn btn-outline-light" id="TambahWP"><b>Simpan</b></button>
       </div>
     </div>
     <!-- /.modal-content -->
@@ -181,30 +179,30 @@
               <span class="input-group-text bg-primary"><b>NPWPD</b></span>
             </div>
             <input type="hidden" id="EditNPWPDLama" class="form-control">
-            <input type="text" id="EditNPWPD" class="form-control" data-inputmask='"mask": "9999.999.999.999"' data-mask>
+            <input type="text" id="EditNPWPD" class="form-control" data-inputmask='"mask": "9999.999.999"' data-mask>
           </div>
           <br>
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text bg-primary"><b>Nama Wajib Pajak</b></span>
             </div>
-            <input class="form-control" type="text" id="EditNamaWP" required>
+            <input class="form-control" type="text" id="EditNamaWP">
           </div>
           <br>
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text bg-primary"><b>Alamat</b></span>
             </div>
-            <input class="form-control" type="text" id="EditAlamatWP" required>
+            <input class="form-control" type="text" id="EditAlamatWP">
           </div>
           <br>
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text bg-primary"><b>Nomor Rekening</b></span>
             </div>
-            <select class="form-control btn btn-light" id="EditDataRekening" required>
+            <select class="form-control btn btn-light" id="EditDataRekening">
               <?php foreach ($DataRekening as $key): ?>
-                <option value="<?=$key['NomorRekening']."|".$key['JenisPajak']."|".$key['SubJenisPajak']?>"><b><?="4.1.1.".$key['NomorRekening']?></b></option>
+                <option value="<?=$key['NomorRekening']."|".$key['JenisPajak']."|".$key['SubJenisPajak']?>"><b><?=$key['SubJenisPajak']?></b></option>
               <?php endforeach; ?>
             </select>
           </div>
@@ -213,13 +211,13 @@
             <div class="input-group-prepend">
               <span class="input-group-text bg-primary"><b>Jam Operasional</b></span>
             </div>
-            <input type="text" id="EditJamOperasional" class="form-control" data-inputmask='"mask": "99.99-99.99"' data-mask required>
+            <input type="text" id="EditJamOperasional" class="form-control" data-inputmask='"mask": "99.99-99.99"' data-mask>
           </div>
         </div>
       </div>
       <div class="modal-footer justify-content-between">
         <button type="button" class="btn btn-outline-light" data-dismiss="modal"><b>Tutup</b></button>
-        <button type="button" class="btn btn-outline-light" id="EditWP"><b>Simpan</b></button>
+        <button type="submit" class="btn btn-outline-light" id="EditWP"><b>Simpan</b></button>
       </div>
     </div>
     <!-- /.modal-content -->
@@ -289,34 +287,54 @@
       $('[data-mask]').inputmask()
 
       $(document).on("click","#TambahWP",function(){
-        var Data = { NPWPD: $('#NPWPD').val(),
+        if ($('#NPWPD').val() === '') {
+          alert('Mohon Input NPWPD')
+        } else if ($('#NamaWP').val() === '') {
+          alert('Mohon Input Nama Wajib Pajak')
+        } else if ($('#AlamatWP').val() === '') {
+          alert('Mohon Input Alamat Wajib Pajak')
+        } else if ($('#JamOperasional').val() === '') {
+          alert('Mohon Input Jam Operasional')
+        } else {
+          var Data = { NPWPD: $('#NPWPD').val(),
                      NamaWP: $('#NamaWP').val(),
                      AlamatWP: $('#AlamatWP').val(),
                      DataRekening: $('#DataRekening').val(),
                      JamOperasional: $('#JamOperasional').val()};
-        $.post(BaseURL+"/WajibPajak/Tambah", Data).done(function(Respon) {
-          if (Respon == 'ok') {
-            window.location = BaseURL + '/WajibPajak';
-          } else {
-            alert('NPWPD Sudah Ada')
-          }
-        });
+          $.post(BaseURL+"/WajibPajak/Tambah", Data).done(function(Respon) {
+            if (Respon == 'ok') {
+              window.location = BaseURL + '/WajibPajak';
+            } else {
+              alert('NPWPD Sudah Ada')
+            }
+          });
+        }
       });
 
       $(document).on("click","#EditWP",function(){
-        var Data = { EditNPWPDLama: $('#EditNPWPDLama').val(),
+        if ($('#EditNPWPD').val() === '') {
+          alert('Mohon Input NPWPD')
+        } else if ($('#EditNamaWP').val() === '') {
+          alert('Mohon Input Nama Wajib Pajak')
+        } else if ($('#EditAlamatWP').val() === '') {
+          alert('Mohon Input Alamat Wajib Pajak')
+        } else if ($('#EditJamOperasional').val() === '') {
+          alert('Mohon Input Jam Operasional')
+        } else {
+          var Data = { EditNPWPDLama: $('#EditNPWPDLama').val(),
                      EditNPWPD: $('#EditNPWPD').val(),
                      EditNamaWP: $('#EditNamaWP').val(),
                      EditAlamatWP: $('#EditAlamatWP').val(),
                      EditDataRekening: $('#EditDataRekening').val(),
                      EditJamOperasional: $('#EditJamOperasional').val()};
-        $.post(BaseURL+"/WajibPajak/Edit", Data).done(function(Respon) {
-          if (Respon == 'ok') {
-            window.location = BaseURL + '/WajibPajak';
-          } else {
-            alert('NPWPD Sudah Ada')
-          }
-        });
+          $.post(BaseURL+"/WajibPajak/Edit", Data).done(function(Respon) {
+            if (Respon == 'ok') {
+              window.location = BaseURL + '/WajibPajak';
+            } else {
+              alert('NPWPD Sudah Ada')
+            }
+          });
+        }
       });
 
       var IndexRekening = [];
