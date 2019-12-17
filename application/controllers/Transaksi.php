@@ -180,21 +180,16 @@ class Transaksi extends CI_Controller {
 		$this->load->view('Transaksi/PdfPerWP');
 	}
 
+	public function PdfPerWPHarian(){ 
+		$this->load->library('Pdf');
+		$this->load->view('Transaksi/PdfPerWPHarian');
+	}
+
 	public function DetailPerWP(){ 
 		$NamaBulan = array('Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember');
 		$FormatData = array();
 		$npwpd = $_POST['NPWPD'];
 		$periode = '';
-		// if ($_POST['Judul'] != "HARIAN") {
-			
-		// } else {
-		// 	$Rentang = explode("-", $filter);
-		// 	$awal = explode("-",substr(str_replace("/","-",$Rentang[0]),0,10));
-		// 	$akhir = explode("-",substr(str_replace("/","-",$Rentang[1]),1,11));
-		// 	$Awal = $awal[1]."-".$awal[0]."-".$awal[2];
-		// 	$Akhir = (int) ($akhir[1])."-".$akhir[0]."-".$akhir[2];
-		// 	$QUERY = "SELECT * FROM ".'"Transaksi"'." WHERE ".'"NPWPD" = '."'$npwpd' AND ".'"WaktuTransaksi"::date >= '."'$Awal'"." AND ".'"WaktuTransaksi"::date <= '."'$Akhir'";
-		// }
 		if ($_POST['Judul'] == "TAHUNAN") {
 			$filter = substr($_POST['Periode'], 0,4);
 			$periode = substr($_POST['Periode'], 0,4);
@@ -202,7 +197,7 @@ class Transaksi extends CI_Controller {
 				if ($i < 10) {
 					$Angka = '0'.$i;
 				} else {
-					$Angka = (int) ('0'.$i);
+					$Angka = $i;
 				}
 				$IndexBulan = (int) $filter.'-'.$Angka;
 				$QUERY = "SELECT * FROM ".'"Transaksi"'." WHERE ".'"NPWPD" = '."'$npwpd' AND ".'"WaktuTransaksi"::text like '."'%$IndexBulan%'";
@@ -236,6 +231,71 @@ class Transaksi extends CI_Controller {
 						}
 					}
 				}
+				array_push($FormatData, $Tampung);
+			}
+		} else if ($_POST['Judul'] == "BULANAN") {
+			$bulan = substr($_POST['Periode'], -2);
+			$tahun = substr($_POST['Periode'], 0, 4);
+			$JumlahHari = cal_days_in_month(CAL_GREGORIAN,$bulan,$tahun);
+			$periode = strtoupper($NamaBulan[(int) ($bulan)-1])." ".$tahun;
+			for ($i=1; $i <= $JumlahHari; $i++) { 
+				if ($i < 10) {
+					$Angka = '0'.$i;
+				} else {
+					$Angka = $i;
+				}
+				$Tanggal = $tahun.'-'.$bulan.'-'.$Angka;
+				$QUERY = "SELECT * FROM ".'"Transaksi"'." WHERE ".'"NPWPD" = '."'$npwpd' AND ".'"WaktuTransaksi"::text like '."'%$Tanggal%'";
+				$DetailData = $this->db->query($QUERY)->result_array();
+				$Tampung = array();
+				if (empty($DetailData)) {
+					$Tampung['Baris'] = $Angka.'-'.$bulan.'-'.$tahun;
+					$Tampung['Receipt'] = 0;
+					$Tampung['SubNominal'] = 0;
+					$Tampung['Service'] = 0;
+					$Tampung['Diskon'] = 0;
+					$Tampung['Pajak'] = 0;
+					$Tampung['TotalTransaksi'] = 0;
+				} else {
+					$Tampung['Baris'] = $Angka.'-'.$bulan.'-'.$tahun;
+					foreach ($DetailData as $key) {
+						if (empty($Tampung['Receipt'])) {
+							$Tampung['Receipt'] = 1;
+							$Tampung['SubNominal'] = $key['SubNominal'];
+							$Tampung['Service'] = $key['Service'];
+							$Tampung['Diskon'] = $key['Diskon'];
+							$Tampung['Pajak'] = $key['Pajak'];
+							$Tampung['TotalTransaksi'] = $key['TotalTransaksi'];
+						} else {
+							$Tampung['Receipt'] += 1;
+							$Tampung['SubNominal'] += $key['SubNominal'];
+							$Tampung['Service'] += $key['Service'];
+							$Tampung['Diskon'] += $key['Diskon'];
+							$Tampung['Pajak'] += $key['Pajak'];
+							$Tampung['TotalTransaksi'] += $key['TotalTransaksi'];
+						}
+					}
+				}
+				array_push($FormatData, $Tampung);
+			}
+		} else if ($_POST['Judul'] == "HARIAN") {
+			$Rentang = explode("-", $_POST['Periode']);
+			$awal = explode("-",substr(str_replace("/","-",$Rentang[0]),0,10));
+			$akhir = explode("-",substr(str_replace("/","-",$Rentang[1]),1,11));
+			$Awal = $awal[1]."-".$awal[0]."-".$awal[2];
+			$Akhir = (int) ($akhir[1])."-".$akhir[0]."-".$akhir[2];
+			$periode = $_POST['Periode'];
+			$QUERY = "SELECT * FROM ".'"Transaksi"'." WHERE ".'"NPWPD" = '."'$npwpd' AND ".'"WaktuTransaksi"::date >= '."'$Awal'"." AND ".'"WaktuTransaksi"::date <= '."'$Akhir'";
+			$DetailData = $this->db->query($QUERY)->result_array();
+			foreach ($DetailData as $key) {
+				$Tampung = array();
+				$Tampung['Baris'] = $key['WaktuTransaksi'];
+				$Tampung['Receipt'] = $key['NomorTransaksi'];
+				$Tampung['SubNominal'] = $key['SubNominal'];
+				$Tampung['Service'] = $key['Service'];
+				$Tampung['Diskon'] = $key['Diskon'];
+				$Tampung['Pajak'] = $key['Pajak'];
+				$Tampung['TotalTransaksi'] = $key['TotalTransaksi'];
 				array_push($FormatData, $Tampung);
 			}
 		}

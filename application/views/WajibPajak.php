@@ -122,6 +122,13 @@
           <br>
           <div class="input-group">
             <div class="input-group-prepend">
+              <span class="input-group-text bg-primary"><b>Password</b></span>
+            </div>
+            <input class="form-control" type="password" id="PasswordWP">
+          </div>
+          <br>
+          <div class="input-group">
+            <div class="input-group-prepend">
               <span class="input-group-text bg-primary"><b>Nama Wajib Pajak</b></span>
             </div>
             <input class="form-control" type="text" id="NamaWP">
@@ -180,6 +187,13 @@
             </div>
             <input type="hidden" id="EditNPWPDLama" class="form-control">
             <input type="text" id="EditNPWPD" class="form-control" data-inputmask='"mask": "9999.999.999"' data-mask>
+          </div>
+          <br>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text bg-primary"><b>Password</b></span>
+            </div>
+            <input class="form-control" type="password" id="EditPasswordWP">
           </div>
           <br>
           <div class="input-group">
@@ -289,6 +303,8 @@
       $(document).on("click","#TambahWP",function(){
         if ($('#NPWPD').val() === '') {
           alert('Mohon Input NPWPD')
+        } else if ($('#PasswordWP').val() === '') {
+          alert('Mohon Input Password Wajib Pajak')
         } else if ($('#NamaWP').val() === '') {
           alert('Mohon Input Nama Wajib Pajak')
         } else if ($('#AlamatWP').val() === '') {
@@ -297,6 +313,7 @@
           alert('Mohon Input Jam Operasional')
         } else {
           var Data = { NPWPD: $('#NPWPD').val(),
+                     PasswordWP: $('#PasswordWP').val(),
                      NamaWP: $('#NamaWP').val(),
                      AlamatWP: $('#AlamatWP').val(),
                      DataRekening: $('#DataRekening').val(),
@@ -323,6 +340,7 @@
         } else {
           var Data = { EditNPWPDLama: $('#EditNPWPDLama').val(),
                      EditNPWPD: $('#EditNPWPD').val(),
+                     EditPasswordWP: $('#EditPasswordWP').val(),
                      EditNamaWP: $('#EditNamaWP').val(),
                      EditAlamatWP: $('#EditAlamatWP').val(),
                      EditDataRekening: $('#EditDataRekening').val(),

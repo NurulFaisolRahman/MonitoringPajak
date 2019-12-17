@@ -21,6 +21,9 @@
       <tr>
         <td align="center" colspan="8"><?=$this->session->userdata('PeriodeWP')?></td>
       </tr>
+      <tr>
+        <td align="left" colspan="8"><?=$this->session->userdata("NamaAdmin")." : ".date("d-m-Y H:i:s")?></td>
+      </tr>
     </table>
     <table border="1">
     <thead>
@@ -55,19 +58,35 @@
           $TotalPajak += $key['Pajak'];
           $Total += $key['TotalTransaksi'];
           $Diskon += $key['Diskon'];
-          $NReceipt += $key['Receipt'];
+          if ($this->session->userdata("JudulPerWP") != 'LAPORAN TRANSAKSI HARIAN') {
+            $NReceipt += $key['Receipt'];
+          }
          ?>
       <?php $Nomor++; } ?>
     </tbody>
-    <tfoot>
-      <tr align="right">
-        <td colspan="2"><b>Total</b></td>
-        <td><b><?=$NReceipt ?></b></td>
-        <td><b><?=Rupiah($TotalSubNominal)?></b></td>
-        <td><b><?=Rupiah($TotalService)?></b></td>
-        <td><b><?=Rupiah($Diskon)?></b></td>
-        <td><b><?=Rupiah($TotalPajak)?></b></td>
-        <td><b><?=Rupiah($Total)?></b></td>
-      </tr>
-    </tfoot>
+    <?php 
+      if ($this->session->userdata("JudulPerWP") == 'LAPORAN TRANSAKSI HARIAN') { ?>
+        <tfoot>
+            <tr align="right">
+              <td colspan="3"><b>Total</b></td>
+              <td><b><?=Rupiah($TotalSubNominal)?></b></td>
+              <td><b><?=Rupiah($TotalService)?></b></td>
+              <td><b><?=Rupiah($Diskon)?></b></td>
+              <td><b><?=Rupiah($TotalPajak)?></b></td>
+              <td><b><?=Rupiah($Total)?></b></td>
+            </tr>
+          </tfoot>
+       <?php  } else { ?>
+          <tfoot>
+            <tr align="right">
+              <td colspan="2"><b>Total</b></td>
+              <td><b><?=$NReceipt ?></b></td>
+              <td><b><?=Rupiah($TotalSubNominal)?></b></td>
+              <td><b><?=Rupiah($TotalService)?></b></td>
+              <td><b><?=Rupiah($Diskon)?></b></td>
+              <td><b><?=Rupiah($TotalPajak)?></b></td>
+              <td><b><?=Rupiah($Total)?></b></td>
+            </tr>
+          </tfoot>
+      <?php  } ?>
    </table>

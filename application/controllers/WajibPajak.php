@@ -32,6 +32,7 @@ class WajibPajak extends CI_Controller {
 			$Pisah = explode("|", $_POST['DataRekening']);
 			$this->db->insert('WajibPajak',
 					    array('NPWPD' => $this->NPWPD($_POST['NPWPD']),
+					    	  'Password' => password_hash($_POST['PasswordWP'], PASSWORD_DEFAULT),
 							  'NamaWP' => $_POST['NamaWP'],
 						      'AlamatWP' => $_POST['AlamatWP'],
 						 	  'NomorRekening' => $Pisah[0],
@@ -48,31 +49,57 @@ class WajibPajak extends CI_Controller {
 		$NPWPD = $this->NPWPD($_POST['EditNPWPD']);
 		if ($NPWPD != $_POST['EditNPWPDLama']) {
 			if ($this->db->get_where('WajibPajak', array('NPWPD' => $NPWPD))->num_rows() === 0) {
-			$Pisah = explode("|", $_POST['EditDataRekening']);
-			$this->db->where('NPWPD', $_POST['EditNPWPDLama']);
-			$this->db->update('WajibPajak',
-						array('NPWPD' => $NPWPD,
-							  'NamaWP' => $_POST['EditNamaWP'],
-							  'AlamatWP' => $_POST['EditAlamatWP'],
-							  'NomorRekening' => $Pisah[0],
-							  'JenisPajak' => $Pisah[1],
-							  'SubJenisPajak' => $Pisah[2],
-							  'JamOperasional' => $_POST['EditJamOperasional']));
+				$Pisah = explode("|", $_POST['EditDataRekening']);
+				$this->db->where('NPWPD', $_POST['EditNPWPDLama']);
+				if (!empty($_POST['EditPasswordWP'])) {
+					$this->db->update('WajibPajak',
+							array('NPWPD' => $NPWPD,
+								  'Password' => password_hash($_POST['EditPasswordWP'], PASSWORD_DEFAULT),
+								  'NamaWP' => $_POST['EditNamaWP'],
+								  'AlamatWP' => $_POST['EditAlamatWP'],
+								  'NomorRekening' => $Pisah[0],
+								  'JenisPajak' => $Pisah[1],
+								  'SubJenisPajak' => $Pisah[2],
+								  'JamOperasional' => $_POST['EditJamOperasional']));
+				} else {
+					$this->db->update('WajibPajak',
+							array('NPWPD' => $NPWPD,
+								  'NamaWP' => $_POST['EditNamaWP'],
+								  'AlamatWP' => $_POST['EditAlamatWP'],
+								  'NomorRekening' => $Pisah[0],
+								  'JenisPajak' => $Pisah[1],
+								  'SubJenisPajak' => $Pisah[2],
+								  'JamOperasional' => $_POST['EditJamOperasional']));
+				}
 				echo "ok";
 			} else {
 				echo "ko";
 			}
 		} else {
-			$Pisah = explode("|", $_POST['EditDataRekening']);
-			$this->db->where('NPWPD', $_POST['EditNPWPDLama']);
-			$this->db->update('WajibPajak',
-						array('NPWPD' => $NPWPD,
-							  'NamaWP' => $_POST['EditNamaWP'],
-							  'AlamatWP' => $_POST['EditAlamatWP'],
-							  'NomorRekening' => $Pisah[0],
-							  'JenisPajak' => $Pisah[1],
-							  'SubJenisPajak' => $Pisah[2],
-							  'JamOperasional' => $_POST['EditJamOperasional']));
+			if (!empty($_POST['EditPasswordWP'])) {
+				$Pisah = explode("|", $_POST['EditDataRekening']);
+				$this->db->where('NPWPD', $_POST['EditNPWPDLama']);
+				$this->db->update('WajibPajak',
+							array('NPWPD' => $NPWPD,
+								  'Password' => password_hash($_POST['EditPasswordWP'], PASSWORD_DEFAULT),
+								  'NamaWP' => $_POST['EditNamaWP'],
+								  'AlamatWP' => $_POST['EditAlamatWP'],
+								  'NomorRekening' => $Pisah[0],
+								  'JenisPajak' => $Pisah[1],
+								  'SubJenisPajak' => $Pisah[2],
+								  'JamOperasional' => $_POST['EditJamOperasional']));
+			} else {
+				$Pisah = explode("|", $_POST['EditDataRekening']);
+				$this->db->where('NPWPD', $_POST['EditNPWPDLama']);
+				$this->db->update('WajibPajak',
+							array('NPWPD' => $NPWPD,
+								  'NamaWP' => $_POST['EditNamaWP'],
+								  'AlamatWP' => $_POST['EditAlamatWP'],
+								  'NomorRekening' => $Pisah[0],
+								  'JenisPajak' => $Pisah[1],
+								  'SubJenisPajak' => $Pisah[2],
+								  'JamOperasional' => $_POST['EditJamOperasional']));
+			}
 			echo "ok";
 		}
 	}

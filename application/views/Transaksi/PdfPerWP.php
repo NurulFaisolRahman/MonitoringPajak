@@ -37,8 +37,8 @@
               <table border="1" cellpadding="4">
                   <tr>
                     <td align="center" width="30px">No</td>
-                    <td width="80px">Transaksi</td>
-                    <td width="70px">Receipt</td>
+                    <td width="90px">Transaksi</td>
+                    <td width="60px">Receipt</td>
                     <td width="110px">SubNominal (Rp)</td>
                     <td width="100px">Service (Rp)</td>
                     <td width="100px">Diskon (Rp)</td>
@@ -49,8 +49,8 @@
               $i++;
               $html.='<tr>
                 <td align="center">'.$i.'</td>
-                <td>'.$key["Baris"].'</td>
-                <td align="right">'.$key["Receipt"].'</td>
+                <td align="center">'.$key["Baris"].'</td>
+                <td align="center">'.$key["Receipt"].'</td>
                 <td align="right">'.$key["SubNominal"].'</td>
                 <td align="right">'.$key["Service"].'</td>
                 <td align="right">'.$key["Diskon"].'</td>
@@ -62,11 +62,13 @@
                 $TotalPajak += $key['Pajak'];
                 $Total += $key['TotalTransaksi'];
                 $Diskon += $key['Diskon'];
-                $NReceipt += $key['Receipt'];
-            } 
-            $html.='<tr align="right">
-                      <td colspan="2">Total</td>
-                      <td>'.$NReceipt.'</td>
+                if ($this->session->userdata("JudulPerWP") != 'LAPORAN TRANSAKSI HARIAN') {
+                  $NReceipt += $key['Receipt'];
+                }
+            }
+            if ($this->session->userdata("JudulPerWP") == 'LAPORAN TRANSAKSI HARIAN') {
+               $html.='<tr align="right">
+                      <td colspan="3">Total</td>
                       <td>'.Rupiah($TotalSubNominal).'</td>
                       <td>'.Rupiah($TotalService).'</td>
                       <td>'.Rupiah($Diskon).'</td>
@@ -74,6 +76,18 @@
                       <td>'.Rupiah($Total).'</td>
                     </tr>
                     </table>';
+             } else {
+               $html.='<tr align="right">
+                      <td colspan="2">Total</td>
+                      <td align="center">'.$NReceipt.'</td>
+                      <td>'.Rupiah($TotalSubNominal).'</td>
+                      <td>'.Rupiah($TotalService).'</td>
+                      <td>'.Rupiah($Diskon).'</td>
+                      <td>'.Rupiah($TotalPajak).'</td>
+                      <td>'.Rupiah($Total).'</td>
+                    </tr>
+                    </table>';
+             }
             $pdf->writeHTML($html, true, false, true, false, '');
             $NamaFile = $this->session->userdata('NamaFilePerWP');
             $pdf->Output($NamaFile.'.pdf', 'D');

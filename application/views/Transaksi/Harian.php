@@ -172,7 +172,7 @@
                      Judul : 'HARIAN', };
         $.post(BaseURL+"/Transaksi/DetailPerWP", Data).done(function(Respon) {
             if (Respon == 'ok') {
-              window.location = BaseURL + '/Transaksi/PdfPerWP';
+              window.location = BaseURL + '/Transaksi/PdfPerWPHarian';
             }
           });
       });
@@ -182,10 +182,10 @@
                      Periode : $("#reservation").val(),
                      Judul : 'HARIAN', };
         $.post(BaseURL+"/Transaksi/DetailPerWP", Data).done(function(Respon) {
-            if (Respon == 'ok') {
-              window.location = BaseURL + '/Transaksi/ExcelPerWP';
-            }
-          });
+          if (Respon == 'ok') {
+            window.location = BaseURL + '/Transaksi/ExcelPerWP';
+          }
+        });
       });
     });
   </script>
