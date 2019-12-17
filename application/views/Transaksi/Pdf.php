@@ -14,7 +14,7 @@
             $pdf->SetDisplayMode('real', 'default');
             $pdf->AddPage('L', 'A4');
             $i=0;
-            $TotalSubNominal = $TotalService = $TotalPajak = $Total = 0;
+            $TotalSubNominal = $TotalService = $TotalPajak = $Total = $NReceipt = $Diskon = 0;
             $html='
               <table cellpadding="2">
                 <tr>
@@ -26,15 +26,19 @@
                 <tr>
                   <td align="center" colspan="7"><h5>PERIODE '.$this->session->userdata("Periode").'</h5></td>
                 </tr>
+                <tr>
+                  <td align="left" colspan="7"><h5>'.$this->session->userdata("NamaAdmin")." : ".date("d-m-Y H:i:s").'</h5></td>
+                </tr>
               </table>
               <br><br>
               <table border="1" cellpadding="4">
                   <tr>
                     <td align="center" width="30px">No</td>
                     <td width="150px">Wajib Pajak</td>
-                    <td width="100px">Receipt</td>
+                    <td width="50px">Receipt</td>
                     <td width="130px">SubNominal (Rp)</td>
-                    <td width="100px">Service (Rp)</td>
+                    <td width="70px">Service (Rp)</td>
+                    <td width="70px">Diskon (Rp)</td>
                     <td width="130px">Pajak (Rp)</td>
                     <td width="130px">Total (Rp)</td>
                   </tr>';
@@ -43,21 +47,26 @@
               $html.='<tr>
                 <td align="center">'.$i.'</td>
                 <td>'.$key["NamaWP"].'</td>
-                <td>'.$key["Receipt"].'</td>
-                <td>'.$key["SubNominal"].'</td>
-                <td>'.$key["Service"].'</td>
-                <td>'.$key["Pajak"].'</td>
-                <td>'.$key["Transaksi"].'</td>
+                <td align="right">'.$key["Receipt"].'</td>
+                <td align="right">'.$key["SubNominal"].'</td>
+                <td align="right">'.$key["Service"].'</td>
+                <td align="right">'.$key["Diskon"].'</td>
+                <td align="right">'.$key["Pajak"].'</td>
+                <td align="right">'.$key["Transaksi"].'</td>
               </tr>';
                 $TotalSubNominal += $key['SubNominal'];
                 $TotalService += $key['Service'];
                 $TotalPajak += $key['Pajak'];
                 $Total += $key['Transaksi'];
+                $Diskon += $key['Diskon'];
+                $NReceipt += $key['Receipt'];
             } 
-            $html.='<tr>
-                      <td colspan="3" align="right">Total</td>
+            $html.='<tr align="right">
+                      <td colspan="2">Total</td>
+                      <td>'.$NReceipt.'</td>
                       <td>'.Rupiah($TotalSubNominal).'</td>
                       <td>'.Rupiah($TotalService).'</td>
+                      <td>'.Rupiah($Diskon).'</td>
                       <td>'.Rupiah($TotalPajak).'</td>
                       <td>'.Rupiah($Total).'</td>
                     </tr>

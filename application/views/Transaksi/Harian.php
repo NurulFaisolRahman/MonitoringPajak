@@ -71,9 +71,10 @@
                     <tr>
                       <th>No</th>
                       <th>Wajib Pajak</th>
-                      <th>(n)Receipt</th>
+                      <th>Receipt</th>
                       <th>Subtotal (Rp)</th>
                       <th>Service (Rp)</th>
+                      <th>Diskon (Rp)</th>
                       <th>Tax (Rp)</th>
                       <th>Total (Rp)</th>
                       <th>Aksi</th>
@@ -81,19 +82,20 @@
                     </thead>
                     <tbody>
                       <?php 
-                          $TotalSubNominal = $TotalService = $TotalPajak = $Total = 0;
+                          $TotalSubNominal = $TotalService = $TotalPajak = $Total = $NReceipt = $Diskon = 0;
                        ?>
                       <?php $Nomor = 1; foreach ($Transaksi as $key){ ?>
                         <tr>
-                          <td><?=$Nomor?></td>
-                          <td><?=$key['NamaWP']?></td>
-                          <td><?=$key['Receipt']?></td>
-                          <td><?=$key['SubNominal']?></td>
-                          <td><?=$key['Service']?></td>
-                          <td><?=$key['Pajak']?></td>
-                          <td><?=$key['Transaksi']?></td>
+                          <td class="text-center" width="20px"><?=$Nomor?></td>
+                          <td class="text-left"><?=$key['NamaWP']?></td>
+                          <td class="text-right"><?=$key['Receipt']?></td>
+                          <td class="text-right"><?=$key['SubNominal']?></td>
+                          <td class="text-right"><?=$key['Service']?></td>
+                          <td class="text-right"><?=$key['Diskon']?></td>
+                          <td class="text-right"><?=$key['Pajak']?></td>
+                          <td class="text-right"><?=$key['Transaksi']?></td>
                           <?php if($this->session->userdata('Admin')){ ?>
-                          <td class="align-middle">
+                          <td class="text-center">
                             <div class="btn-group btn-group-sm">
                               <a href="#" PdfPerWP="<?=$key['NPWPD']?>" class="btn btn-danger PdfPerWP"><i class="fas fa-file-pdf"></i></a>
                               <a href="#" ExcelPerWP="<?=$key['NPWPD']?>" class="btn btn-success ExcelPerWP"><i class="fas fa-file-excel"></i></a>
@@ -106,14 +108,19 @@
                           $TotalService += $key['Service'];
                           $TotalPajak += $key['Pajak'];
                           $Total += $key['Transaksi'];
+                          $Diskon += $key['Diskon'];
+                          $NReceipt += $key['Receipt'];
                          ?>
                       <?php $Nomor++; } ?>
                     </tbody>
                     <tfoot class="bg-success">
-                    <tr>
-                      <th colspan="3" class="text-right">Total</th>
+                    <tr class="text-right">
+                      <th></th>
+                      <th>Total</th>
+                      <th><?=$NReceipt?></th>
                       <th><?=Rupiah($TotalSubNominal)?></th>
                       <th><?=Rupiah($TotalService)?></th>
+                      <th><?=Rupiah($Diskon)?></th>
                       <th><?=Rupiah($TotalPajak)?></th>
                       <th><?=Rupiah($Total)?></th>
                       <th></th>

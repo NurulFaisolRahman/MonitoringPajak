@@ -9,54 +9,65 @@
   }
  ?>
     <table>
+      <tr>
+        <td align="center" colspan="8"><?=$this->session->userdata('Judul')?></td>
+      </tr>
+      <tr>
+        <td align="center" colspan="8">JENIS PAJAK : <?=$this->session->userdata('Bidang')?></td>
+      </tr>
+      <tr>
+        <td align="center" colspan="8">PERIODE <?=$this->session->userdata('Periode')?></td>
+      </tr>
+      <tr>
+        <td align="left" colspan="8"><?=$this->session->userdata("NamaAdmin")." : ".date("d-m-Y H:i:s")?></td>
+      </tr>
+    </table>
+    <table border="1">
     <thead>
-      <tr>
-        <td align="center" colspan="7"><?=$this->session->userdata('Judul')?></td>
-      </tr>
-      <tr>
-        <td align="center" colspan="7">JENIS PAJAK : <?=$this->session->userdata('Bidang')?></td>
-      </tr>
-      <tr>
-        <td align="center" colspan="7">PERIODE <?=$this->session->userdata('Periode')?></td>
-      </tr>
       <tr>
         <th>No</th>
         <th>Wajib Pajak</th>
         <th>Receipt</th>
         <th>SubNominal</th>
         <th>Service</th>
+        <th>Diskon</th>
         <th>Pajak</th>
         <th>Total</th>
       </tr>
     </thead>
     <tbody>
-      <?php $TotalSubNominal = $TotalService = $TotalPajak = $Total = 0; ?>
+      <?php $TotalSubNominal = $TotalService = $TotalPajak = $Total = $NReceipt = $Diskon = 0; ?>
       <?php $Nomor = 1; 
             foreach ($DataTransaksiHarian as $key){ ?>
         <tr>
-          <td><?=$Nomor?></td>
+          <td align="center"><?=$Nomor?></td>
           <td><?=$key['NamaWP']?></td>
-          <td><?=$key['Receipt']?></td>
-          <td><?=$key['SubNominal']?></td>
-          <td><?=$key['Service']?></td>
-          <td><?=$key['Pajak']?></td>
-          <td><?=$key['Transaksi']?></td>
+          <td align="right"><?=$key['Receipt']?></td>
+          <td align="right"><?=$key['SubNominal']?></td>
+          <td align="right"><?=$key['Service']?></td>
+          <td align="right"><?=$key['Diskon']?></td>
+          <td align="right"><?=$key['Pajak']?></td>
+          <td align="right"><?=$key['Transaksi']?></td>
         </tr>
         <?php 
           $TotalSubNominal += $key['SubNominal'];
           $TotalService += $key['Service'];
           $TotalPajak += $key['Pajak'];
           $Total += $key['Transaksi'];
+          $Diskon += $key['Diskon'];
+          $NReceipt += $key['Receipt'];
          ?>
       <?php $Nomor++; } ?>
     </tbody>
     <tfoot>
-      <tr>
-        <th colspan="3" align="right">Total</th>
-        <th><?=Rupiah($TotalSubNominal)?></th>
-        <th><?=Rupiah($TotalService)?></th>
-        <th><?=Rupiah($TotalPajak)?></th>
-        <th><?=Rupiah($Total)?></th>
+      <tr align="right">
+        <td colspan="2"><b>Total</b></td>
+        <td><b><?=$NReceipt ?></b></td>
+        <td><b><?=Rupiah($TotalSubNominal)?></b></td>
+        <td><b><?=Rupiah($TotalService)?></b></td>
+        <td><b><?=Rupiah($Diskon)?></b></td>
+        <td><b><?=Rupiah($TotalPajak)?></b></td>
+        <td><b><?=Rupiah($Total)?></b></td>
       </tr>
     </tfoot>
    </table>

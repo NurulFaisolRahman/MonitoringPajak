@@ -20,23 +20,22 @@ class Transaksi extends CI_Controller {
 				$queri = "SELECT * FROM ".'"Transaksi"'." WHERE ".'"NPWPD" = '."'$NPWPD' AND ".'"WaktuTransaksi"::date >= '."'$periode[0]'"." AND ".'"WaktuTransaksi"::date <= '."'$periode[1]'";
 			}
 			$DataTransaksi = $this->db->query($queri)->result_array();
-			$JumlahSubTotal = $JumlahService = $JumlahTransaksi = $JumlahPajak = 0;
+			$JumlahSubTotal = $JumlahService = $JumlahTransaksi = $JumlahPajak = $NReceipt = $Diskon = 0;
 			foreach ($DataTransaksi as $Key) {
 				$JumlahSubTotal += $Key['SubNominal'];
 				$JumlahService += $Key["Service"];
 				$JumlahTransaksi += $Key['TotalTransaksi'];
 				$JumlahPajak += $Key["Pajak"];
+				$Diskon += $Key["Diskon"];
+				$NReceipt++;
 			}
 			$TransaksiPerWP = array();
 			$TransaksiPerWP['SubNominal'] = $JumlahSubTotal;
 			$TransaksiPerWP['Service'] = $JumlahService;
 			$TransaksiPerWP['Transaksi'] = $JumlahTransaksi;
 			$TransaksiPerWP['Pajak'] = $JumlahPajak;
-			if (count($periode) == 1) {
-				$TransaksiPerWP['Receipt'] = substr($NPWPD,-3)."-".$periode;
-			} else {
-				$TransaksiPerWP['Receipt'] = substr($NPWPD,-3)."-".$periode[0]."-".$periode[1];
-			}
+			$TransaksiPerWP['Diskon'] = $Diskon;
+			$TransaksiPerWP['Receipt'] = $NReceipt;
 			$kueri = "SELECT ".'"NamaWP"'." FROM ".'"WajibPajak"'." WHERE ".'"NPWPD" = '."'$NPWPD'";
 			$NamaWP = $this->db->query($kueri)->result_array();
 			$TransaksiPerWP['NamaWP'] = $NamaWP[0]['NamaWP'];
@@ -182,27 +181,72 @@ class Transaksi extends CI_Controller {
 	}
 
 	public function DetailPerWP(){ 
+		$NamaBulan = array('Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember');
+		$FormatData = array();
 		$npwpd = $_POST['NPWPD'];
-		$filter = $_POST['Periode'];
-		$QUERY = "";
-		if ($_POST['Judul'] != "HARIAN") {
-			$QUERY = "SELECT * FROM ".'"Transaksi"'." WHERE ".'"NPWPD" = '."'$npwpd' AND ".'"WaktuTransaksi"::text like '."'%$filter%'";
-		} else {
-			$Rentang = explode("-", $filter);
-			$awal = explode("-",substr(str_replace("/","-",$Rentang[0]),0,10));
-			$akhir = explode("-",substr(str_replace("/","-",$Rentang[1]),1,11));
-			$Awal = $awal[1]."-".$awal[0]."-".$awal[2];
-			$Akhir = (int) ($akhir[1])."-".$akhir[0]."-".$akhir[2];
-			$QUERY = "SELECT * FROM ".'"Transaksi"'." WHERE ".'"NPWPD" = '."'$npwpd' AND ".'"WaktuTransaksi"::date >= '."'$Awal'"." AND ".'"WaktuTransaksi"::date <= '."'$Akhir'";
+		$periode = '';
+		// if ($_POST['Judul'] != "HARIAN") {
+			
+		// } else {
+		// 	$Rentang = explode("-", $filter);
+		// 	$awal = explode("-",substr(str_replace("/","-",$Rentang[0]),0,10));
+		// 	$akhir = explode("-",substr(str_replace("/","-",$Rentang[1]),1,11));
+		// 	$Awal = $awal[1]."-".$awal[0]."-".$awal[2];
+		// 	$Akhir = (int) ($akhir[1])."-".$akhir[0]."-".$akhir[2];
+		// 	$QUERY = "SELECT * FROM ".'"Transaksi"'." WHERE ".'"NPWPD" = '."'$npwpd' AND ".'"WaktuTransaksi"::date >= '."'$Awal'"." AND ".'"WaktuTransaksi"::date <= '."'$Akhir'";
+		// }
+		if ($_POST['Judul'] == "TAHUNAN") {
+			$filter = substr($_POST['Periode'], 0,4);
+			$periode = substr($_POST['Periode'], 0,4);
+			for ($i=1; $i <= 12; $i++) { 
+				if ($i < 10) {
+					$Angka = '0'.$i;
+				} else {
+					$Angka = (int) ('0'.$i);
+				}
+				$IndexBulan = (int) $filter.'-'.$Angka;
+				$QUERY = "SELECT * FROM ".'"Transaksi"'." WHERE ".'"NPWPD" = '."'$npwpd' AND ".'"WaktuTransaksi"::text like '."'%$IndexBulan%'";
+				$DetailData = $this->db->query($QUERY)->result_array();
+				$Tampung = array();
+				if (empty($DetailData)) {
+					$Tampung['Baris'] = $NamaBulan[$i-1];
+					$Tampung['Receipt'] = 0;
+					$Tampung['SubNominal'] = 0;
+					$Tampung['Service'] = 0;
+					$Tampung['Diskon'] = 0;
+					$Tampung['Pajak'] = 0;
+					$Tampung['TotalTransaksi'] = 0;
+				} else {
+					$Tampung['Baris'] = $NamaBulan[$i-1];
+					foreach ($DetailData as $key) {
+						if (empty($Tampung['Receipt'])) {
+							$Tampung['Receipt'] = 1;
+							$Tampung['SubNominal'] = $key['SubNominal'];
+							$Tampung['Service'] = $key['Service'];
+							$Tampung['Diskon'] = $key['Diskon'];
+							$Tampung['Pajak'] = $key['Pajak'];
+							$Tampung['TotalTransaksi'] = $key['TotalTransaksi'];
+						} else {
+							$Tampung['Receipt'] += 1;
+							$Tampung['SubNominal'] += $key['SubNominal'];
+							$Tampung['Service'] += $key['Service'];
+							$Tampung['Diskon'] += $key['Diskon'];
+							$Tampung['Pajak'] += $key['Pajak'];
+							$Tampung['TotalTransaksi'] += $key['TotalTransaksi'];
+						}
+					}
+				}
+				array_push($FormatData, $Tampung);
+			}
 		}
-		$DetailData = $this->db->query($QUERY)->result_array();
-		$kueri = "SELECT ".'"NamaWP"'." FROM ".'"WajibPajak"'." WHERE ".'"NPWPD" = '."'$npwpd'";
+		$kueri = "SELECT ".'"NamaWP","JenisPajak"'." FROM ".'"WajibPajak"'." WHERE ".'"NPWPD" = '."'$npwpd'";
 		$NamaWP = $this->db->query($kueri)->result_array();
 		$this->session->set_userdata(array('JudulPerWP' => 'LAPORAN TRANSAKSI '.$_POST['Judul']));
 		$this->session->set_userdata(array('NamaWP' => 'WAJIB PAJAK : '.$NamaWP[0]['NamaWP']));
-		$this->session->set_userdata(array('PeriodeWP' => 'PERIODE : '.$_POST['Periode']));
-		$this->session->set_userdata(array('DetailPerWP' => $DetailData));
+		$this->session->set_userdata(array('PeriodeWP' => 'PERIODE : '.$periode));
+		$this->session->set_userdata(array('DetailPerWP' => $FormatData));
 		$this->session->set_userdata(array('NamaFilePerWP' => $NamaWP[0]['NamaWP']));
+		$this->session->set_userdata(array('JenisPajakPerWP' => $NamaWP[0]['JenisPajak']));
 		echo "ok";
 	}
 }
