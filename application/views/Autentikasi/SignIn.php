@@ -42,7 +42,7 @@
 						<button class="login100-form-btn" id="TombolLogin">
 							Login
 						</button>
-					</div
+					</div>
 
 				</form>
 			</div>
@@ -68,12 +68,12 @@
 		  		url		: 'http://localhost/MonitoringPajak/Autentikasi/SignIn',
 		  		data	: DataLogin,
 		  		success	: function(Pesan){
-		  			if(Pesan=='OK'){
+		  			if(Pesan != '3'){
 		  				window.location = 'http://localhost/MonitoringPajak/Dashboard';
-		  			}
-		  			else{
+		  			} else if (Pesan == '3') {
+		  				window.location = 'http://localhost/MonitoringPajak/Transaksi/Tahunan';
+		  			} else{
 		  				alert(Pesan);
-		  				$('#LoginForm').find("input").val("");
 		  			}
 		  		}
 		  	});

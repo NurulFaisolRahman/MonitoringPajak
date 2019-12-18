@@ -47,7 +47,7 @@
               $html.='<tr>
                 <td align="center">'.$i.'</td>
                 <td>'.$key["NamaWP"].'</td>
-                <td align="right">'.$key["Receipt"].'</td>
+                <td align="center">'.$key["Receipt"].'</td>
                 <td align="right">'.$key["SubNominal"].'</td>
                 <td align="right">'.$key["Service"].'</td>
                 <td align="right">'.$key["Diskon"].'</td>
@@ -63,7 +63,7 @@
             } 
             $html.='<tr align="right">
                       <td colspan="2">Total</td>
-                      <td>'.$NReceipt.'</td>
+                      <td align="center">'.$NReceipt.'</td>
                       <td>'.Rupiah($TotalSubNominal).'</td>
                       <td>'.Rupiah($TotalService).'</td>
                       <td>'.Rupiah($Diskon).'</td>

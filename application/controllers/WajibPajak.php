@@ -19,7 +19,8 @@ class WajibPajak extends CI_Controller {
 	}
 
 	public function index(){
-		$Data['DataWajibPajak'] = $this->db->get('WajibPajak')->result_array();
+		$Query = "SELECT * FROM ".'"WajibPajak"'." ORDER BY ".'"WaktuRegistrasi" DESC';
+		$Data['DataWajibPajak'] = $this->db->query($Query)->result_array();
 		$Data['DataRekening'] = $this->db->get('Rekening')->result_array();
 		$Data['title'] = "Daftar WP";
 		$Data['submenu'] = "";
@@ -38,7 +39,9 @@ class WajibPajak extends CI_Controller {
 						 	  'NomorRekening' => $Pisah[0],
 							  'JenisPajak' => $Pisah[1],
 							  'SubJenisPajak' => $Pisah[2],
-							  'JamOperasional' => $_POST['JamOperasional']));
+							  'JamOperasional' => $_POST['JamOperasional'],
+							  'Pembuat' => $this->session->userdata('NamaAdmin'),
+							  'WaktuRegistrasi' => date("d-m-Y H:i:s")));
 			echo "ok";
 		} else {
 			echo "ko";
@@ -70,6 +73,10 @@ class WajibPajak extends CI_Controller {
 								  'JenisPajak' => $Pisah[1],
 								  'SubJenisPajak' => $Pisah[2],
 								  'JamOperasional' => $_POST['EditJamOperasional']));
+				}
+				if ($this->db->get_where('Akun', array('Username' => $_POST['EditNPWPDLama']))->num_rows() === 1) {
+					$this->db->where('Username', $_POST['EditNPWPDLama']);
+					$this->db->update('Akun', array('Username' => $NPWPD));
 				}
 				echo "ok";
 			} else {
@@ -107,6 +114,9 @@ class WajibPajak extends CI_Controller {
 	public function Hapus(){
 		if ($this->db->get_where('Transaksi', array('NPWPD' => $_POST['NPWPD']))->num_rows() === 0) {
 			$this->db->delete('WajibPajak', array('NPWPD' => $_POST['NPWPD']));
+			if ($this->db->get_where('Akun', array('Username' => $_POST['NPWPD']))->num_rows() === 1) {
+				$this->db->delete('Akun', array('Username' => $_POST['NPWPD']));
+			}
 			echo "ok";
 		} else {
 			echo "ko";

@@ -31,6 +31,7 @@
                         <td>
                           <input class="form-control btn btn-outline-primary" type="date" id="Tahun" name="Tahun" value="<?php if(!empty($tahun)) echo $tahun ?>" required>
                         </td>
+                        <?php if($this->session->userdata('Admin') != '3'){ ?>
                         <td class="font-weight-bold text-primary">&emsp;Bidang Pajak :&nbsp;</td>
                         <td>
                           <select class="form-control btn btn-outline-primary" name="BidangPajak">
@@ -44,10 +45,12 @@
                           <?php } ?>
                           </select>
                         </td>
+                        <?php }; ?>
                         <td>&emsp;
                           <button type="submit" class="btn btn-primary" id="Filter"><b>FILTER</b></button>
                         </td>
                       </form>
+                      <?php if($this->session->userdata('Admin') != '3'){ ?>
                       <td>&emsp;
                         <a href="<?=base_url('Transaksi/Pdf')?>" class="btn btn-danger"><i class="fas fa-file-pdf"></i>
                         <b>PDF</b></button>
@@ -56,6 +59,7 @@
                         <a href="<?=base_url('Transaksi/Excel')?>" class="btn btn-success"><i class="fas fa-file-excel"></i>
                         <b>Excel</b></button>
                       </td>
+                      <?php } ?>
                     </tr>
                   </table>
                 </div>
@@ -88,14 +92,12 @@
                           <td class="text-right"><?=$key['Diskon']?></td>
                           <td class="text-right"><?=$key['Pajak']?></td>
                           <td class="text-right"><?=$key['Transaksi']?></td>
-                          <?php if($this->session->userdata('Admin')){ ?>
                           <td class="text-center">
                             <div class="btn-group btn-group-sm">
                               <a href="#" PdfPerWP="<?=$key['NPWPD']?>" class="btn btn-danger PdfPerWP"><i class="fas fa-file-pdf"></i></a>
                               <a href="#" ExcelPerWP="<?=$key['NPWPD']?>" class="btn btn-success ExcelPerWP"><i class="fas fa-file-excel"></i></a>
                             </div>
                           </td>
-                        <?php }; ?>
                         </tr>
                         <?php 
                           $TotalSubNominal += $key['SubNominal'];
@@ -163,7 +165,6 @@
                      Periode : $("#Tahun").val().substr(0,7),
                      Judul : 'TAHUNAN', };
         $.post(BaseURL+"/Transaksi/DetailPerWP", Data).done(function(Respon) {
-            // alert(Respon)
             if (Respon == 'ok') {
               window.location = BaseURL + '/Transaksi/PdfPerWP';
             }

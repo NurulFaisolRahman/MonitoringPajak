@@ -56,110 +56,194 @@ class Transaksi extends CI_Controller {
 
 	public function Tahunan(){
 		$Tahun = $query = $Bidang = $Data['bidangpajak'] = "";
-		if (!empty($_POST)) {
-			$Tahun = substr($_POST['Tahun'],0,4);
-			$Data['tahun'] = $_POST['Tahun'];
-			$Bidang = $_POST['BidangPajak'];
-			$Data['bidangpajak'] = $_POST['BidangPajak'];
-			if ($_POST['BidangPajak'] == 'All') {
+		if ($this->session->userdata('Admin') != '3') {
+			if (!empty($_POST)) {
+				$Tahun = substr($_POST['Tahun'],0,4);
+				$Data['tahun'] = $_POST['Tahun'];
+				$Bidang = $_POST['BidangPajak'];
+				$Data['bidangpajak'] = $_POST['BidangPajak'];
+				if ($_POST['BidangPajak'] == 'All') {
+					$Bidang = 'Semua Jenis Pajak';
+					$query = "SELECT DISTINCT ".'"NPWPD"'." FROM ".'"Transaksi"'." WHERE ".'"WaktuTransaksi"::text like '."'%$Tahun%'";
+				} else {
+					$query = "SELECT DISTINCT ".'"NPWPD"'." FROM ".'"Transaksi"'." WHERE ".'"JenisPajak" = '."'$Bidang'".' AND "WaktuTransaksi"::text like '."'%$Tahun%'";
+				}
+			} else {
+				$Tahun = date("Y");
 				$Bidang = 'Semua Jenis Pajak';
 				$query = "SELECT DISTINCT ".'"NPWPD"'." FROM ".'"Transaksi"'." WHERE ".'"WaktuTransaksi"::text like '."'%$Tahun%'";
-			} else {
-				$query = "SELECT DISTINCT ".'"NPWPD"'." FROM ".'"Transaksi"'." WHERE ".'"JenisPajak" = '."'$Bidang'".' AND "WaktuTransaksi"::text like '."'%$Tahun%'";
 			}
+			$DataPerWP  = $this->db->query($query)->result_array();
+			$DataTransaksiPerWP = array();
+			if (!empty($DataPerWP)) {
+				$DataTransaksiPerWP = $this->DataPerWP($DataPerWP, $Tahun);
+				$Data['Transaksi']  = $DataTransaksiPerWP;
+			} else {
+				$Data['Transaksi']  = $DataTransaksiPerWP;
+			}
+			$Data['DataRekening'] = $this->db->get('Rekening')->result_array();
+			$Data['title'] = "Transaksi";
+			$Data['submenu'] = "Tahunan";
+			$this->load->view('Header',$Data);
+			$this->load->view('Transaksi/Tahunan');
+			$this->SesiTransaksi($DataTransaksiPerWP, 'LAPORAN DATA TRANSAKSI TAHUNAN', $Bidang, $Tahun, 'TransaksiTahunan'.str_replace(" ", "_", ucwords($Bidang)).$Tahun);
 		} else {
-			$Tahun = date("Y");
-			$Bidang = 'Semua Jenis Pajak';
-			$query = "SELECT DISTINCT ".'"NPWPD"'." FROM ".'"Transaksi"'." WHERE ".'"WaktuTransaksi"::text like '."'%$Tahun%'";
+			$Bidang = $this->db->get_where('WajibPajak', array('NPWPD' => $this->session->userdata('NamaAdmin')))->result_array()[0]['JenisPajak'];
+			if (!empty($_POST)) {
+				$Tahun = substr($_POST['Tahun'],0,4);
+				$Data['tahun'] = $_POST['Tahun'];
+				$Data['bidangpajak'] = $Bidang;
+			} else {
+				$Tahun = date("Y");
+			}
+			$DataPerWP  = array();
+			array_push($DataPerWP, array('NPWPD' => $this->session->userdata('NamaAdmin')));
+			$DataTransaksiPerWP = array();
+			if (!empty($DataPerWP)) {
+				$DataTransaksiPerWP = $this->DataPerWP($DataPerWP, $Tahun);
+				$Data['Transaksi']  = $DataTransaksiPerWP;
+			} else {
+				$Data['Transaksi']  = $DataTransaksiPerWP;
+			}
+			$Data['DataRekening'] = $this->db->get('Rekening')->result_array();
+			$Data['title'] = "Transaksi";
+			$Data['submenu'] = "Tahunan";
+			$this->load->view('Header',$Data);
+			$this->load->view('Transaksi/Tahunan');
+			$this->SesiTransaksi($DataTransaksiPerWP, 'LAPORAN DATA TRANSAKSI TAHUNAN', $Bidang, $Tahun, 'TransaksiTahunan'.str_replace(" ", "_", ucwords($Bidang)).$Tahun);
 		}
-		$DataPerWP  = $this->db->query($query)->result_array();
-		$DataTransaksiPerWP = array();
-		if (!empty($DataPerWP)) {
-			$DataTransaksiPerWP = $this->DataPerWP($DataPerWP, $Tahun);
-			$Data['Transaksi']  = $DataTransaksiPerWP;
-		} else {
-			$Data['Transaksi']  = $DataTransaksiPerWP;
-		}
-		$Data['DataRekening'] = $this->db->get('Rekening')->result_array();
-		$Data['title'] = "Transaksi";
-		$Data['submenu'] = "Tahunan";
-		$this->load->view('Header',$Data);
-		$this->load->view('Transaksi/Tahunan');
-		$this->SesiTransaksi($DataTransaksiPerWP, 'LAPORAN DATA TRANSAKSI TAHUNAN', $Bidang, $Tahun, 'TransaksiTahunan'.str_replace(" ", "_", ucwords($Bidang)).$Tahun);
 	}
 
 	public function Bulanan(){
 		$Bulan = $query = $Bidang = $Data['bidangpajak'] = "";
-		if (!empty($_POST)) {
-			$Bulan = substr($_POST['Bulan'],0,7);
-			$Data['bulan'] = $_POST['Bulan'];
-			$Bidang = $_POST['BidangPajak'];
-			$Data['bidangpajak'] = $_POST['BidangPajak'];
-			if ($_POST['BidangPajak'] == 'All') {
+		if ($this->session->userdata('Admin') != '3') {
+			if (!empty($_POST)) {
+				$Bulan = substr($_POST['Bulan'],0,7);
+				$Data['bulan'] = $_POST['Bulan'];
+				$Bidang = $_POST['BidangPajak'];
+				$Data['bidangpajak'] = $_POST['BidangPajak'];
+				if ($_POST['BidangPajak'] == 'All') {
+					$Bidang = 'Semua Jenis Pajak';
+					$query = "SELECT DISTINCT ".'"NPWPD"'." FROM ".'"Transaksi"'." WHERE ".'"WaktuTransaksi"::text like '."'%$Bulan%'";
+				} else {
+					$query = "SELECT DISTINCT ".'"NPWPD"'." FROM ".'"Transaksi"'." WHERE ".'"JenisPajak" = '."'$Bidang'".' AND "WaktuTransaksi"::text like '."'%$Bulan%'";
+				}
+			} else {
+				$Bulan = date("Y-m");
 				$Bidang = 'Semua Jenis Pajak';
 				$query = "SELECT DISTINCT ".'"NPWPD"'." FROM ".'"Transaksi"'." WHERE ".'"WaktuTransaksi"::text like '."'%$Bulan%'";
-			} else {
-				$query = "SELECT DISTINCT ".'"NPWPD"'." FROM ".'"Transaksi"'." WHERE ".'"JenisPajak" = '."'$Bidang'".' AND "WaktuTransaksi"::text like '."'%$Bulan%'";
 			}
+			$DataPerWP  = $this->db->query($query)->result_array();
+			$DataTransaksiPerWP = array();
+			if (!empty($DataPerWP)) {
+				$DataTransaksiPerWP = $this->DataPerWP($DataPerWP, $Bulan);
+				$Data['Transaksi']  = $DataTransaksiPerWP;
+			} else {
+				$Data['Transaksi']  = $DataTransaksiPerWP;
+			}
+			$Data['DataRekening'] = $this->db->get('Rekening')->result_array();
+			$Data['title'] = "Transaksi";
+			$Data['submenu'] = "Bulanan";
+			$this->load->view('Header',$Data);
+			$this->load->view('Transaksi/Bulanan');
+			$NamaBulan = array('Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember');
+			$this->SesiTransaksi($DataTransaksiPerWP, 'LAPORAN DATA TRANSAKSI BULANAN', $Bidang, strtoupper($NamaBulan[(int) substr($Bulan, -2)-1])." ".substr($Bulan, 0, 4), 'TransaksiBulanan'.str_replace(" ", "_", ucwords($Bidang)).ucwords($NamaBulan[(int) substr($Bulan, -2)-1]));
 		} else {
-			$Bulan = date("Y-m");
-			$Bidang = 'Semua Jenis Pajak';
-			$query = "SELECT DISTINCT ".'"NPWPD"'." FROM ".'"Transaksi"'." WHERE ".'"WaktuTransaksi"::text like '."'%$Bulan%'";
+			$Bidang = $this->db->get_where('WajibPajak', array('NPWPD' => $this->session->userdata('NamaAdmin')))->result_array()[0]['JenisPajak'];
+			if (!empty($_POST)) {
+				$Bulan = substr($_POST['Bulan'],0,7);
+				$Data['bulan'] = $_POST['Bulan'];
+				$Data['bidangpajak'] = $Bidang;
+			} else {
+				$Bulan = date("Y-m");
+			}
+			$DataPerWP  = array();
+			array_push($DataPerWP, array('NPWPD' => $this->session->userdata('NamaAdmin')));
+			$DataTransaksiPerWP = array();
+			if (!empty($DataPerWP)) {
+				$DataTransaksiPerWP = $this->DataPerWP($DataPerWP, $Bulan);
+				$Data['Transaksi']  = $DataTransaksiPerWP;
+			} else {
+				$Data['Transaksi']  = $DataTransaksiPerWP;
+			}
+			$Data['DataRekening'] = $this->db->get('Rekening')->result_array();
+			$Data['title'] = "Transaksi";
+			$Data['submenu'] = "Bulanan";
+			$this->load->view('Header',$Data);
+			$this->load->view('Transaksi/Bulanan');
+			$NamaBulan = array('Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember');
+			$this->SesiTransaksi($DataTransaksiPerWP, 'LAPORAN DATA TRANSAKSI BULANAN', $Bidang, strtoupper($NamaBulan[(int) substr($Bulan, -2)-1])." ".substr($Bulan, 0, 4), 'TransaksiBulanan'.str_replace(" ", "_", ucwords($Bidang)).ucwords($NamaBulan[(int) substr($Bulan, -2)-1]));
 		}
-		$DataPerWP  = $this->db->query($query)->result_array();
-		$DataTransaksiPerWP = array();
-		if (!empty($DataPerWP)) {
-			$DataTransaksiPerWP = $this->DataPerWP($DataPerWP, $Bulan);
-			$Data['Transaksi']  = $DataTransaksiPerWP;
-		} else {
-			$Data['Transaksi']  = $DataTransaksiPerWP;
-		}
-		$Data['DataRekening'] = $this->db->get('Rekening')->result_array();
-		$Data['title'] = "Transaksi";
-		$Data['submenu'] = "Bulanan";
-		$this->load->view('Header',$Data);
-		$this->load->view('Transaksi/Bulanan');
-		$NamaBulan = array('Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember');
-		$this->SesiTransaksi($DataTransaksiPerWP, 'LAPORAN DATA TRANSAKSI BULANAN', $Bidang, strtoupper($NamaBulan[(int) substr($Bulan, -2)-1])." ".substr($Bulan, 0, 4), 'TransaksiBulanan'.str_replace(" ", "_", ucwords($Bidang)).ucwords($NamaBulan[(int) substr($Bulan, -2)-1]));
 	}
 
 	public function Harian(){ 
 		$awal = $akhir = $Awal = $Akhir = $query = $Bidang = $Data['bidangpajak'] = "";
-		if (!empty($_POST)) {
-			$Rentang = explode("-", $_POST['Hari']);
-			$awal = explode("-",substr(str_replace("/","-",$Rentang[0]),0,10));
-			$akhir = explode("-",substr(str_replace("/","-",$Rentang[1]),1,11));
-			$Awal = $awal[1]."-".$awal[0]."-".$awal[2];
-			$Akhir = (int) ($akhir[1])."-".$akhir[0]."-".$akhir[2];
-			$Data['hari'] = $_POST['Hari'];
-			$Bidang = $_POST['BidangPajak'];
-			$Data['bidangpajak'] = $_POST['BidangPajak'];
-			if ($_POST['BidangPajak'] == 'All') {
+		if ($this->session->userdata('Admin') != '3') {
+			if (!empty($_POST)) {
+				$Rentang = explode("-", $_POST['Hari']);
+				$awal = explode("-",substr(str_replace("/","-",$Rentang[0]),0,10));
+				$akhir = explode("-",substr(str_replace("/","-",$Rentang[1]),1,11));
+				$Awal = $awal[1]."-".$awal[0]."-".$awal[2];
+				$Akhir = (int) ($akhir[1])."-".$akhir[0]."-".$akhir[2];
+				$Data['hari'] = $_POST['Hari'];
+				$Bidang = $_POST['BidangPajak'];
+				$Data['bidangpajak'] = $_POST['BidangPajak'];
+				if ($_POST['BidangPajak'] == 'All') {
+					$Bidang = 'Semua Jenis Pajak';
+					$query = "SELECT DISTINCT ".'"NPWPD"'." FROM ".'"Transaksi"'." WHERE ".'"WaktuTransaksi"::date >= '."'$Awal'"." AND ".'"WaktuTransaksi"::date <= '."'$Akhir'";
+				} else {
+					$query = "SELECT DISTINCT ".'"NPWPD"'." FROM ".'"Transaksi"'." WHERE ".'"JenisPajak" = '."'$Bidang'".' AND "WaktuTransaksi"::date >= '."'$Awal'"." AND ".'"WaktuTransaksi"::date <= '."'$Akhir'";
+				}
+			} else {
+				$Awal = date("d-m-Y");
+				$Akhir = date("d-m-Y");
 				$Bidang = 'Semua Jenis Pajak';
 				$query = "SELECT DISTINCT ".'"NPWPD"'." FROM ".'"Transaksi"'." WHERE ".'"WaktuTransaksi"::date >= '."'$Awal'"." AND ".'"WaktuTransaksi"::date <= '."'$Akhir'";
-			} else {
-				$query = "SELECT DISTINCT ".'"NPWPD"'." FROM ".'"Transaksi"'." WHERE ".'"JenisPajak" = '."'$Bidang'".' AND "WaktuTransaksi"::date >= '."'$Awal'"." AND ".'"WaktuTransaksi"::date <= '."'$Akhir'";
 			}
+			$DataPerWP  = $this->db->query($query)->result_array();
+			$DataTransaksiPerWP = array();
+			if (!empty($DataPerWP)) {
+				$DataTransaksiPerWP = $this->DataPerWP($DataPerWP, array($Awal,$Akhir));
+				$Data['Transaksi']  = $DataTransaksiPerWP;
+			} else {
+				$Data['Transaksi']  = $DataTransaksiPerWP;
+			}
+			$Data['DataRekening'] = $this->db->get('Rekening')->result_array();
+			$Data['title'] = "Transaksi";
+			$Data['submenu'] = "Harian";
+			$this->load->view('Header',$Data);
+			$this->load->view('Transaksi/Harian');
+			$this->SesiTransaksi($DataTransaksiPerWP, 'LAPORAN DATA TRANSAKSI HARIAN', $Bidang, ($Awal." - ".$Akhir), 'TransaksiHarian'.str_replace(" ", "_", ucwords($Bidang)).($Awal."-".$Akhir));
 		} else {
-			$Awal = date("d-m-Y");
-			$Akhir = date("d-m-Y");
-			$Bidang = 'Semua Jenis Pajak';
-			$query = "SELECT DISTINCT ".'"NPWPD"'." FROM ".'"Transaksi"'." WHERE ".'"WaktuTransaksi"::date >= '."'$Awal'"." AND ".'"WaktuTransaksi"::date <= '."'$Akhir'";
+			$Bidang = $this->db->get_where('WajibPajak', array('NPWPD' => $this->session->userdata('NamaAdmin')))->result_array()[0]['JenisPajak'];
+			if (!empty($_POST)) {
+				$Rentang = explode("-", $_POST['Hari']);
+				$awal = explode("-",substr(str_replace("/","-",$Rentang[0]),0,10));
+				$akhir = explode("-",substr(str_replace("/","-",$Rentang[1]),1,11));
+				$Awal = $awal[1]."-".$awal[0]."-".$awal[2];
+				$Akhir = (int) ($akhir[1])."-".$akhir[0]."-".$akhir[2];
+				$Data['hari'] = $_POST['Hari'];
+				$Data['bidangpajak'] = $Bidang;
+			} else {
+				$Awal = date("d-m-Y");
+				$Akhir = date("d-m-Y");
+			}
+			$DataPerWP  = array();
+			array_push($DataPerWP, array('NPWPD' => $this->session->userdata('NamaAdmin')));
+			$DataTransaksiPerWP = array();
+			if (!empty($DataPerWP)) {
+				$DataTransaksiPerWP = $this->DataPerWP($DataPerWP, array($Awal,$Akhir));
+				$Data['Transaksi']  = $DataTransaksiPerWP;
+			} else {
+				$Data['Transaksi']  = $DataTransaksiPerWP;
+			}
+			$Data['DataRekening'] = $this->db->get('Rekening')->result_array();
+			$Data['title'] = "Transaksi";
+			$Data['submenu'] = "Harian";
+			$this->load->view('Header',$Data);
+			$this->load->view('Transaksi/Harian');
+			$this->SesiTransaksi($DataTransaksiPerWP, 'LAPORAN DATA TRANSAKSI HARIAN', $Bidang, ($Awal." - ".$Akhir), 'TransaksiHarian'.str_replace(" ", "_", ucwords($Bidang)).($Awal."-".$Akhir));
 		}
-		$DataPerWP  = $this->db->query($query)->result_array();
-		$DataTransaksiPerWP = array();
-		if (!empty($DataPerWP)) {
-			$DataTransaksiPerWP = $this->DataPerWP($DataPerWP, array($Awal,$Akhir));
-			$Data['Transaksi']  = $DataTransaksiPerWP;
-		} else {
-			$Data['Transaksi']  = $DataTransaksiPerWP;
-		}
-		$Data['DataRekening'] = $this->db->get('Rekening')->result_array();
-		$Data['title'] = "Transaksi";
-		$Data['submenu'] = "Harian";
-		$this->load->view('Header',$Data);
-		$this->load->view('Transaksi/Harian');
-		$this->SesiTransaksi($DataTransaksiPerWP, 'LAPORAN DATA TRANSAKSI HARIAN', $Bidang, ($Awal." - ".$Akhir), 'TransaksiHarian'.str_replace(" ", "_", ucwords($Bidang)).($Awal."-".$Akhir));
 	}
 
 	public function Excel(){ 
@@ -178,11 +262,6 @@ class Transaksi extends CI_Controller {
 	public function PdfPerWP(){ 
 		$this->load->library('Pdf');
 		$this->load->view('Transaksi/PdfPerWP');
-	}
-
-	public function PdfPerWPHarian(){ 
-		$this->load->library('Pdf');
-		$this->load->view('Transaksi/PdfPerWPHarian');
 	}
 
 	public function DetailPerWP(){ 

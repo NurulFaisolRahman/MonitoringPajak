@@ -2,7 +2,7 @@
   $DetailPerWP = $this->session->userdata('DetailPerWP');
   $NamaFile = $this->session->userdata('NamaFilePerWP').".xls";
   header("Content-type: application/vnd-ms-excel");
-  header("Content-Disposition: attachment; filename=".$NamaFile);
+  header("Content-Disposition: attachment; filename=".str_replace(" ","_",$NamaFile));
   function Rupiah($Angka){
     $hasil_rupiah = "Rp " . number_format($Angka,2,',','.');
     return $hasil_rupiah;
@@ -43,9 +43,9 @@
       <?php $Nomor = 1; 
             foreach ($DetailPerWP as $key){ ?>
         <tr>
-          <td><?=$Nomor?></td>
-          <td><?=$key['Baris']?></td>
-          <td><?=$key['Receipt']?></td>
+          <td align="center"><?=$Nomor?></td>
+          <td align="center"><?=$key['Baris']?></td>
+          <td align="center"><?=$key['Receipt']?></td>
           <td><?=$key['SubNominal']?></td>
           <td><?=$key['Service']?></td>
           <td><?=$key['Diskon']?></td>
@@ -80,7 +80,7 @@
           <tfoot>
             <tr align="right">
               <td colspan="2"><b>Total</b></td>
-              <td><b><?=$NReceipt ?></b></td>
+              <td align="center"><b><?=$NReceipt ?></b></td>
               <td><b><?=Rupiah($TotalSubNominal)?></b></td>
               <td><b><?=Rupiah($TotalService)?></b></td>
               <td><b><?=Rupiah($Diskon)?></b></td>

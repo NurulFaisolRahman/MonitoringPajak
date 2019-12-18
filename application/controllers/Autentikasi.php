@@ -3,15 +3,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Autentikasi extends CI_Controller {
 
-	// function __construct(){
-	// 	parent::__construct();
-	// 	if($this->session->userdata('Status') == "Login"){
-	// 		redirect(base_url('Dashboard'));
-	// 	}
-	// }
-
 	public function index(){
-		$this->load->view('Autentikasi/SignIn');
+		if($this->session->userdata('Status') == "Login"){
+			redirect(base_url('Dashboard'));
+		} else {
+			$this->load->view('Autentikasi/SignIn');
+		}
 	}
 
 	public function SignIn(){
@@ -25,15 +22,9 @@ class Autentikasi extends CI_Controller {
 	  		$Akun = $CekLogin->result_array();
 			if (password_verify($Password, $Akun[0]['Password'])) {
 				$DataSession = array();
-				if ($Akun[0]['JenisAkun'] == 1) {
-					$DataSession = array('Status' => "Login", 'Admin' => true, 'NamaAdmin' => $Akun[0]['Username']);
-					$this->session->set_userdata($DataSession);
-			  		echo 'OK';
-				} else {
-					$DataSession = array('Status' => "Login", 'Admin' => false);
-					$this->session->set_userdata($DataSession);
-					echo 'OK';
-				}
+				$DataSession = array('Status' => "Login", 'Admin' => $Akun[0]['JenisAkun'], 'NamaAdmin' => $Akun[0]['Username']);
+				$this->session->set_userdata($DataSession);
+		  		echo $Akun[0]['JenisAkun'];
 			} else {
 				echo "Password Salah";
 			}
@@ -46,15 +37,16 @@ class Autentikasi extends CI_Controller {
 	}
 
 	public function AutentikasiWajibPajak(){
-		$CekLogin = $this->db->select('Status')
-                    ->from('WajibPajak')
-                    ->where('NPWPD', $_POST['NPWPD'])
-                    ->get();
+		$CekLogin = $this->db->get_where('WajibPajak', array('NPWPD' => $_POST['NPWPD']));
 		if($CekLogin->num_rows() == 1){
 			if ($CekLogin->result_array()[0]['Status'] != 'Disable') {
-				$this->db->where('NPWPD', $_POST['NPWPD']);
-				$this->db->update('WajibPajak', array('Status' => 'Online'));
-				echo "ok";
+				if (password_verify($_POST['Password'], $CekLogin->result_array()[0]['Password'])) {
+					$this->db->where('NPWPD', $_POST['NPWPD']);
+					$this->db->update('WajibPajak', array('Status' => 'Online'));
+					echo "ok";
+				} else {
+					echo "fail";
+				}
 			} else {
 				echo "Disable";
 			}
@@ -67,19 +59,25 @@ class Autentikasi extends CI_Controller {
 	public function InputTransaksiWajibPajak(){
 		$inputJSON = file_get_contents('php://input');
 		$Data = json_decode($inputJSON);
-		$NPWPD = "";
 		foreach ($Data as $key => $value) {
-			$Data[$key] = (array) $value;
+			$JenisPajak = $this->db->get_where("WajibPajak", array('NPWPD' => $key))->result_array();
+			foreach ($value as $Key => $Value) {
+				$value[$Key] = (array) $Value;
+				$value[$Key]['NPWPD'] = $key;
+				$value[$Key]['JenisPajak'] = $JenisPajak[0]['JenisPajak'];
+			}
+			if ($this->db->get_where('Transaksi', array('NPWPD' => $key))->num_rows() === 0) {
+				$this->db->update('WajibPajak', array('PengirimanPertama' => date("d-m-Y H:i:s")));
+			}
+			$this->db->insert_batch("Transaksi", $value);
+			$this->db->where('NPWPD', $key);
+			$this->db->update('WajibPajak', array('Riwayat' => date("d-m-Y H:i:s")));
+			echo "ok";
 		}
-		$NPWPD = $Data[0]['NPWPD'];
-		$this->db->insert_batch("Transaksi", $Data);
-		$this->db->where('NPWPD', $NPWPD);
-		$this->db->update('WajibPajak', array('Riwayat' => date("d-m-Y H:i:s")));
-		echo "ok";
 	}
 
-	public function api(){
-		$Data = $this->db->get_where('Transaksi', array('NPWPD' => '1507.199.607'))->result_array();
-		echo json_encode($Data);
-	}
+	// public function api(){
+	// 	$Data = $this->db->get_where('Transaksi', array('NPWPD' => '1507.199.607'))->result_array();
+	// 	echo json_encode($Data);
+	// }
 }

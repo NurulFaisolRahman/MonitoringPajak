@@ -36,6 +36,7 @@
               <tr>
                 <th style="width:10px;">No</th>
                 <th>Username</th>
+                <th>Jenis Akun</th>
                 <th>Pembuat</th>
                 <th>Waktu Registrasi</th>
                 <?php if($this->session->userdata('Admin')){ ?>
@@ -48,16 +49,22 @@
                   <tr valign="middle">
                     <td align="center"><?=$Nomor?></td>
                     <td><?=$key['Username']?></td>
+                    <td><?php if ($key['JenisAkun'] == '2') {
+                        echo "Read Only";
+                      } else {
+                        echo "Wajib Pajak";
+                      }
+                     ?></td>
                     <td><?=$key['Pembuat']?></td>
                     <td><?=$key['WaktuRegistrasi']?></td>
                     <td align="center">
                       <div class="btn-group btn-group-sm">
-                        <a href="#" EditUser="<?=$key['Username'];?>" class="btn btn-warning EditUser"><i class="fas fa-edit"></i></a>
+                        <a href="#" EditUser="<?=$key['Username']."|".$key['JenisAkun'];?>" class="btn btn-warning EditUser"><i class="fas fa-edit"></i></a>
                         <a href="#" HapusUser="<?=$key['Username'];?>" class="btn btn-danger HapusUser"><i class="fas fa-trash"></i></a>
                       </div>
                     </td>
                   </tr>
-              <?php } ?>
+              <?php $Nomor++; } ?>
               </tbody>
             </table>
           </div>
@@ -83,6 +90,16 @@
       </div>
       <div class="modal-body">
         <div class="card-body">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text bg-primary"><b>Jenis Akun</b></i></span>
+            </div>
+            <select class="form-control btn btn-light" id="JenisAkun">
+              <option value="2"><?="Read Only"?></option>
+              <option value="3"><?="Wajib Pajak"?></option>
+            </select>
+          </div>
+          <br>
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text bg-primary"><b>Username</b></i></span>
@@ -123,6 +140,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text bg-primary"><b>Username</b></i></span>
             </div>
+            <input class="form-control" type="hidden" id="EditJenisAkun">
             <input class="form-control" type="hidden" id="EditUsernameLama">
             <input class="form-control" type="text" id="EditUsername">
           </div>
@@ -131,7 +149,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text bg-primary"><b>Password</b></i></span>
             </div>
-            <input class="form-control" type="password" id="EditPassword" required>
+            <input class="form-control" type="password" id="EditPassword">
           </div>
         </div>
       </div>
@@ -174,12 +192,13 @@
         alert('Mohon Input Password')
       } else {
         var Data = { Username: $('#Username').val(),
-                   Password: $('#Password').val()};
+                    Password: $('#Password').val(),
+                    JenisAkun: $('#JenisAkun').val()};
         $.post(BaseURL+"/User/Tambah", Data).done(function(Respon) {
           if (Respon == 'ok') {
             window.location = BaseURL + '/User';
           } else {
-            alert('Username Sudah Ada')
+            alert(Respon)
           }
         });
       }
@@ -191,21 +210,24 @@
       } else {
         var Data = { EditUsernameLama: $('#EditUsernameLama').val(),
                    EditUsername: $('#EditUsername').val(),
-                   EditPassword: $('#EditPassword').val()};
+                   EditPassword: $('#EditPassword').val(),
+                   EditJenisAkun: $('#EditJenisAkun').val()};
         $.post(BaseURL+"/User/Edit", Data).done(function(Respon) {
           if (Respon == 'ok') {
             window.location = BaseURL + '/User';
           } else {
-            alert('Username Sudah Ada')
+            alert(Respon)
           }
         });
       }
     });
 
     $(document).on("click",".EditUser",function(){
-      var UsernameLama = $(this).attr('EditUser');
-      document.getElementById('EditUsernameLama').value = UsernameLama;
-      document.getElementById('EditUsername').value = UsernameLama;
+      var Data = $(this).attr('EditUser');
+      var Pisah = Data.split("|");
+      document.getElementById('EditUsernameLama').value = Pisah[0];
+      document.getElementById('EditUsername').value = Pisah[0];
+      document.getElementById('EditJenisAkun').value = Pisah[1];
       $('#ModalEditUser').modal("show");
     });
 

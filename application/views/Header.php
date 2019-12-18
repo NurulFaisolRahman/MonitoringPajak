@@ -58,12 +58,10 @@
     </a>
 
     <!-- Sidebar -->
-    <div class="sidebar">
-      <!-- Sidebar Menu -->
+    <div class="sidebar">      
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-          <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
+          <?php if($this->session->userdata('Admin') != '3'){ ?>
           <li class="nav-item">
             <a href="<?=base_url("Dashboard")?>" class="nav-link <?php if ($title == "Dashboard") {
               echo "active";
@@ -72,6 +70,7 @@
               <p><b>Dashboard</b></p>
             </a>
           </li>
+          <?php }; ?>
           <li class="nav-item has-treeview <?php if ($title == "Transaksi") {
             echo "menu-open";
           } ?>">
@@ -101,6 +100,7 @@
               </ul>
             <?php } ?>
           </li>
+          <?php if($this->session->userdata('Admin') != '3'){ ?>
           <li class="nav-item">
             <a href="<?=base_url("Rekening")?>" class="nav-link <?php if ($title == "Rekening") {
               echo "active";
@@ -109,7 +109,7 @@
               <p><b>Rekening</b></p>
             </a>
           </li>
-          <?php if($this->session->userdata('Admin')){ ?>
+          <?php if($this->session->userdata('Admin') == '1'){ ?>
             <li class="nav-item">
               <a href="<?=base_url("User")?>" class="nav-link <?php if ($title == "User") {
                 echo "active";
@@ -127,9 +127,8 @@
               <p><b>Daftar WP</b></p>
             </a>
           </li>
+          <?php }; ?>
         </ul>
       </nav>
-      <!-- /.sidebar-menu -->
     </div>
-    <!-- /.sidebar -->
   </aside>

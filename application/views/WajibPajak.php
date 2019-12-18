@@ -293,9 +293,8 @@
         "scrollCollapse": true,
         "paging": false,
         "ordering": true,
-        "autoWidth": true,
-        "columnDefs": [{ "targets": [0,1,2,3,4,5], "searchable": true }]
-        // "columnDefs": [{"targets": [0], "orderable": false}]
+        "autoWidth": true
+        // "columnDefs": [{ "targets": [0,3,4,5,6,7,8], "searchable": false }]
     });
     $(function () {
       $('[data-mask]').inputmask()
