@@ -10,6 +10,13 @@ class Dashboard extends CI_Controller {
 		}
 	}
 
+	public function Log($Aktifitas){
+		$this->db->insert('Aktifitas',
+							array('NamaUser' => $this->session->userdata('NamaAdmin'),
+								 'Aktifitas' => $Aktifitas,
+								 'TanggalAkses' => date("d-m-Y H:i:s")));
+	}
+
 	public function index(){
 		$Tahun = $Bulan = $Query = $Queri = $query = $Bidang = $Data['bidangpajak'] = "";
 		$NamaBulan = array('Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember');
@@ -20,15 +27,22 @@ class Dashboard extends CI_Controller {
 			$Bidang = $_POST['BidangPajak'];
 			$Data['bidangpajak'] = $_POST['BidangPajak'];
 			if ($_POST['BidangPajak'] == 'All') {
+				$this->Log('Filter Bulan Pada Menu Dashboard');
 				$Query = "SELECT * FROM ".'"Transaksi"'." WHERE ".'"WaktuTransaksi"::text like '."'%$Bulan%'";
 				$Queri = "SELECT * FROM ".'"Transaksi"'." WHERE ".'"WaktuTransaksi"::text like '."'%$Tahun%'";
 				$query = "SELECT DISTINCT ".'"NPWPD"'." FROM ".'"Transaksi"'." WHERE ".'"WaktuTransaksi"::text like '."'%$Bulan%'";
 			} else {
+				$this->Log('Filter Bulan Dan Bidang Pajak Pada Menu Dashboard');
 				$Query = "SELECT * FROM ".'"Transaksi"'." WHERE ".'"JenisPajak" = '."'$Bidang'".' AND "WaktuTransaksi"::text like '."'%$Bulan%'";
 				$Queri = "SELECT * FROM ".'"Transaksi"'." WHERE ".'"JenisPajak" = '."'$Bidang'".' AND "WaktuTransaksi"::text like '."'%$Tahun%'";
 				$query = "SELECT DISTINCT ".'"NPWPD"'." FROM ".'"Transaksi"'." WHERE ".'"JenisPajak" = '."'$Bidang'".' AND "WaktuTransaksi"::text like '."'%$Bulan%'";
 			}
 		} else {
+			$this->Log('Akses Menu Dashboard');
+			$this->db->insert('Aktifitas',
+							array('NamaUser' => $this->session->userdata('NamaAdmin'),
+								 'Aktifitas' => 'Akses Menu Dashboard',
+								 'TanggalAkses' => date("d-m-Y H:i:s")));
 			$Bulan = date("Y-m");
 			$Tahun = date("Y");
 			$Query = "SELECT * FROM ".'"Transaksi"'." WHERE ".'"WaktuTransaksi"::text like '."'%$Bulan%'";

@@ -10,6 +10,13 @@ class Transaksi extends CI_Controller {
 		}
 	}
 
+	public function Log($Aktifitas){
+		$this->db->insert('Aktifitas',
+							array('NamaUser' => $this->session->userdata('NamaAdmin'),
+								 'Aktifitas' => $Aktifitas,
+								 'TanggalAkses' => date("d-m-Y H:i:s")));
+	}
+
 	public function DataPerWP($dataperwp, $periode){ 
 		$dataTransaksiPerWP = array();
 		foreach ($dataperwp as $key) {
@@ -55,6 +62,7 @@ class Transaksi extends CI_Controller {
 	}
 
 	public function Tahunan(){
+		$this->Log('Akses Menu Transaksi Tahunan');
 		$Tahun = $query = $Bidang = $Data['bidangpajak'] = "";
 		if ($this->session->userdata('Admin') != '3') {
 			if (!empty($_POST)) {
@@ -115,6 +123,7 @@ class Transaksi extends CI_Controller {
 	}
 
 	public function Bulanan(){
+		$this->Log('Akses Menu Transaksi Bulanan');
 		$Bulan = $query = $Bidang = $Data['bidangpajak'] = "";
 		if ($this->session->userdata('Admin') != '3') {
 			if (!empty($_POST)) {
@@ -177,6 +186,7 @@ class Transaksi extends CI_Controller {
 	}
 
 	public function Harian(){ 
+		$this->Log('Akses Menu Transaksi Harian');
 		$awal = $akhir = $Awal = $Akhir = $query = $Bidang = $Data['bidangpajak'] = "";
 		if ($this->session->userdata('Admin') != '3') {
 			if (!empty($_POST)) {
@@ -247,19 +257,23 @@ class Transaksi extends CI_Controller {
 	}
 
 	public function Excel(){ 
+		$this->Log('Download Excel '.ucwords(strtolower($this->session->userdata('Judul'))));
 		$this->load->view('Transaksi/Excel');
 	}
 
 	public function Pdf(){ 
+		$this->Log('Download Pdf '.ucwords(strtolower($this->session->userdata('Judul'))));
 		$this->load->library('Pdf');
 		$this->load->view('Transaksi/Pdf');
 	}
 
 	public function ExcelPerWP(){ 
+		$this->Log('Download Excel '.ucwords(strtolower($this->session->userdata('Judul'))).' Per Wajib Pajak');
 		$this->load->view('Transaksi/ExcelPerWP');
 	}
 
 	public function PdfPerWP(){ 
+		$this->Log('Download Pdf '.ucwords(strtolower($this->session->userdata('Judul'))).' Per Wajib Pajak');
 		$this->load->library('Pdf');
 		$this->load->view('Transaksi/PdfPerWP');
 	}

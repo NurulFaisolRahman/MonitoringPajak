@@ -10,7 +10,15 @@ class Rekening extends CI_Controller {
 		}
 	}
 
+	public function Log($Aktifitas){
+		$this->db->insert('Aktifitas',
+							array('NamaUser' => $this->session->userdata('NamaAdmin'),
+								 'Aktifitas' => $Aktifitas,
+								 'TanggalAkses' => date("d-m-Y H:i:s")));
+	}
+
 	public function index(){
+		$this->Log('Akses Menu Rekening');
 		$Data['DataRekening'] = $this->db->get('Rekening')->result_array();
 		$Data['title'] = "Rekening";
 		$Data['submenu'] = "";
@@ -29,6 +37,7 @@ class Rekening extends CI_Controller {
 										'JenisPajak' => $_POST['NamaJenisPajak'],
 										'SubJenisPajak' => $_POST['SubJenisPajak']));		
 			echo "ok";
+			$this->Log('Tambah Data Rekening Dengan Nomor = 4.1.1.'.$_POST['JenisPajak'].'.'.$NomorRekening);
 		} else {
 			echo "ko";
 		}
@@ -47,6 +56,7 @@ class Rekening extends CI_Controller {
 									  'JenisPajak' => $_POST['NamaJenisPajak'],
 									  'SubJenisPajak' => $_POST['EditSubJenisPajak']));
 				echo "ok";
+				$this->Log('Edit Data Rekening Dengan Nomor = 4.1.1.'.$_POST['EditJenisPajak'].'.'.$NomorRekening);
 			} else {
 				echo "ko";
 			}
@@ -54,6 +64,7 @@ class Rekening extends CI_Controller {
 			$this->db->where('NomorRekening', $_POST['EditNomorRekeningLama']);
 			$this->db->update('Rekening',array('SubJenisPajak' => $_POST['EditSubJenisPajak']));
 			echo "ok";
+			$this->Log('Edit Data Rekening Dengan Nomor = 4.1.1.'.$_POST['EditJenisPajak'].'.'.$NomorRekening);
 		}
 	}
 
@@ -61,6 +72,7 @@ class Rekening extends CI_Controller {
 		if ($this->db->get_where('WajibPajak', array('NomorRekening' => $_POST['NomorRekening']))->num_rows() === 0) {
 			$this->db->delete('Rekening', array('NomorRekening' => $_POST['NomorRekening']));
 			echo "ok";
+			$this->Log('Hapus Data Rekening Dengan Nomor = 4.1.1.'.$_POST['NomorRekening']);
 		} else {
 			echo "ko";
 		}

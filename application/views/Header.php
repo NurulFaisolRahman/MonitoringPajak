@@ -127,6 +127,16 @@
               <p><b>Daftar WP</b></p>
             </a>
           </li>
+          <?php if($this->session->userdata('Admin') == '1'){ ?>
+          <li class="nav-item">
+            <a href="<?=base_url("Aktifitas")?>" class="nav-link <?php if ($title == "Aktifitas") {
+              echo "active";
+            } ?>">
+              <i class="nav-icon fas fa-history"></i>
+              <p><b>Aktifitas</b></p>
+            </a>
+          </li>
+          <?php }; ?>
           <?php }; ?>
         </ul>
       </nav>

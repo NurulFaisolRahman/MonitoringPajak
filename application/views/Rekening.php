@@ -222,14 +222,10 @@
     });
 
     var IndexRekening = [];
-    $.post(BaseURL+"/WajibPajak/IndexRekening").done(function(Respon) {
-      var ParseData = JSON.parse(Respon);
-      for (var i = 0; i < ParseData.length; i++){
-          var key = ParseData[i].NomorRekening.toString();
-          var len = key.length;
-          IndexRekening[key.substr(0,2)] = i;
-      }
-    });
+    IndexRekening['01'] = 0;
+    IndexRekening['02'] = 1;
+    IndexRekening['07'] = 2;
+    IndexRekening['03'] = 3;
 
     $(document).on("click","#EditRekening",function(){  
       if ($('#EditNomorRekening').val() === '') {
@@ -270,7 +266,8 @@
           if (Respon == 'ok') {
             window.location = BaseURL + '/Rekening';
           } else {
-            alert('Nomor Rekening Digunakan Pada Tabel Wajib Pajak')
+            alert(Respon)
+            // alert('Nomor Rekening Digunakan Pada Tabel Wajib Pajak')
           }
         });
       }

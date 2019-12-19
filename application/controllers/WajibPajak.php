@@ -18,7 +18,15 @@ class WajibPajak extends CI_Controller {
 	   }
 	}
 
+	public function Log($Aktifitas){
+		$this->db->insert('Aktifitas',
+							array('NamaUser' => $this->session->userdata('NamaAdmin'),
+								 'Aktifitas' => $Aktifitas,
+								 'TanggalAkses' => date("d-m-Y H:i:s")));
+	}
+
 	public function index(){
+		$this->Log('Akses Menu Wajib Pajak');
 		$Query = "SELECT * FROM ".'"WajibPajak"'." ORDER BY ".'"WaktuRegistrasi" DESC';
 		$Data['DataWajibPajak'] = $this->db->query($Query)->result_array();
 		$Data['DataRekening'] = $this->db->get('Rekening')->result_array();
@@ -43,6 +51,7 @@ class WajibPajak extends CI_Controller {
 							  'Pembuat' => $this->session->userdata('NamaAdmin'),
 							  'WaktuRegistrasi' => date("d-m-Y H:i:s")));
 			echo "ok";
+			$this->Log('Tambah Data Wajib Pajak Dengan NPWPD = '.$this->NPWPD($_POST['NPWPD']));
 		} else {
 			echo "ko";
 		}
@@ -79,6 +88,7 @@ class WajibPajak extends CI_Controller {
 					$this->db->update('Akun', array('Username' => $NPWPD));
 				}
 				echo "ok";
+				$this->Log('Edit Data Wajib Pajak Dengan NPWPD = '.$NPWPD);
 			} else {
 				echo "ko";
 			}
@@ -108,6 +118,7 @@ class WajibPajak extends CI_Controller {
 								  'JamOperasional' => $_POST['EditJamOperasional']));
 			}
 			echo "ok";
+			$this->Log('Edit Data Wajib Pajak Dengan NPWPD = '.$NPWPD);
 		}
 	}
 
@@ -118,6 +129,7 @@ class WajibPajak extends CI_Controller {
 				$this->db->delete('Akun', array('Username' => $_POST['NPWPD']));
 			}
 			echo "ok";
+			$this->Log('Hapus Data Wajib Pajak Dengan NPWPD = '.$_POST['NPWPD']);
 		} else {
 			echo "ko";
 		}
@@ -134,20 +146,24 @@ class WajibPajak extends CI_Controller {
                     ->where('NPWPD', $_POST['NPWPD'])
                     ->get()->result_array();
 		echo json_encode($Status[0]);
+		$this->Log('Lihat Status Wajib Pajak '.$_POST['NPWPD']);
 	}
 
 	public function GantiStatus(){
 		$this->db->where('NPWPD', $_POST['NPWPD']);
 		$this->db->update('WajibPajak', array('Status' => $_POST['WPStatus']));
+		$this->Log($_POST['WPStatus'].' Wajib Pajak Dengan NPWPD = '.$_POST['NPWPD']);
 	}
 
 	public function PDF(){
+		$this->Log('Download Pdf Data Wajib Pajak');
 		$this->load->library('Pdf');
 		$Data['DataWajibPajak'] = $this->db->get('WajibPajak')->result_array();
 		$this->load->view('WajibPajakPDF',$Data);
 	}
 
 	public function Excel(){
+		$this->Log('Download Excel Data Wajib Pajak');
 		$Data['DataWajibPajak'] = $this->db->get('WajibPajak')->result_array();
 		$this->load->view('WajibPajakExcel',$Data);
 	}

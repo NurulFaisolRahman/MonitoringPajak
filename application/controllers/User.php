@@ -10,7 +10,15 @@ class User extends CI_Controller {
 		}
 	}
 
+	public function Log($Aktifitas){
+		$this->db->insert('Aktifitas',
+							array('NamaUser' => $this->session->userdata('NamaAdmin'),
+								 'Aktifitas' => $Aktifitas,
+								 'TanggalAkses' => date("d-m-Y H:i:s")));
+	}
+
 	public function index(){
+		$this->Log('Akses Menu User');
 		$Query = "SELECT * FROM ".'"Akun"'." WHERE ".'"JenisAkun" != '."'1' ORDER BY ".'"WaktuRegistrasi" DESC';
 		$Data['DataUser'] = $this->db->query($Query)->result_array();
 		$Data['title'] = "User";
@@ -29,6 +37,7 @@ class User extends CI_Controller {
 								 'Pembuat' => $this->session->userdata('NamaAdmin'),
 								 'WaktuRegistrasi' => date("d-m-Y H:i:s")));	
 				echo "ok";
+				$this->Log('Tambah Data User Dengan Username = '.$_POST['Username']);
 			} else {
 				echo "Username Sudah Ada";
 			}
@@ -41,6 +50,7 @@ class User extends CI_Controller {
 								 'Pembuat' => $this->session->userdata('NamaAdmin'),
 								 'WaktuRegistrasi' => date("d-m-Y H:i:s")));	
 				echo "ok";
+				$this->Log('Tambah Data User Dengan Username = '.$_POST['Username']);
 			} else if($this->db->get_where('Akun', array('Username' => $_POST['Username']))->num_rows() === 1){
 				echo "Username Sudah Ada";
 			} else if($this->db->get_where('WajibPajak', array('NPWPD' => $_POST['Username']))->num_rows() === 0){
@@ -63,6 +73,7 @@ class User extends CI_Controller {
 						$this->db->update('Akun', array('Username' => $_POST['EditUsername']));
 						echo "ok";
 					}
+					$this->Log('Edit Data User Dengan Username = '.$_POST['EditUsername']);
 				} else {
 					echo "Username Sudah Ada";
 				}
@@ -82,6 +93,7 @@ class User extends CI_Controller {
 						$this->db->update('Akun', array('Username' => $_POST['EditUsername']));
 						echo "ok";
 					}
+					$this->Log('Edit Data User Dengan Username = '.$_POST['EditUsername']);
 				}
 			}
 		} else {
@@ -89,6 +101,7 @@ class User extends CI_Controller {
 				$this->db->where('Username', $_POST['EditUsername']);
 				$this->db->update('Akun', array('Password' => password_hash($_POST['EditPassword'], PASSWORD_DEFAULT)));
 				echo "ok";
+				$this->Log('Edit Data User Dengan Username = '.$_POST['EditUsername']);
 			} else {
 				echo "ok";
 			}
@@ -98,5 +111,6 @@ class User extends CI_Controller {
 	public function Hapus(){
 		$this->db->delete('Akun', array('Username' => $_POST['Username']));
 		echo "ok";
+		$this->Log('Hapus Data User Dengan Username = '.$_POST['Username']);
 	}
 }

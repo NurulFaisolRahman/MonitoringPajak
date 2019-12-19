@@ -24,6 +24,10 @@ class Autentikasi extends CI_Controller {
 				$DataSession = array();
 				$DataSession = array('Status' => "Login", 'Admin' => $Akun[0]['JenisAkun'], 'NamaAdmin' => $Akun[0]['Username']);
 				$this->session->set_userdata($DataSession);
+				$this->db->insert('Aktifitas',
+							array('NamaUser' => $Akun[0]['Username'],
+								 'Aktifitas' => 'Login',
+								 'TanggalAkses' => date("d-m-Y H:i:s")));	
 		  		echo $Akun[0]['JenisAkun'];
 			} else {
 				echo "Password Salah";
@@ -32,6 +36,10 @@ class Autentikasi extends CI_Controller {
 	}
 
 	public function SignOut(){
+		$this->db->insert('Aktifitas',
+							array('NamaUser' => $this->session->userdata('NamaAdmin'),
+								 'Aktifitas' => 'Log Out',
+								 'TanggalAkses' => date("d-m-Y H:i:s")));	
 		$this->session->sess_destroy();
 		redirect(base_url());
 	}
