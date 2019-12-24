@@ -21,7 +21,7 @@
               <div class="col-8">
                 <table>
                   <tr>
-                    <?php if($this->session->userdata('Admin')){ ?>
+                    <?php if($this->session->userdata('Admin') == '1'){ ?>
                     <td>
                       <a href="#" data-toggle="modal" data-target="#ModalRekening" class="btn btn-primary font-weight-bold"><li class="fa fa-plus"></li> Rekening</a>
                     </td>
@@ -40,7 +40,7 @@
                 <th>Nomor Rekening</th>
                 <th>Jenis Pajak</th>
                 <th>Sub Jenis Pajak</th>
-                <?php if($this->session->userdata('Admin')){ ?>
+                <?php if($this->session->userdata('Admin') == '1'){ ?>
                   <th style="width:10px;">Aksi</th>
                 <?php }; ?>
               </tr>
@@ -52,7 +52,7 @@
                     <td><?="4.1.1.".$key['NomorRekening']?></td>
                     <td><?=$key['JenisPajak']?></td>
                     <td><?=$key['SubJenisPajak']?></td>
-                    <?php if($this->session->userdata('Admin')){ ?>
+                    <?php if($this->session->userdata('Admin') == '1'){ ?>
                       <td align="center">
                         <div class="btn-group btn-group-sm">
                           <a href="#" EditRekening="<?=$key['NomorRekening']."|".$key['SubJenisPajak']?>" class="btn btn-warning EditRekening"><i class="fas fa-edit"></i></a>

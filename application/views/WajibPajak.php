@@ -21,7 +21,7 @@
               <div class="col-8">
                 <table>
                   <tr>
-                    <?php if($this->session->userdata('Admin')){ ?>
+                    <?php if($this->session->userdata('Admin') == '1'){ ?>
                     <td>
                       <a href="#" data-toggle="modal" data-target="#ModalWP" class="btn btn-primary font-weight-bold"><li class="fa fa-plus"></li> WAJIB PAJAK</a>
                     </td>
@@ -51,7 +51,7 @@
                 <th style="width: 50px;">Jenis Pajak</th>
                 <th style="width: 70px;">Sub Jenis Pajak</th>
                 <th style="width: 50px;">Jam Kerja</th>
-                <?php if($this->session->userdata('Admin')){ ?>
+                <?php if($this->session->userdata('Admin') == '1'){ ?>
                   <th style="width: 40px;">Status</th>
                   <th style="width: 10px;">Aksi</th>
                 <?php }; ?>
@@ -64,10 +64,10 @@
                     <td><?=$key['NPWPD']?><br><?=$key['NamaWP']?></td>
                     <td><?=$key['AlamatWP']?></td>
                     <td><?="4.1.1.".$key['NomorRekening']?></td>
-                    <td><?=$key['JenisPajak']?></td>
-                    <td><?=$key['SubJenisPajak']?></td>
+                    <td><?=$JenisPajak[$key['NomorRekening']]?></td>
+                    <td><?=$SubJenisPajak[$key['NomorRekening']]?></td>
                     <td><?=$key['JamOperasional']?></td>
-                    <?php if($this->session->userdata('Admin')){ ?>
+                    <?php if($this->session->userdata('Admin') == '1'){ ?>
                       <td>
                         <?php if (empty($key['Status'])) {?>
                           <?="Belum Aktivasi"?>
@@ -147,7 +147,7 @@
             </div>
             <select class="form-control btn btn-light" id="DataRekening">
               <?php foreach ($DataRekening as $key): ?>
-                <option value="<?=$key['NomorRekening']."|".$key['JenisPajak']."|".$key['SubJenisPajak']?>"><b><?=$key['SubJenisPajak']?></b></option>
+                <option value="<?=$key['NomorRekening']?>"><b><?=$key['SubJenisPajak']?></b></option>
               <?php endforeach; ?>
             </select>
           </div>
@@ -216,7 +216,7 @@
             </div>
             <select class="form-control btn btn-light" id="EditDataRekening">
               <?php foreach ($DataRekening as $key): ?>
-                <option value="<?=$key['NomorRekening']."|".$key['JenisPajak']."|".$key['SubJenisPajak']?>"><b><?=$key['SubJenisPajak']?></b></option>
+                <option value="<?=$key['NomorRekening']?>"><b><?=$key['SubJenisPajak']?></b></option>
               <?php endforeach; ?>
             </select>
           </div>
@@ -252,11 +252,29 @@
         <div class="card-body">
           <div class="row">
             <div class="col-12">
-              <div class="input-group mb-3">
+              <div class="input-group mb-1">
                 <div class="input-group-prepend">
                   <span class="input-group-text bg-primary font-weight-bold text-white" id="Status"></span>
                 </div>
                 <input type="text" class="form-control text-center font-weight-bold" id="Riwayat" readonly>
+              </div>
+              <div class="input-group mb-1">
+                <div class="input-group-prepend">
+                  <span class="input-group-text bg-success font-weight-bold text-white">Data Pertama</span>
+                </div>
+                <input type="text" class="form-control text-center font-weight-bold" id="RiwayatPertama" readonly>
+              </div>
+              <div class="input-group mb-1">
+                <div class="input-group-prepend">
+                  <span class="input-group-text bg-danger font-weight-bold text-white">Data Terakhir</span>
+                </div>
+                <input type="text" class="form-control text-center font-weight-bold" id="RiwayatTerakhir" readonly>
+              </div>
+              <div class="input-group mb-1">
+                <div class="input-group-prepend">
+                  <span class="input-group-text bg-info font-weight-bold text-white">Jenis Data</span>
+                </div>
+                <input type="text" class="form-control text-center font-weight-bold" id="JenisData" readonly>
               </div>
             </div>
           </div>
@@ -393,18 +411,11 @@
         var Status = { NPWPD: $(this).attr('StatusWP') };
         $.post(BaseURL+"/WajibPajak/Status", Status).done(function(Respon) {
           var Data = JSON.parse(Respon);
-          var WPstatus
-          if (Data.Status == "Disable") {
-            WPstatus = "Offline"
-          } else if (Data.Status == "Enable"){
-            WPstatus = "Online"
-          } else if (Data.Status == "Offline"){
-            WPstatus = "Offline"
-          } else if (Data.Status == "Online"){
-            WPstatus = "Online"
-          }
-          document.getElementById('Status').innerHTML = WPstatus;
-          document.getElementById('Riwayat').value = Data.Riwayat;
+          document.getElementById('Status').innerHTML = Data.Status;
+          document.getElementById('Riwayat').value = Data.Sinyal;
+          document.getElementById('RiwayatPertama').value = Data.PengirimanPertama;
+          document.getElementById('RiwayatTerakhir').value = Data.Riwayat;
+          document.getElementById('JenisData').value = Data.Koneksi;
           if (Data.Riwayat == '') {
             document.getElementById('Riwayat').value = 'Belum Ada Data';
           }

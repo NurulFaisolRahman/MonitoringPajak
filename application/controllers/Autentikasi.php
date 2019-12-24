@@ -51,7 +51,11 @@ class Autentikasi extends CI_Controller {
 				if (password_verify($_POST['Password'], $CekLogin->result_array()[0]['Password'])) {
 					$this->db->where('NPWPD', $_POST['NPWPD']);
 					$this->db->update('WajibPajak', array('Status' => 'Online'));
-					echo "ok";
+					if ($CekLogin->result_array()[0]['Koneksi'] == '') {
+						echo "ok";
+					} else {
+						echo $CekLogin->result_array()[0]['Koneksi'];
+					}
 				} else {
 					echo "fail";
 				}
@@ -62,6 +66,16 @@ class Autentikasi extends CI_Controller {
 		else{
 			echo "ko";
 		}
+	}
+
+	public function UpdateJenisData(){
+		$this->db->where('NPWPD', $_POST['NPWPD']);
+		$this->db->update('WajibPajak', array('Koneksi' => $_POST['JenisData']));
+	}
+
+	public function UpdateSinyal(){
+		$this->db->where('NPWPD', $_POST['NPWPD']);
+		$this->db->update('WajibPajak', array('Sinyal' => $_POST['Sinyal']));
 	}
 
 	public function InputTransaksiWajibPajak(){
@@ -79,13 +93,19 @@ class Autentikasi extends CI_Controller {
 			}
 			$this->db->insert_batch("Transaksi", $value);
 			$this->db->where('NPWPD', $key);
-			$this->db->update('WajibPajak', array('Riwayat' => date("d-m-Y H:i:s")));
+			$this->db->update('WajibPajak', array('Riwayat' => date("Y-m-d H:i:s")));
 			echo "ok";
 		}
 	}
 
-	// public function api(){
-	// 	$Data = $this->db->get_where('Transaksi', array('NPWPD' => '1507.199.607'))->result_array();
-	// 	echo json_encode($Data);
-	// }
+	public function api(){
+		$Data = Array("NomorTransaksi" => '3', 
+					  "SubNominal" => '150796', 
+					  "Service" => '0', 
+					  "Diskon" => '0', 
+					  "Pajak" => '15079', 
+					  "TotalTransaksi" => '199615', 
+					  "WaktuTransaksi" => '2019-12-15 15:07:00'); 		
+		echo json_encode($Data);
+	}
 }

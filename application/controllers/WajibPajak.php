@@ -26,27 +26,32 @@ class WajibPajak extends CI_Controller {
 	}
 
 	public function index(){
-		$this->Log('Akses Menu Wajib Pajak');
 		$Query = "SELECT * FROM ".'"WajibPajak"'." ORDER BY ".'"WaktuRegistrasi" DESC';
 		$Data['DataWajibPajak'] = $this->db->query($Query)->result_array();
 		$Data['DataRekening'] = $this->db->get('Rekening')->result_array();
+		$IndexJenisPajak = $IndexSubJenisPajak = array();
+		foreach ($Data['DataRekening'] as $key) {
+			$IndexJenisPajak[$key['NomorRekening']] = $key['JenisPajak'];
+			$IndexSubJenisPajak[$key['NomorRekening']] = $key['SubJenisPajak'];
+		}
+		$Data['JenisPajak'] = $IndexJenisPajak;
+		$Data['SubJenisPajak'] = $IndexSubJenisPajak;
 		$Data['title'] = "Daftar WP";
 		$Data['submenu'] = "";
 		$this->load->view('Header',$Data);
 		$this->load->view('WajibPajak');
+		$this->Log('Akses Menu Wajib Pajak');
 	}
 
 	public function Tambah(){
 		if ($this->db->get_where('WajibPajak', array('NPWPD' => $this->NPWPD($_POST['NPWPD'])))->num_rows() === 0) {
-			$Pisah = explode("|", $_POST['DataRekening']);
+			// $Pisah = explode("|", $_POST['DataRekening']);
 			$this->db->insert('WajibPajak',
 					    array('NPWPD' => $this->NPWPD($_POST['NPWPD']),
 					    	  'Password' => password_hash($_POST['PasswordWP'], PASSWORD_DEFAULT),
 							  'NamaWP' => $_POST['NamaWP'],
 						      'AlamatWP' => $_POST['AlamatWP'],
-						 	  'NomorRekening' => $Pisah[0],
-							  'JenisPajak' => $Pisah[1],
-							  'SubJenisPajak' => $Pisah[2],
+						 	  'NomorRekening' => $_POST['DataRekening'],
 							  'JamOperasional' => $_POST['JamOperasional'],
 							  'Pembuat' => $this->session->userdata('NamaAdmin'),
 							  'WaktuRegistrasi' => date("d-m-Y H:i:s")));
@@ -61,7 +66,7 @@ class WajibPajak extends CI_Controller {
 		$NPWPD = $this->NPWPD($_POST['EditNPWPD']);
 		if ($NPWPD != $_POST['EditNPWPDLama']) {
 			if ($this->db->get_where('WajibPajak', array('NPWPD' => $NPWPD))->num_rows() === 0) {
-				$Pisah = explode("|", $_POST['EditDataRekening']);
+				// $Pisah = explode("|", $_POST['EditDataRekening']);
 				$this->db->where('NPWPD', $_POST['EditNPWPDLama']);
 				if (!empty($_POST['EditPasswordWP'])) {
 					$this->db->update('WajibPajak',
@@ -69,18 +74,14 @@ class WajibPajak extends CI_Controller {
 								  'Password' => password_hash($_POST['EditPasswordWP'], PASSWORD_DEFAULT),
 								  'NamaWP' => $_POST['EditNamaWP'],
 								  'AlamatWP' => $_POST['EditAlamatWP'],
-								  'NomorRekening' => $Pisah[0],
-								  'JenisPajak' => $Pisah[1],
-								  'SubJenisPajak' => $Pisah[2],
+								  'NomorRekening' => $_POST['EditDataRekening'],
 								  'JamOperasional' => $_POST['EditJamOperasional']));
 				} else {
 					$this->db->update('WajibPajak',
 							array('NPWPD' => $NPWPD,
 								  'NamaWP' => $_POST['EditNamaWP'],
 								  'AlamatWP' => $_POST['EditAlamatWP'],
-								  'NomorRekening' => $Pisah[0],
-								  'JenisPajak' => $Pisah[1],
-								  'SubJenisPajak' => $Pisah[2],
+								  'NomorRekening' => $_POST['EditDataRekening'],
 								  'JamOperasional' => $_POST['EditJamOperasional']));
 				}
 				if ($this->db->get_where('Akun', array('Username' => $_POST['EditNPWPDLama']))->num_rows() === 1) {
@@ -94,27 +95,23 @@ class WajibPajak extends CI_Controller {
 			}
 		} else {
 			if (!empty($_POST['EditPasswordWP'])) {
-				$Pisah = explode("|", $_POST['EditDataRekening']);
+				// $Pisah = explode("|", $_POST['EditDataRekening']);
 				$this->db->where('NPWPD', $_POST['EditNPWPDLama']);
 				$this->db->update('WajibPajak',
 							array('NPWPD' => $NPWPD,
 								  'Password' => password_hash($_POST['EditPasswordWP'], PASSWORD_DEFAULT),
 								  'NamaWP' => $_POST['EditNamaWP'],
 								  'AlamatWP' => $_POST['EditAlamatWP'],
-								  'NomorRekening' => $Pisah[0],
-								  'JenisPajak' => $Pisah[1],
-								  'SubJenisPajak' => $Pisah[2],
+								  'NomorRekening' => $_POST['EditDataRekening'],
 								  'JamOperasional' => $_POST['EditJamOperasional']));
 			} else {
-				$Pisah = explode("|", $_POST['EditDataRekening']);
+				// $Pisah = explode("|", $_POST['EditDataRekening']);
 				$this->db->where('NPWPD', $_POST['EditNPWPDLama']);
 				$this->db->update('WajibPajak',
 							array('NPWPD' => $NPWPD,
 								  'NamaWP' => $_POST['EditNamaWP'],
 								  'AlamatWP' => $_POST['EditAlamatWP'],
-								  'NomorRekening' => $Pisah[0],
-								  'JenisPajak' => $Pisah[1],
-								  'SubJenisPajak' => $Pisah[2],
+								  'NomorRekening' => $_POST['EditDataRekening'],
 								  'JamOperasional' => $_POST['EditJamOperasional']));
 			}
 			echo "ok";
@@ -141,10 +138,26 @@ class WajibPajak extends CI_Controller {
 	}
 
 	public function Status(){
-		$Status = $this->db->select('Status,Riwayat')    
+		$Status = $this->db->select('Status,Sinyal,Riwayat,PengirimanPertama,Koneksi')    
                     ->from('WajibPajak')
                     ->where('NPWPD', $_POST['NPWPD'])
                     ->get()->result_array();
+        $start_date = new DateTime(date("Y-m-d H:i:s"));
+        if (!empty($Status[0]['Sinyal'])) {
+        	$since_start = $start_date->diff(new DateTime($Status[0]['Sinyal']));
+        } else {
+        	$since_start = $start_date->diff(new DateTime(date("Y-m-d H:i:s")));
+        }
+
+		if ($Status[0]['Status'] == 'Disable') {
+			$Status[0]['Status'] = 'Disable';
+		} else {
+			if ($since_start->i == 0 && $since_start->s < 15) {
+				$Status[0]['Status'] = 'Online';
+			} else {
+				$Status[0]['Status'] = 'Offline';
+			}
+		}
 		echo json_encode($Status[0]);
 		$this->Log('Lihat Status Wajib Pajak '.$_POST['NPWPD']);
 	}

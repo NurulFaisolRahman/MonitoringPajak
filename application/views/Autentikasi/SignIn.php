@@ -19,7 +19,7 @@
 					<img src="LogoBP2DMalang.jpeg" alt="IMG">
 				</div>
 
-				<form class="login100-form">
+				<form class="login100-form" onsubmit="event.preventDefault();">
 					<span class="login100-form-title">
 						SIGN IN <br> MONITORING PAJAK
 					</span>
@@ -43,7 +43,6 @@
 							Login
 						</button>
 					</div>
-
 				</form>
 			</div>
 		</div>
@@ -64,16 +63,16 @@
 		                      Password: $("#Password").val()
 		                    };
 		  	$.ajax({
-		      type	: 'POST',
+		      	type	: 'POST',
 		  		url		: 'http://localhost/MonitoringPajak/Autentikasi/SignIn',
 		  		data	: DataLogin,
 		  		success	: function(Pesan){
-		  			if(Pesan != '3'){
+		  			if(Pesan == '1' || Pesan == '2'){
 		  				window.location = 'http://localhost/MonitoringPajak/Dashboard';
 		  			} else if (Pesan == '3') {
 		  				window.location = 'http://localhost/MonitoringPajak/Transaksi/Tahunan';
 		  			} else{
-		  				alert(Pesan);
+		  				alert(Pesan)
 		  			}
 		  		}
 		  	});
