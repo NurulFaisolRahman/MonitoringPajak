@@ -11,6 +11,13 @@ class Autentikasi extends CI_Controller {
 		}
 	}
 
+	public function Log($Aktifitas){
+		$this->db->insert('Aktifitas',
+							array('NamaUser' => $this->session->userdata('NamaAdmin'),
+								 'Aktifitas' => $Aktifitas,
+								 'IP' => $_SERVER['REMOTE_ADDR']));
+	}
+
 	public function SignIn(){
 	  	$Username = $_POST['Username'];
 	  	$Password = $_POST['Password'];
@@ -24,10 +31,7 @@ class Autentikasi extends CI_Controller {
 				$DataSession = array();
 				$DataSession = array('Status' => "Login", 'Admin' => $Akun[0]['JenisAkun'], 'NamaAdmin' => $Akun[0]['Username']);
 				$this->session->set_userdata($DataSession);
-				$this->db->insert('Aktifitas',
-							array('NamaUser' => $Akun[0]['Username'],
-								 'Aktifitas' => 'Login',
-								 'TanggalAkses' => date("d-m-Y H:i:s")));	
+				$this->Log('Sign In');	
 		  		echo $Akun[0]['JenisAkun'];
 			} else {
 				echo "Password Salah";
@@ -36,12 +40,17 @@ class Autentikasi extends CI_Controller {
 	}
 
 	public function SignOut(){
-		$this->db->insert('Aktifitas',
-							array('NamaUser' => $this->session->userdata('NamaAdmin'),
-								 'Aktifitas' => 'Log Out',
-								 'TanggalAkses' => date("d-m-Y H:i:s")));	
+		$this->Log('Sign Out');	
 		$this->session->sess_destroy();
 		redirect(base_url());
+	}
+
+	public function JamOperasional(){
+		$JO = $this->db->select('JamOperasional')    
+                    ->from('WajibPajak')
+                    ->where('NPWPD', $_POST['NPWPD'])
+                    ->get()->row_array();
+        echo $JO['JamOperasional'];
 	}
 
 	public function AutentikasiWajibPajak(){
@@ -82,13 +91,15 @@ class Autentikasi extends CI_Controller {
 		$inputJSON = file_get_contents('php://input');
 		$Data = json_decode($inputJSON);
 		foreach ($Data as $key => $value) {
-			$JenisPajak = $this->db->get_where("WajibPajak", array('NPWPD' => $key))->result_array();
+			$NomorRekening = $this->db->get_where("WajibPajak", array('NPWPD' => $key))->result_array();
+			$JenisPajak = $this->db->get_where("Rekening", array('NomorRekening' => $NomorRekening[0]['NomorRekening']))->result_array();
 			foreach ($value as $Key => $Value) {
 				$value[$Key] = (array) $Value;
 				$value[$Key]['NPWPD'] = $key;
 				$value[$Key]['JenisPajak'] = $JenisPajak[0]['JenisPajak'];
 			}
 			if ($this->db->get_where('Transaksi', array('NPWPD' => $key))->num_rows() === 0) {
+				$this->db->where('NPWPD', $key);
 				$this->db->update('WajibPajak', array('PengirimanPertama' => date("d-m-Y H:i:s")));
 			}
 			$this->db->insert_batch("Transaksi", $value);
@@ -98,14 +109,45 @@ class Autentikasi extends CI_Controller {
 		}
 	}
 
+	public function ApiWP(){
+		// http://localhost/MonitoringPajak/Autentikasi/ApiWP?NPWPD=1507.199.607&Password=kekkai&Data=[{"NomorTransaksi":"3","SubNominal":"150796","Service":"0","Diskon":"0","Pajak":"15079","TotalTransaksi":"199615","WaktuTransaksi":"2019-12-15%2015:07:00"}]
+		$NPWPD = $_GET['NPWPD'];
+		$Password = $_GET['Password'];
+		$Data = json_decode($_GET['Data'],true);
+		$Cek = $this->db->get_where('WajibPajak', array('NPWPD' => $NPWPD));
+		if($Cek->num_rows() == 0){
+			echo "NPWPD Tidak Terdaftar";
+	  	}
+	  	else{
+			if (password_verify($Password, $Cek->result_array()[0]['Password'])) {
+				$NomorRekening = $this->db->get_where("WajibPajak", array('NPWPD' => $NPWPD))->result_array();
+				$JenisPajak = $this->db->get_where("Rekening", array('NomorRekening' => $NomorRekening[0]['NomorRekening']))->result_array();
+				foreach ($Data as $key => $value) {
+					$Data[$key]['NPWPD'] = $NPWPD;
+					$Data[$key]['JenisPajak'] = $JenisPajak[0]['JenisPajak'];
+				}
+				if ($this->db->get_where('Transaksi', array('NPWPD' => $NPWPD))->num_rows() === 0) {
+					$this->db->where('NPWPD', $NPWPD);
+					$this->db->update('WajibPajak', array('PengirimanPertama' => date("d-m-Y H:i:s")));
+				}
+				$this->db->insert_batch("Transaksi", $Data);
+				$this->db->where('NPWPD', $NPWPD);
+				$this->db->update('WajibPajak', array('Riwayat' => date("Y-m-d H:i:s")));
+		  		echo "Sukses";
+			} else {
+				echo "Password Salah";
+			}
+		}
+	}
+
 	public function api(){
-		$Data = Array("NomorTransaksi" => '3', 
+		$Data = Array(0 => array("NomorTransaksi" => '3', 
 					  "SubNominal" => '150796', 
 					  "Service" => '0', 
 					  "Diskon" => '0', 
 					  "Pajak" => '15079', 
 					  "TotalTransaksi" => '199615', 
-					  "WaktuTransaksi" => '2019-12-15 15:07:00'); 		
+					  "WaktuTransaksi" => '2019-12-15 15:07:00')); 	
 		echo json_encode($Data);
 	}
 }

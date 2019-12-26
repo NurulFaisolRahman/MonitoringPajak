@@ -66,7 +66,7 @@
                     <td><?="4.1.1.".$key['NomorRekening']?></td>
                     <td><?=$JenisPajak[$key['NomorRekening']]?></td>
                     <td><?=$SubJenisPajak[$key['NomorRekening']]?></td>
-                    <td><?=$key['JamOperasional']?></td>
+                    <td><?=$key['JamOperasional'].'<br>'.$key['Sinyal']?></td>
                     <?php if($this->session->userdata('Admin') == '1'){ ?>
                       <td>
                         <?php if (empty($key['Status'])) {?>
@@ -254,7 +254,7 @@
             <div class="col-12">
               <div class="input-group mb-1">
                 <div class="input-group-prepend">
-                  <span class="input-group-text bg-primary font-weight-bold text-white" id="Status"></span>
+                  <span class="input-group-text font-weight-bold text-white" id="Status"></span>
                 </div>
                 <input type="text" class="form-control text-center font-weight-bold" id="Riwayat" readonly>
               </div>
@@ -412,6 +412,13 @@
         $.post(BaseURL+"/WajibPajak/Status", Status).done(function(Respon) {
           var Data = JSON.parse(Respon);
           document.getElementById('Status').innerHTML = Data.Status;
+          if (Data.Status == 'Online') {
+            $("#Status").removeClass("bg-danger")
+            $("#Status").addClass("bg-success")
+          } else {
+            $("#Status").removeClass("bg-success")
+            $("#Status").addClass("bg-danger")
+          }
           document.getElementById('Riwayat').value = Data.Sinyal;
           document.getElementById('RiwayatPertama').value = Data.PengirimanPertama;
           document.getElementById('RiwayatTerakhir').value = Data.Riwayat;

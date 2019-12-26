@@ -65,7 +65,7 @@
     $('#example1').DataTable( {
         "scrollY": "50vh",
         "scrollCollapse": true,
-        "paging": false,
+        "paging": true,
         "ordering": true,
         "autoWidth": true,
     });

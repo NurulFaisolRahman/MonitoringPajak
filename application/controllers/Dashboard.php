@@ -14,7 +14,7 @@ class Dashboard extends CI_Controller {
 		$this->db->insert('Aktifitas',
 							array('NamaUser' => $this->session->userdata('NamaAdmin'),
 								 'Aktifitas' => $Aktifitas,
-								 'TanggalAkses' => date("d-m-Y H:i:s")));
+								 'IP' => $_SERVER['REMOTE_ADDR']));
 	}
 
 	public function index(){
@@ -39,10 +39,6 @@ class Dashboard extends CI_Controller {
 			}
 		} else {
 			$this->Log('Akses Menu Dashboard');
-			$this->db->insert('Aktifitas',
-							array('NamaUser' => $this->session->userdata('NamaAdmin'),
-								 'Aktifitas' => 'Akses Menu Dashboard',
-								 'TanggalAkses' => date("d-m-Y H:i:s")));
 			$Bulan = date("Y-m");
 			$Tahun = date("Y");
 			$Query = "SELECT * FROM ".'"Transaksi"'." WHERE ".'"WaktuTransaksi"::text like '."'%$Bulan%'";

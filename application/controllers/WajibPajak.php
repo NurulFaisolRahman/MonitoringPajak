@@ -22,7 +22,7 @@ class WajibPajak extends CI_Controller {
 		$this->db->insert('Aktifitas',
 							array('NamaUser' => $this->session->userdata('NamaAdmin'),
 								 'Aktifitas' => $Aktifitas,
-								 'TanggalAkses' => date("d-m-Y H:i:s")));
+								 'IP' => $_SERVER['REMOTE_ADDR']));
 	}
 
 	public function index(){
@@ -53,8 +53,7 @@ class WajibPajak extends CI_Controller {
 						      'AlamatWP' => $_POST['AlamatWP'],
 						 	  'NomorRekening' => $_POST['DataRekening'],
 							  'JamOperasional' => $_POST['JamOperasional'],
-							  'Pembuat' => $this->session->userdata('NamaAdmin'),
-							  'WaktuRegistrasi' => date("d-m-Y H:i:s")));
+							  'Pembuat' => $this->session->userdata('NamaAdmin')));
 			echo "ok";
 			$this->Log('Tambah Data Wajib Pajak Dengan NPWPD = '.$this->NPWPD($_POST['NPWPD']));
 		} else {
@@ -152,7 +151,7 @@ class WajibPajak extends CI_Controller {
 		if ($Status[0]['Status'] == 'Disable') {
 			$Status[0]['Status'] = 'Disable';
 		} else {
-			if ($since_start->i == 0 && $since_start->s < 15) {
+			if ($since_start->h == 0 && $since_start->i < 1) {
 				$Status[0]['Status'] = 'Online';
 			} else {
 				$Status[0]['Status'] = 'Offline';

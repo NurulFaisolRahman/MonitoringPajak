@@ -14,7 +14,7 @@ class Aktifitas extends CI_Controller {
 		$this->db->insert('Aktifitas',
 							array('NamaUser' => $this->session->userdata('NamaAdmin'),
 								 'Aktifitas' => $Aktifitas,
-								 'TanggalAkses' => date("d-m-Y H:i:s")));
+								 'IP' => $_SERVER['REMOTE_ADDR']));
 	}
 
 	public function index(){

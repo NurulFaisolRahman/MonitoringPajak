@@ -22,7 +22,10 @@
                 <table>
                   <tr>
                     <td>
-                      <a href="#" data-toggle="modal" data-target="#ModalUser" class="btn btn-primary font-weight-bold"><li class="fa fa-plus"></li> USER</a>
+                      <a href="#" data-toggle="modal" data-target="#ModalUser" class="btn btn-warning text-white font-weight-bold"><li class="fa fa-plus"></li> USER</a>
+                    </td>
+                    <td>&emsp;
+                      <a href="#" data-toggle="modal" data-target="#ModalUser" class="btn btn-success font-weight-bold"><li class="fa fa-plus"></li> WAJIB PAJAK</a>
                     </td>
                   </tr>
                 </table>
@@ -90,16 +93,6 @@
       </div>
       <div class="modal-body">
         <div class="card-body">
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text bg-primary"><b>Jenis Akun</b></i></span>
-            </div>
-            <select class="form-control btn btn-light" id="JenisAkun">
-              <option value="2"><?="Read Only"?></option>
-              <option value="3"><?="Wajib Pajak"?></option>
-            </select>
-          </div>
-          <br>
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text bg-primary"><b>Username</b></i></span>
@@ -192,8 +185,7 @@
         alert('Mohon Input Password')
       } else {
         var Data = { Username: $('#Username').val(),
-                    Password: $('#Password').val(),
-                    JenisAkun: $('#JenisAkun').val()};
+                    Password: $('#Password').val() };
         $.post(BaseURL+"/User/Tambah", Data).done(function(Respon) {
           if (Respon == 'ok') {
             window.location = BaseURL + '/User';

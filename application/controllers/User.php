@@ -14,11 +14,11 @@ class User extends CI_Controller {
 		$this->db->insert('Aktifitas',
 							array('NamaUser' => $this->session->userdata('NamaAdmin'),
 								 'Aktifitas' => $Aktifitas,
-								 'TanggalAkses' => date("d-m-Y H:i:s")));
+								 'IP' => $_SERVER['REMOTE_ADDR']));
 	}
 
 	public function index(){
-		$this->Log('Akses Menu User');
+		// $this->Log('Akses Menu User');
 		$Query = "SELECT * FROM ".'"Akun"'." WHERE ".'"JenisAkun" != '."'1' ORDER BY ".'"WaktuRegistrasi" DESC';
 		$Data['DataUser'] = $this->db->query($Query)->result_array();
 		$Data['title'] = "User";
@@ -28,34 +28,16 @@ class User extends CI_Controller {
 	}
 
 	public function Tambah(){
-		if ($_POST['JenisAkun'] == '2') {
-			if ($this->db->get_where('Akun', array('Username' => $_POST['Username']))->num_rows() === 0) {
-				$this->db->insert('Akun',
-							array('Username' => $_POST['Username'],
-								 'Password' => password_hash($_POST['Password'], PASSWORD_DEFAULT),
-								 'JenisAkun' => '2',
-								 'Pembuat' => $this->session->userdata('NamaAdmin'),
-								 'WaktuRegistrasi' => date("d-m-Y H:i:s")));	
-				echo "ok";
-				$this->Log('Tambah Data User Dengan Username = '.$_POST['Username']);
-			} else {
-				echo "Username Sudah Ada";
-			}
+		if ($this->db->get_where('Akun', array('Username' => $_POST['Username']))->num_rows() === 0) {
+			$this->db->insert('Akun',
+						array('Username' => $_POST['Username'],
+							 'Password' => password_hash($_POST['Password'], PASSWORD_DEFAULT),
+							 'JenisAkun' => '2',
+							 'Pembuat' => $this->session->userdata('NamaAdmin')));	
+			echo "ok";
+			// $this->Log('Tambah Data User Dengan Username = '.$_POST['Username']);
 		} else {
-			if ($this->db->get_where('Akun', array('Username' => $_POST['Username']))->num_rows() === 0 && $this->db->get_where('WajibPajak', array('NPWPD' => $_POST['Username']))->num_rows() === 1) {
-				$this->db->insert('Akun',
-							array('Username' => $_POST['Username'],
-								 'Password' => password_hash($_POST['Password'], PASSWORD_DEFAULT),
-								 'JenisAkun' => '3',
-								 'Pembuat' => $this->session->userdata('NamaAdmin'),
-								 'WaktuRegistrasi' => date("d-m-Y H:i:s")));	
-				echo "ok";
-				$this->Log('Tambah Data User Dengan Username = '.$_POST['Username']);
-			} else if($this->db->get_where('Akun', array('Username' => $_POST['Username']))->num_rows() === 1){
-				echo "Username Sudah Ada";
-			} else if($this->db->get_where('WajibPajak', array('NPWPD' => $_POST['Username']))->num_rows() === 0){
-				echo "NPWPD Wajib Pajak Tidak Terdaftar";
-			}
+			echo "Username Sudah Ada";
 		}
 	}
 
