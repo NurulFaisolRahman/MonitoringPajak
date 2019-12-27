@@ -110,10 +110,10 @@ class Autentikasi extends CI_Controller {
 	}
 
 	public function ApiWP(){
-		// http://localhost/MonitoringPajak/Autentikasi/ApiWP?NPWPD=1507.199.607&Password=kekkai&Data=[{"NomorTransaksi":"3","SubNominal":"150796","Service":"0","Diskon":"0","Pajak":"15079","TotalTransaksi":"199615","WaktuTransaksi":"2019-12-15%2015:07:00"}]
-		$NPWPD = $_GET['NPWPD'];
-		$Password = $_GET['Password'];
-		$Data = json_decode($_GET['Data'],true);
+		$InputJSON = json_decode(file_get_contents('php://input'), true);
+		$NPWPD = $InputJSON['NPWPD'];
+		$Password = $InputJSON['Password'];
+		$Data = json_decode($InputJSON['Data'],true);
 		$Cek = $this->db->get_where('WajibPajak', array('NPWPD' => $NPWPD));
 		if($Cek->num_rows() == 0){
 			echo "NPWPD Tidak Terdaftar";

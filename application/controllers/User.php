@@ -18,7 +18,7 @@ class User extends CI_Controller {
 	}
 
 	public function index(){
-		// $this->Log('Akses Menu User');
+		$this->Log('Akses Menu User');
 		$Query = "SELECT * FROM ".'"Akun"'." WHERE ".'"JenisAkun" != '."'1' ORDER BY ".'"WaktuRegistrasi" DESC';
 		$Data['DataUser'] = $this->db->query($Query)->result_array();
 		$Data['title'] = "User";
@@ -35,7 +35,26 @@ class User extends CI_Controller {
 							 'JenisAkun' => '2',
 							 'Pembuat' => $this->session->userdata('NamaAdmin')));	
 			echo "ok";
-			// $this->Log('Tambah Data User Dengan Username = '.$_POST['Username']);
+			$this->Log('Tambah Data User Dengan Username = '.$_POST['Username']);
+		} else {
+			echo "Username Sudah Ada";
+		}
+	}
+
+	public function TambahWP(){
+		if ($this->db->get_where('Akun', array('Username' => $_POST['UsernameWP']))->num_rows() === 0) {
+			$Pemilik = array();
+			foreach ($_POST['DataWP'] as $key => $value) {
+				array_push($Pemilik, array('NPWPD' => $value, 'Pemilik' => $_POST['UsernameWP']));
+			}
+			$this->db->insert('Akun',
+						array('Username' => $_POST['UsernameWP'],
+							 'Password' => password_hash($_POST['PasswordWP'], PASSWORD_DEFAULT),
+							 'JenisAkun' => '3',
+							 'Pembuat' => $this->session->userdata('NamaAdmin')));	
+			$this->db->update_batch('WajibPajak', $Pemilik, 'NPWPD');
+			echo "ok";
+			$this->Log('Tambah Data User WP Dengan Username = '.$_POST['UsernameWP']);
 		} else {
 			echo "Username Sudah Ada";
 		}
@@ -43,40 +62,20 @@ class User extends CI_Controller {
 
 	public function Edit(){
 		if ($_POST['EditUsername'] != $_POST['EditUsernameLama']) {
-			if ($_POST['EditJenisAkun'] == '2') {
-				if ($this->db->get_where('Akun', array('Username' => $_POST['EditUsername']))->num_rows() === 0) {
-					if (!empty($_POST['EditPassword'])) {
-						$this->db->where('Username', $_POST['EditUsernameLama']);
-						$this->db->update('Akun', array('Username' => $_POST['EditUsername'],
-														'Password' => password_hash($_POST['EditPassword'], PASSWORD_DEFAULT)));
-						echo "ok";
-					} else {
-						$this->db->where('Username', $_POST['EditUsernameLama']);
-						$this->db->update('Akun', array('Username' => $_POST['EditUsername']));
-						echo "ok";
-					}
-					$this->Log('Edit Data User Dengan Username = '.$_POST['EditUsername']);
+			if ($this->db->get_where('Akun', array('Username' => $_POST['EditUsername']))->num_rows() === 0) {
+				if (!empty($_POST['EditPassword'])) {
+					$this->db->where('Username', $_POST['EditUsernameLama']);
+					$this->db->update('Akun', array('Username' => $_POST['EditUsername'],
+													'Password' => password_hash($_POST['EditPassword'], PASSWORD_DEFAULT)));
+					echo "ok";
 				} else {
-					echo "Username Sudah Ada";
+					$this->db->where('Username', $_POST['EditUsernameLama']);
+					$this->db->update('Akun', array('Username' => $_POST['EditUsername']));
+					echo "ok";
 				}
+				$this->Log('Edit Data User Dengan Username = '.$_POST['EditUsername']);
 			} else {
-				if($this->db->get_where('Akun', array('Username' => $_POST['EditUsername']))->num_rows() === 1){
-					echo "Username Sudah Ada";
-				} else if($this->db->get_where('WajibPajak', array('NPWPD' => $_POST['EditUsername']))->num_rows() === 0){
-					echo "NPWPD Wajib Pajak Tidak Terdaftar";
-				} else {
-					if (!empty($_POST['EditPassword'])) {
-						$this->db->where('Username', $_POST['EditUsernameLama']);
-						$this->db->update('Akun', array('Username' => $_POST['EditUsername'],
-														'Password' => password_hash($_POST['EditPassword'], PASSWORD_DEFAULT)));
-						echo "ok";
-					} else {
-						$this->db->where('Username', $_POST['EditUsernameLama']);
-						$this->db->update('Akun', array('Username' => $_POST['EditUsername']));
-						echo "ok";
-					}
-					$this->Log('Edit Data User Dengan Username = '.$_POST['EditUsername']);
-				}
+				echo "Username Sudah Ada";
 			}
 		} else {
 			if (!empty($_POST['EditPassword'])) {
@@ -90,9 +89,64 @@ class User extends CI_Controller {
 		}
 	}
 
+	public function EditWP(){
+		$EditPemilik = array();
+		foreach ($_POST['EditDataWP'] as $key => $value) {
+			array_push($EditPemilik, array('NPWPD' => $value, 'Pemilik' => $_POST['EditUsernameWP']));
+		}
+		if ($_POST['EditUsernameWP'] != $_POST['EditUsernameWPLama']) {
+			if ($this->db->get_where('Akun', array('Username' => $_POST['EditUsernameWP']))->num_rows() === 0) {
+				if (!empty($_POST['EditPasswordWP'])) {
+					$this->db->where('Username', $_POST['EditUsernameWPLama']);
+					$this->db->update('Akun', array('Username' => $_POST['EditUsernameWP'],
+													'Password' => password_hash($_POST['EditPasswordWP'], PASSWORD_DEFAULT)));
+					$Query = 'UPDATE "WajibPajak" SET '.'"Pemilik" = NULL WHERE "Pemilik" = '."'".$_POST['EditUsernameWP']."'";
+					$this->db->query($Query);
+					$this->db->update_batch('WajibPajak', $EditPemilik, 'NPWPD');
+					echo "ok";
+				} else {
+					$this->db->where('Username', $_POST['EditUsernameWPLama']);
+					$this->db->update('Akun', array('Username' => $_POST['EditUsernameWP']));
+					$Query = 'UPDATE "WajibPajak" SET '.'"Pemilik" = NULL WHERE "Pemilik" = '."'".$_POST['EditUsernameWP']."'";
+					$this->db->query($Query);
+					$this->db->update_batch('WajibPajak', $EditPemilik, 'NPWPD');
+					echo "ok";
+				}
+				$this->Log('Edit Data User Dengan Username = '.$_POST['EditUsernameWP']);
+			} else {
+				echo "Username Sudah Ada";
+			}
+		} else {
+			if (!empty($_POST['EditPasswordWP'])) {
+				$this->db->where('Username', $_POST['EditUsernameWP']);
+				$this->db->update('Akun', array('Password' => password_hash($_POST['EditPasswordWP'], PASSWORD_DEFAULT)));
+				$Query = 'UPDATE "WajibPajak" SET '.'"Pemilik" = NULL WHERE "Pemilik" = '."'".$_POST['EditUsernameWP']."'";
+				$this->db->query($Query);
+				$this->db->update_batch('WajibPajak', $EditPemilik, 'NPWPD');
+				echo "ok";
+				$this->Log('Edit Data User Dengan Username = '.$_POST['EditUsernameWP']);
+			} else {
+				$Query = 'UPDATE "WajibPajak" SET '.'"Pemilik" = NULL WHERE "Pemilik" = '."'".$_POST['EditUsernameWP']."'";
+				$this->db->query($Query);
+				$this->db->update_batch('WajibPajak', $EditPemilik, 'NPWPD');
+				echo "ok";
+			}
+		}
+	}
+
+	public function DaftarWP(){
+		$Query = 'SELECT DISTINCT "Pemilik"'.' FROM "WajibPajak"';
+		$Pemilik = $this->db->query($Query)->result_array();
+		echo json_encode($Pemilik);
+	}
+
 	public function Hapus(){
-		$this->db->delete('Akun', array('Username' => $_POST['Username']));
-		echo "ok";
-		$this->Log('Hapus Data User Dengan Username = '.$_POST['Username']);
+		if ($this->db->get_where('WajibPajak', array('Pemilik' => $_POST['Username']))->num_rows() === 0) {
+			$this->db->delete('Akun', array('Username' => $_POST['Username']));
+			echo "ok";
+			$this->Log('Hapus Data User Dengan Username = '.$_POST['Username']);
+		} else {
+			echo "Username Digunakan Pada Tabel Wajib Pajak!";
+		}
 	}
 }

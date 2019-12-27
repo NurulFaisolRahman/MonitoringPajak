@@ -23,7 +23,7 @@
                   <tr>
                     <?php if($this->session->userdata('Admin') == '1'){ ?>
                     <td>
-                      <a href="#" data-toggle="modal" data-target="#ModalWP" class="btn btn-primary font-weight-bold"><li class="fa fa-plus"></li> WAJIB PAJAK</a>
+                      <a href="" data-toggle="modal" data-target="#ModalWP" class="btn btn-primary font-weight-bold"><li class="fa fa-plus"></li> WAJIB PAJAK</a>
                     </td>
                     <?php }; ?>
                     <td>&emsp;
@@ -72,17 +72,17 @@
                         <?php if (empty($key['Status'])) {?>
                           <?="Belum Aktivasi"?>
                         <?php } else if ($key['Status'] != "Disable") {?>
-                          <a href="#" StatusWP="<?=$key['NPWPD']?>" class="btn btn-sm btn-primary StatusWP"><i class="fas fa-smile"></i></a><br>
+                          <button href="#" StatusWP="<?=$key['NPWPD']?>" class="btn btn-sm btn-primary StatusWP"><i class="fas fa-smile"></i></button><br>
                           <input type="checkbox" data-size="mini" StatusWP="<?=$key['NPWPD']?>" id="WPStatus" data-toggle="toggle" data-on="ON" data-off="OFF" data-onstyle="success" data-offstyle="danger" data-width="70" checked>
                         <?php } else {?>
-                          <a href="#" StatusWP="<?=$key['NPWPD']?>" class="btn btn-sm btn-primary StatusWP"><i class="fas fa-smile"></i></a><br>
+                          <button href="#" StatusWP="<?=$key['NPWPD']?>" class="btn btn-sm btn-primary StatusWP"><i class="fas fa-smile"></i></button><br>
                           <input type="checkbox" data-size="mini" StatusWP="<?=$key['NPWPD']?>" id="WPStatus" data-toggle="toggle" data-on="ON" data-off="OFF" data-onstyle="success" data-offstyle="danger" data-width="70">
                         <?php } ?>
                       </td>
                       <td align="center">
                         <div class="btn-group btn-group-sm">
-                          <a href="#" EditWP="<?=$key['NPWPD']."|".$key['NamaWP']."|".$key['AlamatWP']."|".$key['NomorRekening']."|".$key['JamOperasional'];?>" class="btn btn-warning EditWP"><i class="fas fa-edit"></i></a>
-                          <a href="#" HapusWP="<?=$key['NPWPD'];?>" class="btn btn-danger HapusWP"><i class="fas fa-trash"></i></a>
+                          <button EditWP="<?=$key['NPWPD']."|".$key['NamaWP']."|".$key['AlamatWP']."|".$key['NomorRekening']."|".$key['JamOperasional'];?>" class="btn btn-warning EditWP"><i class="fas fa-edit"></i></button>
+                          <button HapusWP="<?=$key['NPWPD'];?>" class="btn btn-danger HapusWP"><i class="fas fa-trash"></i></button>
                         </div>
                       </td>
                     <?php }; ?>

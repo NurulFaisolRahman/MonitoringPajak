@@ -23,7 +23,7 @@
                   <tr>
                     <?php if($this->session->userdata('Admin') == '1'){ ?>
                     <td>
-                      <a href="#" data-toggle="modal" data-target="#ModalRekening" class="btn btn-primary font-weight-bold"><li class="fa fa-plus"></li> Rekening</a>
+                      <a href="" data-toggle="modal" data-target="#ModalRekening" class="btn btn-primary font-weight-bold"><li class="fa fa-plus"></li> Rekening</a>
                     </td>
                     <?php }; ?>
                   </tr>
@@ -55,8 +55,8 @@
                     <?php if($this->session->userdata('Admin') == '1'){ ?>
                       <td align="center">
                         <div class="btn-group btn-group-sm">
-                          <a href="#" EditRekening="<?=$key['NomorRekening']."|".$key['SubJenisPajak']?>" class="btn btn-warning EditRekening"><i class="fas fa-edit"></i></a>
-                          <a href="#" HapusRekening="<?=$key['NomorRekening'];?>" class="btn btn-danger HapusRekening"><i class="fas fa-trash"></i></a>
+                          <button EditRekening="<?=$key['NomorRekening']."|".$key['SubJenisPajak']?>" class="btn btn-warning EditRekening"><i class="fas fa-edit"></i></button>
+                          <button HapusRekening="<?=$key['NomorRekening'];?>" class="btn btn-danger HapusRekening"><i class="fas fa-trash"></i></button>
                         </div>
                       </td>
                     <?php }; ?>
