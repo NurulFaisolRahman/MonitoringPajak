@@ -285,9 +285,9 @@
       } else {
         var Data = { Username: $('#Username').val(),
                     Password: $('#Password').val() };
-        $.post(BaseURL+"/User/Tambah", Data).done(function(Respon) {
+        $.post(BaseURL+"User/Tambah", Data).done(function(Respon) {
           if (Respon == 'ok') {
-            window.location = BaseURL + '/User';
+            window.location = BaseURL + 'User';
           } else {
             alert(Respon)
           }
@@ -310,9 +310,9 @@
         var Data = { UsernameWP: $('#UsernameWP').val(),
                     PasswordWP: $('#PasswordWP').val(),
                     DataWP : DaftarWP };
-        $.post(BaseURL+"/User/TambahWP", Data).done(function(Respon) {
+        $.post(BaseURL+"User/TambahWP", Data).done(function(Respon) {
           if (Respon == 'ok') {
-            window.location = BaseURL + '/User';
+            window.location = BaseURL + 'User';
           } else {
             alert(Respon)
           }
@@ -327,9 +327,9 @@
         var Data = { EditUsernameLama: $('#EditUsernameLama').val(),
                    EditUsername: $('#EditUsername').val(),
                    EditPassword: $('#EditPassword').val() };
-        $.post(BaseURL+"/User/Edit", Data).done(function(Respon) {
+        $.post(BaseURL+"User/Edit", Data).done(function(Respon) {
           if (Respon == 'ok') {
-            window.location = BaseURL + '/User';
+            window.location = BaseURL + 'User';
           } else {
             alert(Respon)
           }
@@ -351,9 +351,9 @@
                    EditUsernameWP: $('#EditUsernameWP').val(),
                    EditPasswordWP: $('#EditPasswordWP').val(),
                    EditDataWP : EditDaftarWP }
-        $.post(BaseURL+"/User/EditWP", Data).done(function(Respon) {
+        $.post(BaseURL+"User/EditWP", Data).done(function(Respon) {
           if (Respon == 'ok') {
-            window.location = BaseURL + '/User';
+            window.location = BaseURL + 'User';
           } else {
             alert(Respon)
           }
@@ -372,9 +372,11 @@
         document.getElementById('EditUsernameWPLama').value = Pisah[0];
         document.getElementById('EditUsernameWP').value = Pisah[0];
         $('.'+Pisah[0]).prop('checked', true);
-        $.post(BaseURL+"/User/DaftarWP").done(function(Respon) {
+        $('.'+Pisah[0]).attr("disabled", false);
+        $.post(BaseURL+"User/DaftarWP").done(function(Respon) {
           for (var key in JSON.parse(Respon)) {
             if (JSON.parse(Respon)[key].Pemilik != Pisah[0]) {
+              $('.'+JSON.parse(Respon)[key].Pemilik).prop('checked', false);
               $('.'+JSON.parse(Respon)[key].Pemilik).attr("disabled", true);
             }
           }
@@ -387,9 +389,9 @@
       var HapusUser = { Username: $(this).attr('HapusUser')};
       var Konfirmasi = confirm("Yakin Ingin Menghapus Data?");
       if (Konfirmasi == true) {
-        $.post(BaseURL+"/User/Hapus", HapusUser).done(function(Respon) {
+        $.post(BaseURL+"User/Hapus", HapusUser).done(function(Respon) {
           if (Respon == 'ok') {
-            window.location = BaseURL + '/User';
+            window.location = BaseURL + 'User';
           } else {
             alert(Respon)
           }

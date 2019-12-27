@@ -102,11 +102,11 @@
           </li>
           <?php if($this->session->userdata('Admin') == '3'){ ?>
           <li class="nav-item">
-            <a href="<?=base_url("Aktifitas")?>" class="nav-link <?php if ($title == "Aktifitas") {
+            <a href="<?=base_url("Transaksi/GantiPasswordWP")?>" class="nav-link <?php if ($title == "Password WP") {
               echo "active";
             } ?>">
               <i class="nav-icon fas fa-lock"></i>
-              <p><b>GANTI PASSWORD</b></p>
+              <p><b>Ganti Password</b></p>
             </a>
           </li>
           <?php }; ?>

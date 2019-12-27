@@ -5,7 +5,7 @@ class Aktifitas extends CI_Controller {
 
 	function __construct(){
 		parent::__construct();
-		if(!$this->session->userdata('Admin')){
+		if(!$this->session->userdata('Admin') != 1){
 			redirect(base_url());
 		}
 	}

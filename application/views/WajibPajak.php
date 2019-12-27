@@ -66,17 +66,24 @@
                     <td><?="4.1.1.".$key['NomorRekening']?></td>
                     <td><?=$JenisPajak[$key['NomorRekening']]?></td>
                     <td><?=$SubJenisPajak[$key['NomorRekening']]?></td>
-                    <td><?=$key['JamOperasional'].'<br>'.$key['Sinyal']?></td>
+                    <?php 
+                      $start_date = new DateTime(date("Y-m-d H:i:s"));
+                      $since_start = $start_date->diff(new DateTime($key['Sinyal']));
+                      if ($since_start->d > 0 || $since_start->h >= 2 && $since_start->i > 0 ) { ?>
+                        <td><?=$key['JamOperasional'].'<br>'.'<div class="text-white bg-danger">'.$key['Sinyal'].'</div>'?></td>  
+                    <?php } else { ?>
+                        <td><?=$key['JamOperasional'].'<br>'.'<div class="text-white bg-success">'.$key['Sinyal'].'</div>'?></td>
+                    <?php } ?>
                     <?php if($this->session->userdata('Admin') == '1'){ ?>
                       <td>
                         <?php if (empty($key['Status'])) {?>
                           <?="Belum Aktivasi"?>
                         <?php } else if ($key['Status'] != "Disable") {?>
                           <button href="#" StatusWP="<?=$key['NPWPD']?>" class="btn btn-sm btn-primary StatusWP"><i class="fas fa-smile"></i></button><br>
-                          <input type="checkbox" data-size="mini" StatusWP="<?=$key['NPWPD']?>" id="WPStatus" data-toggle="toggle" data-on="ON" data-off="OFF" data-onstyle="success" data-offstyle="danger" data-width="70" checked>
+                          <input type="checkbox" data-size="mini" StatusWP="<?=$key['NPWPD']?>" id="WPStatus" data-toggle="toggle" data-on="Enable" data-off="Disable" data-onstyle="success" data-offstyle="danger" data-width="70" checked>
                         <?php } else {?>
                           <button href="#" StatusWP="<?=$key['NPWPD']?>" class="btn btn-sm btn-primary StatusWP"><i class="fas fa-smile"></i></button><br>
-                          <input type="checkbox" data-size="mini" StatusWP="<?=$key['NPWPD']?>" id="WPStatus" data-toggle="toggle" data-on="ON" data-off="OFF" data-onstyle="success" data-offstyle="danger" data-width="70">
+                          <input type="checkbox" data-size="mini" StatusWP="<?=$key['NPWPD']?>" id="WPStatus" data-toggle="toggle" data-on="Enable" data-off="Disable" data-onstyle="success" data-offstyle="danger" data-width="70">
                         <?php } ?>
                       </td>
                       <td align="center">
@@ -117,7 +124,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text bg-primary"><b>NPWPD</b></span>
             </div>
-          <input type="text" id="NPWPD" class="form-control" data-inputmask='"mask": "9999.999.999"' data-mask>
+          <input type="text" id="NPWPD" class="form-control" data-inputmask='"mask": "9999.99.999"' data-mask>
           </div>
           <br>
           <div class="input-group">
@@ -186,7 +193,7 @@
               <span class="input-group-text bg-primary"><b>NPWPD</b></span>
             </div>
             <input type="hidden" id="EditNPWPDLama" class="form-control">
-            <input type="text" id="EditNPWPD" class="form-control" data-inputmask='"mask": "9999.999.999"' data-mask>
+            <input type="text" id="EditNPWPD" class="form-control" data-inputmask='"mask": "9999.99.999"' data-mask>
           </div>
           <br>
           <div class="input-group">
@@ -335,9 +342,9 @@
                      AlamatWP: $('#AlamatWP').val(),
                      DataRekening: $('#DataRekening').val(),
                      JamOperasional: $('#JamOperasional').val()};
-          $.post(BaseURL+"/WajibPajak/Tambah", Data).done(function(Respon) {
+          $.post(BaseURL+"WajibPajak/Tambah", Data).done(function(Respon) {
             if (Respon == 'ok') {
-              window.location = BaseURL + '/WajibPajak';
+              window.location = BaseURL + 'WajibPajak';
             } else {
               alert('NPWPD Sudah Ada')
             }
@@ -362,9 +369,9 @@
                      EditAlamatWP: $('#EditAlamatWP').val(),
                      EditDataRekening: $('#EditDataRekening').val(),
                      EditJamOperasional: $('#EditJamOperasional').val()};
-          $.post(BaseURL+"/WajibPajak/Edit", Data).done(function(Respon) {
+          $.post(BaseURL+"WajibPajak/Edit", Data).done(function(Respon) {
             if (Respon == 'ok') {
-              window.location = BaseURL + '/WajibPajak';
+              window.location = BaseURL + 'WajibPajak';
             } else {
               alert('NPWPD Sudah Ada')
             }
@@ -373,7 +380,7 @@
       });
 
       var IndexRekening = [];
-      $.post(BaseURL+"/WajibPajak/IndexRekening").done(function(Respon) {
+      $.post(BaseURL+"WajibPajak/IndexRekening").done(function(Respon) {
         var ParseData = JSON.parse(Respon);
         for (var i = 0; i < ParseData.length; i++){
             var key = ParseData[i].NomorRekening.toString();
@@ -397,9 +404,9 @@
         var HapusWP = { NPWPD : $(this).attr('HapusWP')};
         var Konfirmasi = confirm("Yakin Ingin Menghapus Data?");
         if (Konfirmasi == true) {
-          $.post(BaseURL+"/WajibPajak/Hapus", HapusWP).done(function(Respon) {
+          $.post(BaseURL+"WajibPajak/Hapus", HapusWP).done(function(Respon) {
             if (Respon == 'ok') {
-              window.location = BaseURL + '/WajibPajak';
+              window.location = BaseURL + 'WajibPajak';
             } else {
               alert('NPWPD Digunakan Pada Tabel Transaksi')
             }
@@ -409,7 +416,7 @@
 
       $(document).on("click",".StatusWP",function(){
         var Status = { NPWPD: $(this).attr('StatusWP') };
-        $.post(BaseURL+"/WajibPajak/Status", Status).done(function(Respon) {
+        $.post(BaseURL+"WajibPajak/Status", Status).done(function(Respon) {
           var Data = JSON.parse(Respon);
           document.getElementById('Status').innerHTML = Data.Status;
           if (Data.Status == 'Online') {
@@ -438,7 +445,7 @@
           StatusWP = "Disable"
         }
         var GantiStatus = { NPWPD: $(this).attr('StatusWP'), WPStatus: StatusWP };
-        $.post(BaseURL+"/WajibPajak/GantiStatus", GantiStatus)
+        $.post(BaseURL+"WajibPajak/GantiStatus", GantiStatus)
       });
     })
   });

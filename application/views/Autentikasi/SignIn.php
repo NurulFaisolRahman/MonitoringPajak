@@ -11,6 +11,14 @@
 	<link rel="stylesheet" type="text/css" href="Assets/css/util.css">
 	<link rel="stylesheet" type="text/css" href="Assets/css/main.css">
 	<style type="text/css">
+		body {
+		-webkit-touch-callout: none; /* iOS Safari */
+		-webkit-user-select: none;   /* Chrome 6.0+, Safari 3.1+, Edge & Opera 15+ */
+		-moz-user-select: none;      /* Firefox */
+		-ms-user-select: none;       /* IE 10+ and Edge */
+		user-select: none;           /* Non-prefixed version, 
+										currently supported by Chrome and Opera */
+		}
 		.capbox {
 			background-color: #92D433;
 			border: #B3E272 0px solid;
@@ -91,6 +99,7 @@
 	<script src="Assets/vendor/bootstrap/js/popper.js"></script>
 	<script src="Assets/vendor/bootstrap/js/bootstrap.min.js"></script>
 	<script src="Assets/vendor/tilt/tilt.jquery.min.js"></script>
+	<script>var BaseURL = '<?=base_url()?>';</script>
 	<script >
 		$('.js-tilt').tilt({
 			scale: 1.2
@@ -110,13 +119,13 @@
 			 	    var DataLogin = { Username: $("#Username").val(), Password: $("#Password").val() };
 				  	$.ajax({
 				      	type	: 'POST',
-				  		url		: 'http://localhost/MonitoringPajak/Autentikasi/SignIn',
+				  		url		: BaseURL+'Autentikasi/SignIn',
 				  		data	: DataLogin,
 				  		success	: function(Pesan){
 				  			if(Pesan == '1' || Pesan == '2'){
-				  				window.location = 'http://localhost/MonitoringPajak/Dashboard';
+				  				window.location = BaseURL+'Dashboard';
 				  			} else if (Pesan == '3') {
-				  				window.location = 'http://localhost/MonitoringPajak/Transaksi/Tahunan';
+				  				window.location = BaseURL+'Transaksi/Tahunan';
 				  			} else{
 				  				alert(Pesan)
 				  			}

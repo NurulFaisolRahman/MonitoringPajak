@@ -5,7 +5,7 @@ class Rekening extends CI_Controller {
 
 	function __construct(){
 		parent::__construct();
-		if($this->session->userdata('Status') != "Login"){
+		if($this->session->userdata('Admin') == '3'){
 			redirect(base_url());
 		}
 	}

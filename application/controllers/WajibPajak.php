@@ -5,7 +5,7 @@ class WajibPajak extends CI_Controller {
 
 	function __construct(){
 		parent::__construct();
-		if($this->session->userdata('Status') != "Login"){
+		if($this->session->userdata('Admin') == '3' ){
 			redirect(base_url());
 		}
 	}
@@ -167,12 +167,28 @@ class WajibPajak extends CI_Controller {
 		$this->Log('Download Pdf Data Wajib Pajak');
 		$this->load->library('Pdf');
 		$Data['DataWajibPajak'] = $this->db->get('WajibPajak')->result_array();
+		$Data['DataRekening'] = $this->db->get('Rekening')->result_array();
+		$IndexJenisPajak = $IndexSubJenisPajak = array();
+		foreach ($Data['DataRekening'] as $key) {
+			$IndexJenisPajak[$key['NomorRekening']] = $key['JenisPajak'];
+			$IndexSubJenisPajak[$key['NomorRekening']] = $key['SubJenisPajak'];
+		}
+		$Data['JenisPajak'] = $IndexJenisPajak;
+		$Data['SubJenisPajak'] = $IndexSubJenisPajak;
 		$this->load->view('WajibPajakPDF',$Data);
 	}
 
 	public function Excel(){
 		$this->Log('Download Excel Data Wajib Pajak');
 		$Data['DataWajibPajak'] = $this->db->get('WajibPajak')->result_array();
+		$Data['DataRekening'] = $this->db->get('Rekening')->result_array();
+		$IndexJenisPajak = $IndexSubJenisPajak = array();
+		foreach ($Data['DataRekening'] as $key) {
+			$IndexJenisPajak[$key['NomorRekening']] = $key['JenisPajak'];
+			$IndexSubJenisPajak[$key['NomorRekening']] = $key['SubJenisPajak'];
+		}
+		$Data['JenisPajak'] = $IndexJenisPajak;
+		$Data['SubJenisPajak'] = $IndexSubJenisPajak;
 		$this->load->view('WajibPajakExcel',$Data);
 	}
 }

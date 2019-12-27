@@ -211,9 +211,9 @@
                      JenisPajak : $('#JenisPajak').val(),
                      NamaJenisPajak: NamaJenisPajak,
                      SubJenisPajak: $('#SubJenisPajak').val()};
-        $.post(BaseURL+"/Rekening/Tambah", Data).done(function(Respon) {
+        $.post(BaseURL+"Rekening/Tambah", Data).done(function(Respon) {
           if (Respon == 'ok') {
-            window.location = BaseURL + '/Rekening';
+            window.location = BaseURL + 'Rekening';
           } else {
             alert('Nomor Rekening Sudah Ada')
           }
@@ -248,9 +248,9 @@
                    EditJenisPajak: $('#EditJenisPajak').val(),
                    NamaJenisPajak: NamaJenisPajak,
                    EditSubJenisPajak: $('#EditSubJenisPajak').val()};
-        $.post(BaseURL+"/Rekening/Edit", Data).done(function(Respon) {
+        $.post(BaseURL+"Rekening/Edit", Data).done(function(Respon) {
           if (Respon == 'ok') {
-            window.location = BaseURL + '/Rekening';
+            window.location = BaseURL + 'Rekening';
           } else {
             alert('Nomor Rekening Sudah Ada')
           }
@@ -262,9 +262,9 @@
       var HapusRekening = { NomorRekening: $(this).attr('HapusRekening')};
       var Konfirmasi = confirm("Yakin Ingin Menghapus Data?");
       if (Konfirmasi == true) {
-        $.post(BaseURL+"/Rekening/Hapus", HapusRekening).done(function(Respon) {
+        $.post(BaseURL+"Rekening/Hapus", HapusRekening).done(function(Respon) {
           if (Respon == 'ok') {
-            window.location = BaseURL + '/Rekening';
+            window.location = BaseURL + 'Rekening';
           } else {
             alert(Respon)
             // alert('Nomor Rekening Digunakan Pada Tabel Wajib Pajak')

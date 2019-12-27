@@ -97,17 +97,12 @@ class Transaksi extends CI_Controller {
 			$this->SesiTransaksi($DataTransaksiPerWP, 'LAPORAN DATA TRANSAKSI TAHUNAN', $Bidang, $Tahun, 'TransaksiTahunan'.str_replace(" ", "_", ucwords($Bidang)).$Tahun);
 		} else {
 			if (!empty($_POST)) {
-				$this->session->set_userdata('NPWPDWP', $_POST['IdWP']);
-			}
-			if (!empty($_POST)) {
 				$Tahun = substr($_POST['Tahun'],0,4);
 				$Data['tahun'] = $_POST['Tahun'];
-				$Data['bidangpajak'] = $this->session->userdata('NPWPDWP');
 			} else {
 				$Tahun = date("Y");
 			}
-			$DataPerWP  = array();
-			array_push($DataPerWP, array('NPWPD' => $this->session->userdata('NPWPDWP')));
+			$DataPerWP  = $this->session->userdata('WP');
 			$DataTransaksiPerWP = array();
 			if (!empty($DataPerWP)) {
 				$DataTransaksiPerWP = $this->DataPerWP($DataPerWP, $Tahun);
@@ -115,7 +110,6 @@ class Transaksi extends CI_Controller {
 			} else {
 				$Data['Transaksi']  = $DataTransaksiPerWP;
 			}
-			$Data['DataRekening'] = $this->db->get('Rekening')->result_array();
 			$Data['title'] = "Transaksi";
 			$Data['submenu'] = "Tahunan";
 			$this->load->view('Header',$Data);
@@ -160,17 +154,13 @@ class Transaksi extends CI_Controller {
 			$this->SesiTransaksi($DataTransaksiPerWP, 'LAPORAN DATA TRANSAKSI BULANAN', $Bidang, strtoupper($NamaBulan[(int) substr($Bulan, -2)-1])." ".substr($Bulan, 0, 4), 'TransaksiBulanan'.str_replace(" ", "_", ucwords($Bidang)).ucwords($NamaBulan[(int) substr($Bulan, -2)-1]));
 		} else {
 			if (!empty($_POST)) {
-				$this->session->set_userdata('NPWPDWP', $_POST['IdWP']);
-			}
-			if (!empty($_POST)) {
 				$Bulan = substr($_POST['Bulan'],0,7);
 				$Data['bulan'] = $_POST['Bulan'];
 				$Data['bidangpajak'] = $this->session->userdata('NPWPDWP');
 			} else {
 				$Bulan = date("Y-m");
 			}
-			$DataPerWP  = array();
-			array_push($DataPerWP, array('NPWPD' => $this->session->userdata('NPWPDWP')));
+			$DataPerWP  = $this->session->userdata('WP');
 			$DataTransaksiPerWP = array();
 			if (!empty($DataPerWP)) {
 				$DataTransaksiPerWP = $this->DataPerWP($DataPerWP, $Bulan);
@@ -227,9 +217,6 @@ class Transaksi extends CI_Controller {
 			$this->SesiTransaksi($DataTransaksiPerWP, 'LAPORAN DATA TRANSAKSI HARIAN', $Bidang, ($Awal." - ".$Akhir), 'TransaksiHarian'.str_replace(" ", "_", ucwords($Bidang)).($Awal."-".$Akhir));
 		} else {
 			if (!empty($_POST)) {
-				$this->session->set_userdata('NPWPDWP', $_POST['IdWP']);
-			}
-			if (!empty($_POST)) {
 				$Rentang = explode("-", $_POST['Hari']);
 				$awal = explode("-",substr(str_replace("/","-",$Rentang[0]),0,10));
 				$akhir = explode("-",substr(str_replace("/","-",$Rentang[1]),1,11));
@@ -241,8 +228,7 @@ class Transaksi extends CI_Controller {
 				$Awal = date("d-m-Y");
 				$Akhir = date("d-m-Y");
 			}
-			$DataPerWP  = array();
-			array_push($DataPerWP, array('NPWPD' => $this->session->userdata('NPWPDWP')));
+			$DataPerWP  = $this->session->userdata('WP');
 			$DataTransaksiPerWP = array();
 			if (!empty($DataPerWP)) {
 				$DataTransaksiPerWP = $this->DataPerWP($DataPerWP, array($Awal,$Akhir));
@@ -405,5 +391,25 @@ class Transaksi extends CI_Controller {
 		$this->session->set_userdata(array('NamaFilePerWP' => $NamaWP[0]['NamaWP']));
 		$this->session->set_userdata(array('JenisPajakPerWP' => $JenisBidangWP));
 		echo "ok";
+	}
+
+	public function GantiPasswordWP(){ 
+		$Data['title'] = "Password WP";
+		$Data['submenu'] = "";
+		$this->load->view('Header',$Data);
+		$this->load->view('GantiPasswordWP');
+		$this->Log('User Wajib Pajak Akses Menu Ganti Password');
+	}
+
+	public function WPGantiPassword(){
+		$CekPassword = $this->db->get_where('Akun', array('Username' => $_POST['Username']));
+		$Akun = $CekPassword->result_array();
+		if (password_verify($_POST['PasswordLama'], $Akun[0]['Password'])) {
+			$this->db->where('Username', $_POST['Username']);
+			$this->db->update('Akun', array('Password' => password_hash($_POST['PasswordBaru'], PASSWORD_DEFAULT)));
+	  		echo 'ok';
+		} else {
+			echo "Password Lama, Salah!";
+		}
 	}
 }

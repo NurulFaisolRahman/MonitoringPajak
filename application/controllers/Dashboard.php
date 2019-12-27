@@ -5,7 +5,7 @@ class Dashboard extends CI_Controller {
 
 	function __construct(){
 		parent::__construct();
-		if($this->session->userdata('Status') != "Login"){
+		if($this->session->userdata('Admin') == "3"){
 			redirect(base_url());
 		}
 	}
@@ -113,7 +113,8 @@ class Dashboard extends CI_Controller {
 		$Data['TotalPajakTahun'] = $this->Rupiah($TotalPajakTahun);
 		$Data['TotalTransaksiTahun'] = $this->Rupiah($TotalTransaksiTahun);
 		$Data['Top5'] = $Top5;
-		$Data['DataRekening'] = $this->db->get('Rekening')->result_array();
+		$Query = 'SELECT DISTINCT "JenisPajak"'.' FROM "Rekening"';
+		$Data['DataRekening'] = $this->db->query($Query)->result_array();
 		$Data['title'] = "Dashboard";
 		$Data['submenu'] = "";
 		$this->load->view('Header',$Data);

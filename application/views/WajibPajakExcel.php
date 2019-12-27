@@ -31,8 +31,8 @@
           <td><?=$key['NPWPD']?><br><?=$key['NamaWP']?></td>
           <td><?=$key['AlamatWP']?></td>
           <td><?='4.1.1.'.$key['NomorRekening']?></td>
-          <td><?=$key['JenisPajak']?></td>
-          <td><?=$key['SubJenisPajak']?></td>
+          <td><?=$JenisPajak[$key['NomorRekening']]?></td>
+          <td><?=$SubJenisPajak[$key['NomorRekening']]?></td>
           <td><?=$key['JamOperasional']?></td>
           <td><?=$key['Riwayat']?></td>
           <td><?=$key['Status']?></td>

@@ -125,7 +125,8 @@ class Autentikasi extends CI_Controller {
 		$Data = json_decode($InputJSON['Data'],true);
 		$Cek = $this->db->get_where('WajibPajak', array('NPWPD' => $NPWPD));
 		if($Cek->num_rows() == 0){
-			echo "NPWPD Tidak Terdaftar";
+			$Respon = array('Respon' => 0, 'Deskripsi' => 'NPWPD Tidak Terdaftar');
+		  	echo json_encode($Respon);
 	  	}
 	  	else{
 			if (password_verify($Password, $Cek->result_array()[0]['Password'])) {
@@ -142,9 +143,11 @@ class Autentikasi extends CI_Controller {
 				$this->db->insert_batch("Transaksi", $Data);
 				$this->db->where('NPWPD', $NPWPD);
 				$this->db->update('WajibPajak', array('Riwayat' => date("Y-m-d H:i:s")));
-		  		echo "Sukses";
+		  		$Respon = array('Respon' => 1, 'Deskripsi' => 'Sukses');
+		  		echo json_encode($Respon);
 			} else {
-				echo "Password Salah";
+				$Respon = array('Respon' => 0, 'Deskripsi' => 'Password Salah');
+		  		echo json_encode($Respon);
 			}
 		}
 	}
