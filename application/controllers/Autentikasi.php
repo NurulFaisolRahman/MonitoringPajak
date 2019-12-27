@@ -5,7 +5,11 @@ class Autentikasi extends CI_Controller {
 
 	public function index(){
 		if($this->session->userdata('Status') == "Login"){
-			redirect(base_url('Dashboard'));
+			if($this->session->userdata('Admin') == '1' || $this->session->userdata('Admin') == '2'){
+  				redirect(base_url('Dashboard'));
+  			} else if ($this->session->userdata('Admin') == '3') {
+  				redirect(base_url('Transaksi/Tahunan'));
+  			}
 		} else {
 			$this->load->view('Autentikasi/SignIn');
 		}
@@ -30,6 +34,11 @@ class Autentikasi extends CI_Controller {
 			if (password_verify($Password, $Akun[0]['Password'])) {
 				$DataSession = array();
 				$DataSession = array('Status' => "Login", 'Admin' => $Akun[0]['JenisAkun'], 'NamaAdmin' => $Akun[0]['Username']);
+				if ($Akun[0]['JenisAkun'] == '3') {
+					$NPWPDWP = $this->db->get_where('WajibPajak', array('Pemilik' => $Akun[0]['Username']))->result_array();
+					$DataSession['NPWPDWP'] = $NPWPDWP[0]['NPWPD'];
+					$DataSession['WP'] = $NPWPDWP;
+				}
 				$this->session->set_userdata($DataSession);
 				$this->Log('Sign In');	
 		  		echo $Akun[0]['JenisAkun'];

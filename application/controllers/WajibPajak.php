@@ -45,7 +45,6 @@ class WajibPajak extends CI_Controller {
 
 	public function Tambah(){
 		if ($this->db->get_where('WajibPajak', array('NPWPD' => $this->NPWPD($_POST['NPWPD'])))->num_rows() === 0) {
-			// $Pisah = explode("|", $_POST['DataRekening']);
 			$this->db->insert('WajibPajak',
 					    array('NPWPD' => $this->NPWPD($_POST['NPWPD']),
 					    	  'Password' => password_hash($_POST['PasswordWP'], PASSWORD_DEFAULT),
@@ -65,7 +64,6 @@ class WajibPajak extends CI_Controller {
 		$NPWPD = $this->NPWPD($_POST['EditNPWPD']);
 		if ($NPWPD != $_POST['EditNPWPDLama']) {
 			if ($this->db->get_where('WajibPajak', array('NPWPD' => $NPWPD))->num_rows() === 0) {
-				// $Pisah = explode("|", $_POST['EditDataRekening']);
 				$this->db->where('NPWPD', $_POST['EditNPWPDLama']);
 				if (!empty($_POST['EditPasswordWP'])) {
 					$this->db->update('WajibPajak',
@@ -94,7 +92,6 @@ class WajibPajak extends CI_Controller {
 			}
 		} else {
 			if (!empty($_POST['EditPasswordWP'])) {
-				// $Pisah = explode("|", $_POST['EditDataRekening']);
 				$this->db->where('NPWPD', $_POST['EditNPWPDLama']);
 				$this->db->update('WajibPajak',
 							array('NPWPD' => $NPWPD,
@@ -104,7 +101,6 @@ class WajibPajak extends CI_Controller {
 								  'NomorRekening' => $_POST['EditDataRekening'],
 								  'JamOperasional' => $_POST['EditJamOperasional']));
 			} else {
-				// $Pisah = explode("|", $_POST['EditDataRekening']);
 				$this->db->where('NPWPD', $_POST['EditNPWPDLama']);
 				$this->db->update('WajibPajak',
 							array('NPWPD' => $NPWPD,

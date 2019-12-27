@@ -31,6 +31,18 @@
                         <td>
                           <input class="form-control btn btn-outline-primary" type="date" id="Tahun" name="Tahun" value="<?php if(!empty($tahun)) echo $tahun ?>" required>
                         </td>
+                        <?php if($this->session->userdata('Admin') == '3'){ ?>
+                          <td class="font-weight-bold text-primary">&emsp;Wajib Pajak :&nbsp;</td>
+                          <td>
+                            <select class="form-control btn btn-outline-primary" name="IdWP">
+                              <?php foreach ($this->session->userdata('WP') as $key){ ?>
+                                <option value="<?=$key['NPWPD']?>" <?php if ($bidangpajak == $key['NPWPD']) {
+                                echo "selected";
+                              } ?>><?=$key['NamaWP']?></option>
+                            <?php } ?>
+                            </select>
+                          </td>
+                        <?php }; ?>
                         <?php if($this->session->userdata('Admin') != '3'){ ?>
                         <td class="font-weight-bold text-primary">&emsp;Bidang Pajak :&nbsp;</td>
                         <td>
@@ -94,8 +106,8 @@
                           <td class="text-right"><?=$key['Transaksi']?></td>
                           <td class="text-center">
                             <div class="btn-group btn-group-sm">
-                              <a href="#" PdfPerWP="<?=$key['NPWPD']?>" class="btn btn-danger PdfPerWP"><i class="fas fa-file-pdf"></i></a>
-                              <a href="#" ExcelPerWP="<?=$key['NPWPD']?>" class="btn btn-success ExcelPerWP"><i class="fas fa-file-excel"></i></a>
+                              <button PdfPerWP="<?=$key['NPWPD']?>" class="btn btn-danger PdfPerWP"><i class="fas fa-file-pdf"></i></button>
+                              <button href="#" ExcelPerWP="<?=$key['NPWPD']?>" class="btn btn-success ExcelPerWP"><i class="fas fa-file-excel"></i></button>
                             </div>
                           </td>
                         </tr>
@@ -163,23 +175,26 @@
       $(document).on("click",".PdfPerWP",function(){
         var Data = { NPWPD : $(this).attr('PdfPerWP'),
                      Periode : $("#Tahun").val().substr(0,7),
-                     Judul : 'TAHUNAN', };
+                     Judul : 'TAHUNAN' };
         $.post(BaseURL+"/Transaksi/DetailPerWP", Data).done(function(Respon) {
-            if (Respon == 'ok') {
-              window.location = BaseURL + '/Transaksi/PdfPerWP';
-            }
-          });
+          if (Respon == 'ok') {
+            window.location = BaseURL + '/Transaksi/PdfPerWP';
+          }
+          else {
+            alert(Respon)
+          }
+        });
       });
         
       $(document).on("click",".ExcelPerWP",function(){
         var Data = { NPWPD : $(this).attr('ExcelPerWP'),
                      Periode : $("#Tahun").val().substr(0,4),
-                     Judul : 'TAHUNAN', };
+                     Judul : 'TAHUNAN' };
         $.post(BaseURL+"/Transaksi/DetailPerWP", Data).done(function(Respon) {
-            if (Respon == 'ok') {
-              window.location = BaseURL + '/Transaksi/ExcelPerWP';
-            }
-          });
+          if (Respon == 'ok') {
+            window.location = BaseURL + '/Transaksi/ExcelPerWP';
+          }
+        });
       });
     });
   </script>

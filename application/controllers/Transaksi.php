@@ -96,17 +96,18 @@ class Transaksi extends CI_Controller {
 			$this->load->view('Transaksi/Tahunan');
 			$this->SesiTransaksi($DataTransaksiPerWP, 'LAPORAN DATA TRANSAKSI TAHUNAN', $Bidang, $Tahun, 'TransaksiTahunan'.str_replace(" ", "_", ucwords($Bidang)).$Tahun);
 		} else {
-			$Bidang = $this->db->get_where('WajibPajak', array('NPWPD' => $this->session->userdata('NamaAdmin')))->result_array()[0]['NomorRekening'];
-			$JenisBidang = $this->db->get_where('Rekening', array('JenisPajak' => $Bidang))->row_array()['NomorRekening'];
+			if (!empty($_POST)) {
+				$this->session->set_userdata('NPWPDWP', $_POST['IdWP']);
+			}
 			if (!empty($_POST)) {
 				$Tahun = substr($_POST['Tahun'],0,4);
 				$Data['tahun'] = $_POST['Tahun'];
-				$Data['bidangpajak'] = $JenisBidang;
+				$Data['bidangpajak'] = $this->session->userdata('NPWPDWP');
 			} else {
 				$Tahun = date("Y");
 			}
 			$DataPerWP  = array();
-			array_push($DataPerWP, array('NPWPD' => $this->session->userdata('NamaAdmin')));
+			array_push($DataPerWP, array('NPWPD' => $this->session->userdata('NPWPDWP')));
 			$DataTransaksiPerWP = array();
 			if (!empty($DataPerWP)) {
 				$DataTransaksiPerWP = $this->DataPerWP($DataPerWP, $Tahun);
@@ -119,7 +120,6 @@ class Transaksi extends CI_Controller {
 			$Data['submenu'] = "Tahunan";
 			$this->load->view('Header',$Data);
 			$this->load->view('Transaksi/Tahunan');
-			$this->SesiTransaksi($DataTransaksiPerWP, 'LAPORAN DATA TRANSAKSI TAHUNAN', $Bidang, $Tahun, 'TransaksiTahunan'.str_replace(" ", "_", ucwords($Bidang)).$Tahun);
 		}
 	}
 
@@ -159,17 +159,18 @@ class Transaksi extends CI_Controller {
 			$NamaBulan = array('Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember');
 			$this->SesiTransaksi($DataTransaksiPerWP, 'LAPORAN DATA TRANSAKSI BULANAN', $Bidang, strtoupper($NamaBulan[(int) substr($Bulan, -2)-1])." ".substr($Bulan, 0, 4), 'TransaksiBulanan'.str_replace(" ", "_", ucwords($Bidang)).ucwords($NamaBulan[(int) substr($Bulan, -2)-1]));
 		} else {
-			$Bidang = $this->db->get_where('WajibPajak', array('NPWPD' => $this->session->userdata('NamaAdmin')))->result_array()[0]['NomorRekening'];
-			$JenisBidang = $this->db->get_where('Rekening', array('JenisPajak' => $Bidang))->row_array()['NomorRekening'];
+			if (!empty($_POST)) {
+				$this->session->set_userdata('NPWPDWP', $_POST['IdWP']);
+			}
 			if (!empty($_POST)) {
 				$Bulan = substr($_POST['Bulan'],0,7);
 				$Data['bulan'] = $_POST['Bulan'];
-				$Data['bidangpajak'] = $JenisBidang;
+				$Data['bidangpajak'] = $this->session->userdata('NPWPDWP');
 			} else {
 				$Bulan = date("Y-m");
 			}
 			$DataPerWP  = array();
-			array_push($DataPerWP, array('NPWPD' => $this->session->userdata('NamaAdmin')));
+			array_push($DataPerWP, array('NPWPD' => $this->session->userdata('NPWPDWP')));
 			$DataTransaksiPerWP = array();
 			if (!empty($DataPerWP)) {
 				$DataTransaksiPerWP = $this->DataPerWP($DataPerWP, $Bulan);
@@ -182,8 +183,6 @@ class Transaksi extends CI_Controller {
 			$Data['submenu'] = "Bulanan";
 			$this->load->view('Header',$Data);
 			$this->load->view('Transaksi/Bulanan');
-			$NamaBulan = array('Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember');
-			$this->SesiTransaksi($DataTransaksiPerWP, 'LAPORAN DATA TRANSAKSI BULANAN', $Bidang, strtoupper($NamaBulan[(int) substr($Bulan, -2)-1])." ".substr($Bulan, 0, 4), 'TransaksiBulanan'.str_replace(" ", "_", ucwords($Bidang)).ucwords($NamaBulan[(int) substr($Bulan, -2)-1]));
 		}
 	}
 
@@ -227,8 +226,9 @@ class Transaksi extends CI_Controller {
 			$this->load->view('Transaksi/Harian');
 			$this->SesiTransaksi($DataTransaksiPerWP, 'LAPORAN DATA TRANSAKSI HARIAN', $Bidang, ($Awal." - ".$Akhir), 'TransaksiHarian'.str_replace(" ", "_", ucwords($Bidang)).($Awal."-".$Akhir));
 		} else {
-			$Bidang = $this->db->get_where('WajibPajak', array('NPWPD' => $this->session->userdata('NamaAdmin')))->result_array()[0]['NomorRekening'];
-			$JenisBidang = $this->db->get_where('Rekening', array('JenisPajak' => $Bidang))->row_array()['NomorRekening'];
+			if (!empty($_POST)) {
+				$this->session->set_userdata('NPWPDWP', $_POST['IdWP']);
+			}
 			if (!empty($_POST)) {
 				$Rentang = explode("-", $_POST['Hari']);
 				$awal = explode("-",substr(str_replace("/","-",$Rentang[0]),0,10));
@@ -236,13 +236,13 @@ class Transaksi extends CI_Controller {
 				$Awal = $awal[1]."-".$awal[0]."-".$awal[2];
 				$Akhir = (int) ($akhir[1])."-".$akhir[0]."-".$akhir[2];
 				$Data['hari'] = $_POST['Hari'];
-				$Data['bidangpajak'] = $JenisPajak;
+				$Data['bidangpajak'] = $this->session->userdata('NPWPDWP');
 			} else {
 				$Awal = date("d-m-Y");
 				$Akhir = date("d-m-Y");
 			}
 			$DataPerWP  = array();
-			array_push($DataPerWP, array('NPWPD' => $this->session->userdata('NamaAdmin')));
+			array_push($DataPerWP, array('NPWPD' => $this->session->userdata('NPWPDWP')));
 			$DataTransaksiPerWP = array();
 			if (!empty($DataPerWP)) {
 				$DataTransaksiPerWP = $this->DataPerWP($DataPerWP, array($Awal,$Akhir));
@@ -255,7 +255,6 @@ class Transaksi extends CI_Controller {
 			$Data['submenu'] = "Harian";
 			$this->load->view('Header',$Data);
 			$this->load->view('Transaksi/Harian');
-			$this->SesiTransaksi($DataTransaksiPerWP, 'LAPORAN DATA TRANSAKSI HARIAN', $Bidang, ($Awal." - ".$Akhir), 'TransaksiHarian'.str_replace(" ", "_", ucwords($Bidang)).($Awal."-".$Akhir));
 		}
 	}
 
@@ -395,14 +394,16 @@ class Transaksi extends CI_Controller {
 				array_push($FormatData, $Tampung);
 			}
 		}
-		$kueri = "SELECT ".'"NamaWP","JenisPajak"'." FROM ".'"WajibPajak"'." WHERE ".'"NPWPD" = '."'$npwpd'";
+		$BidangWP = $this->db->get_where('WajibPajak', array('NPWPD' => $npwpd))->result_array()[0]['NomorRekening'];
+		$JenisBidangWP = $this->db->get_where('Rekening', array('NomorRekening' => $BidangWP))->row_array()['JenisPajak'];
+		$kueri = "SELECT ".'"NamaWP"'." FROM ".'"WajibPajak"'." WHERE ".'"NPWPD" = '."'$npwpd'";
 		$NamaWP = $this->db->query($kueri)->result_array();
 		$this->session->set_userdata(array('JudulPerWP' => 'LAPORAN TRANSAKSI '.$_POST['Judul']));
 		$this->session->set_userdata(array('NamaWP' => 'WAJIB PAJAK : '.$NamaWP[0]['NamaWP']));
 		$this->session->set_userdata(array('PeriodeWP' => 'PERIODE : '.$periode));
 		$this->session->set_userdata(array('DetailPerWP' => $FormatData));
 		$this->session->set_userdata(array('NamaFilePerWP' => $NamaWP[0]['NamaWP']));
-		$this->session->set_userdata(array('JenisPajakPerWP' => $NamaWP[0]['JenisPajak']));
+		$this->session->set_userdata(array('JenisPajakPerWP' => $JenisBidangWP));
 		echo "ok";
 	}
 }

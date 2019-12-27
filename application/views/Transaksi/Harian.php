@@ -37,6 +37,18 @@
                             <input type="text" class="form-control btn btn-outline-primary float-right" name="Hari" id="reservation" value="<?php if(!empty($hari)) echo $hari ?>">
                           </div>
                         </td>
+                        <?php if($this->session->userdata('Admin') == '3'){ ?>
+                          <td class="font-weight-bold text-primary">&emsp;Wajib Pajak :&nbsp;</td>
+                          <td>
+                            <select class="form-control btn btn-outline-primary" name="IdWP">
+                              <?php foreach ($this->session->userdata('WP') as $key){ ?>
+                                <option value="<?=$key['NPWPD']?>" <?php if ($bidangpajak == $key['NPWPD']) {
+                                echo "selected";
+                              } ?>><?=$key['NamaWP']?></option>
+                            <?php } ?>
+                            </select>
+                          </td>
+                        <?php }; ?>
                         <?php if($this->session->userdata('Admin') != '3'){ ?>
                         <td class="font-weight-bold text-primary">&emsp;Bidang Pajak :&nbsp;</td>
                         <td>

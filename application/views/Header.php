@@ -100,6 +100,16 @@
               </ul>
             <?php } ?>
           </li>
+          <?php if($this->session->userdata('Admin') == '3'){ ?>
+          <li class="nav-item">
+            <a href="<?=base_url("Aktifitas")?>" class="nav-link <?php if ($title == "Aktifitas") {
+              echo "active";
+            } ?>">
+              <i class="nav-icon fas fa-lock"></i>
+              <p><b>GANTI PASSWORD</b></p>
+            </a>
+          </li>
+          <?php }; ?>
           <?php if($this->session->userdata('Admin') != '3'){ ?>
           <li class="nav-item">
             <a href="<?=base_url("Rekening")?>" class="nav-link <?php if ($title == "Rekening") {
