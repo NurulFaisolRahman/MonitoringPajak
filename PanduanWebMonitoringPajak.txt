@@ -1,0 +1,11 @@
+Panduan Konfigurasi Website Monitoring Pajak
+
+Lokasi File /MonitoringPajak/application/config/config.php
+
+1. Ganti base_url Dengan URL Website Ketika Dipasang/Install Pada Baris 26
+2. Pengaturan sess_expiration Pada Baris 382. 0 Berarti Session Akan Tetap Ada Kecuali Browser Ditutup. Apabila Mengganti Dengan Membatasi Waktu Misal 1 Jam, Maka 0 Diganti Dengan 3600
+
+Lokasi File /MonitoringPajak/application/config/database.php
+
+1. Konfigurasi Database disesuaikan Dengan Database Server. Sesuaikan Hostname, Username Hingga Nama Database
+2. Export File DB.sql Yang Ada Pada Folder MonitoringPajak Ke Database Server.
