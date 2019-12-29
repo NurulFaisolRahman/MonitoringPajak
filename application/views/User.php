@@ -186,8 +186,9 @@
                 foreach ($WP as $key) { ?>
                   <div class="col-6">
                     <div class="form-check">
+                      <label class="form-check-label">
                       <input class="form-check-input" type="checkbox" name="DaftarWP" value="<?=$key['NPWPD'];?>">
-                      <label class="form-check-label"><?=$key['NamaWP'];?></label>
+                      <?=$key['NamaWP'];?></label>
                     </div>
                   </div>
                <?php } ?> 
@@ -236,8 +237,9 @@
                 foreach ($WP as $key) { ?>
                   <div class="col-6">
                     <div class="form-check">
+                      <label class="form-check-label">
                       <input class="form-check-input <?=$key['Pemilik'];?>" type="checkbox" name="EditDaftarWP" value="<?=$key['NPWPD'];?>">
-                      <label class="form-check-label"><?=$key['NamaWP'];?></label>
+                      <?=$key['NamaWP'];?></label>
                     </div>
                   </div>
                <?php } ?> 
