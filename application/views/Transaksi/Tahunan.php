@@ -147,7 +147,7 @@
     $(document).ready(function() {
       
       var d = new Date();
-      var tahun = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
+      var tahun = String(d.getFullYear()+'-'+(("0" + (d.getMonth() + 1)).slice(-2))+'-'+("0" + d.getDate()).slice(-2));
       if ($("#Tahun").val() == "") {
         document.getElementById('Tahun').value = tahun;
       }

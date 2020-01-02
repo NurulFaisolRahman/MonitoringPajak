@@ -147,7 +147,7 @@
     $(document).ready(function() {
 
       var d = new Date();
-      var bulan = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
+      var bulan = String(d.getFullYear()+'-'+(("0" + (d.getMonth() + 1)).slice(-2))+'-'+("0" + d.getDate()).slice(-2));
       if ($("#Bulan").val() == "") {
         document.getElementById('Bulan').value = bulan;
       }
