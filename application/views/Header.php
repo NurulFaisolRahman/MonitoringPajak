@@ -148,16 +148,6 @@
           </li>
           <?php }; ?>
           <?php }; ?>
-          <?php if($this->session->userdata('Admin') == '1'){ ?>
-            <li class="nav-item">
-              <a href="<?=base_url("WebServis")?>" class="nav-link <?php if ($title == "WebServis") {
-                echo "active";
-              } ?>">
-                <i class="nav-icon fas fa-globe"></i>
-                <p><b>WebServis</b></p>
-              </a>
-            </li>
-          <?php }; ?>
         </ul>
       </nav>
     </div>
