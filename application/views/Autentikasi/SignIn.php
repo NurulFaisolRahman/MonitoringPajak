@@ -6,10 +6,10 @@
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<title>SIGN IN</title>
 	<link rel="icon" href="Favicon.ico" type="image/x-icon">
-	<link rel="stylesheet" type="text/css" href="Assets/vendor/bootstrap/css/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="Assets/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
-	<link rel="stylesheet" type="text/css" href="Assets/css/util.css">
-	<link rel="stylesheet" type="text/css" href="Assets/css/main.css">
+	<link rel="stylesheet" type="text/css" href="<?=base_url('Assets/vendor/bootstrap/css/bootstrap.min.css')?>">
+	<link rel="stylesheet" type="text/css" href="<?=base_url('Assets/fonts/font-awesome-4.7.0/css/font-awesome.min.css')?>">
+	<link rel="stylesheet" type="text/css" href="<?=base_url('Assets/css/util.css')?>">
+	<link rel="stylesheet" type="text/css" href="<?=base_url('Assets/css/main.css')?>">
 	<style type="text/css">
 		body {
 		-webkit-touch-callout: none; /* iOS Safari */
@@ -94,11 +94,10 @@
 			</div>
 		</div>
 	</div>
-
-	<script src="Assets/vendor/jquery/jquery-3.2.1.min.js"></script>
-	<script src="Assets/vendor/bootstrap/js/popper.js"></script>
-	<script src="Assets/vendor/bootstrap/js/bootstrap.min.js"></script>
-	<script src="Assets/vendor/tilt/tilt.jquery.min.js"></script>
+	<script src="<?=base_url('Assets/vendor/jquery/jquery-3.2.1.min.js')?>"></script>
+	<script src="<?=base_url('Assets/vendor/bootstrap/js/popper.js')?>"></script>
+	<script src="<?=base_url('Assets/vendor/bootstrap/js/bootstrap.min.js')?>"></script>
+	<script src="<?=base_url('Assets/vendor/tilt/tilt.jquery.min.js')?>"></script>
 	<script>var BaseURL = '<?=base_url()?>';</script>
 	<script >
 		$('.js-tilt').tilt({

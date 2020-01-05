@@ -35,14 +35,17 @@
                         <td class="font-weight-bold text-primary">&emsp;Bidang Pajak :&nbsp;</td>
                         <td>
                           <select class="form-control btn btn-outline-primary" name="BidangPajak">
-                          <option value="All" <?php if ($bidangpajak == 'All') {
-                            echo "selected";
-                          } ?>><?="All"?></option>
-                          <?php foreach ($DataRekening as $key){ ?>
-                            <option value="<?=$key['JenisPajak']?>" <?php if ($bidangpajak == $key['JenisPajak']) {
-                            echo "selected";
-                          } ?>><?=$key['JenisPajak']?></option>
-                          <?php } ?>
+                            <?php 
+                              $JenisPajak = array('All' => 'All',
+                                                  '01' => 'Hotel',
+                                                  '02' => 'Restoran',
+                                                  '03' => 'Hiburan',
+                                                  '07' => 'Parkir');
+                              foreach ($JenisPajak as $key => $value) { ?>
+                                <option value="<?=$value?>" <?php if ($bidangpajak == $value) {
+                                  echo "selected";
+                                } ?>><?=$value?></option>
+                            <?php } ?>
                           </select>
                         </td>
                         <td>&emsp;
@@ -106,7 +109,7 @@
               </div>
               <div class="card-body">
                 <div class="position-relative">
-                  <canvas id="visitors-chart"></canvas>
+                  <canvas id="DashboardChart"></canvas>
                 </div>
               </div>
             </div>
@@ -154,16 +157,11 @@
 </div>
 <!-- ./wrapper -->
 
-<!-- jQuery -->
-<script src="plugins/jquery/jquery.min.js"></script>
-<!-- Bootstrap 4 -->
-<script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- overlayScrollbars -->
-<script src="plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
-<!-- AdminLTE App -->
-<script src="dist/js/adminlte.min.js"></script>
-<!-- OPTIONAL SCRIPTS -->
-<script src="plugins/chart.js/Chart.min.js"></script>
+<script src="<?=base_url('plugins/jquery/jquery.min.js')?>"></script>
+<script src="<?=base_url('plugins/bootstrap/js/bootstrap.bundle.min.js')?>"></script>
+<script src="<?=base_url('plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js')?>"></script>
+<script src="<?=base_url('dist/js/adminlte.min.js')?>"></script>
+<script src="<?=base_url('plugins/chart.js/Chart.min.js')?>"></script>
 <script type="text/javascript">
 $(function () {
   'use strict'
@@ -190,7 +188,7 @@ $(function () {
     tanggal[i] = i.toString();
   }
   tanggal[0] = 'Tanggal';
-  var grafik = document.getElementById("visitors-chart").getContext('2d');
+  var grafik = document.getElementById("DashboardChart").getContext('2d');
   var myLineChart = new Chart(grafik, {
     type: 'line',
     data: {

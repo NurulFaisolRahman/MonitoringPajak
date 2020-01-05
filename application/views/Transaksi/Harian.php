@@ -41,13 +41,16 @@
                         <td class="font-weight-bold text-primary">&emsp;Bidang Pajak :&nbsp;</td>
                         <td>
                           <select class="form-control btn btn-outline-primary" name="BidangPajak" id="BidangPajak">
-                          <option value="All" <?php if ($bidangpajak == 'All') {
-                            echo "selected";
-                          } ?>><?="All"?></option>
-                          <?php foreach ($DataRekening as $key){ ?>
-                            <option value="<?=$key['JenisPajak']?>" <?php if ($bidangpajak == $key['JenisPajak']) {
-                            echo "selected";
-                          } ?>><?=$key['JenisPajak']?></option>
+                          <?php 
+                            $JenisPajak = array('All' => 'All',
+                                                '01' => 'Hotel',
+                                                '02' => 'Restoran',
+                                                '03' => 'Hiburan',
+                                                '07' => 'Parkir');
+                            foreach ($JenisPajak as $key => $value) { ?>
+                              <option value="<?=$value?>" <?php if ($bidangpajak == $value) {
+                                echo "selected";
+                              } ?>><?=$value?></option>
                           <?php } ?>
                           </select>
                         </td>
@@ -100,8 +103,8 @@
                           <td class="text-right"><?=$key['Transaksi']?></td>
                           <td class="text-center">
                             <div class="btn-group btn-group-sm">
-                              <a href="#" PdfPerWP="<?=$key['NPWPD']?>" class="btn btn-danger PdfPerWP"><i class="fas fa-file-pdf"></i></a>
-                              <a href="#" ExcelPerWP="<?=$key['NPWPD']?>" class="btn btn-success ExcelPerWP"><i class="fas fa-file-excel"></i></a>
+                              <button PdfPerWP="<?=$key['NPWPD']?>" class="btn btn-danger PdfPerWP"><i class="fas fa-file-pdf"></i></button>
+                              <button ExcelPerWP="<?=$key['NPWPD']?>" class="btn btn-success ExcelPerWP"><i class="fas fa-file-excel"></i></button>
                             </div>
                           </td>
                         </tr>
@@ -138,24 +141,14 @@
       <!-- /.content -->
     </div>
   </div>
-  <form style="display: hidden" action="<?=base_url('Transaksi/ExcelHarian')?>" method="POST" id="ExcelHarian">
-    <input type="hidden" name="DataTransaksiHarian" value="<?php print_r($Transaksi) ?>"/>
-  </form>
-  <!-- jQuery -->
-  <script src="../plugins/jquery/jquery.min.js"></script>
-  <!-- Bootstrap 4 -->
-  <script src="../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <!-- overlayScrollbars -->
-  <script src="../plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
-  <!-- InputMask -->
-  <script src="../plugins/moment/moment.min.js"></script>
-  <!-- date-range-picker -->
-  <script src="../plugins/daterangepicker/daterangepicker.js"></script>
-  <!-- DataTables -->
-  <script src="../plugins/datatables/jquery.dataTables.js"></script>
-  <script src="../plugins/datatables-bs4/js/dataTables.bootstrap4.js"></script>
-  <!-- AdminLTE App -->
-  <script src="../dist/js/adminlte.min.js"></script>
+  <script src="<?=base_url('plugins/jquery/jquery.min.js')?>"></script>
+  <script src="<?=base_url('plugins/bootstrap/js/bootstrap.bundle.min.js')?>"></script>
+  <script src="<?=base_url('plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js')?>"></script>
+  <script src="<?=base_url('plugins/moment/moment.min.js')?>"></script>
+  <script src="<?=base_url('plugins/daterangepicker/daterangepicker.js')?>"></script>
+  <script src="<?=base_url('plugins/datatables/jquery.dataTables.js')?>"></script>
+  <script src="<?=base_url('plugins/datatables-bs4/js/dataTables.bootstrap4.js')?>"></script>
+  <script src="<?=base_url('dist/js/adminlte.min.js')?>"></script>
   <script>
     $(document).ready(function() {
       $('#example1').DataTable( {

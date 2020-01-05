@@ -89,7 +89,6 @@ class Transaksi extends CI_Controller {
 			} else {
 				$Data['Transaksi']  = $DataTransaksiPerWP;
 			}
-			$Data['DataRekening'] = $this->db->get('Rekening')->result_array();
 			$Data['title'] = "Transaksi";
 			$Data['submenu'] = "Tahunan";
 			$this->load->view('Header',$Data);
@@ -145,7 +144,6 @@ class Transaksi extends CI_Controller {
 			} else {
 				$Data['Transaksi']  = $DataTransaksiPerWP;
 			}
-			$Data['DataRekening'] = $this->db->get('Rekening')->result_array();
 			$Data['title'] = "Transaksi";
 			$Data['submenu'] = "Bulanan";
 			$this->load->view('Header',$Data);
@@ -168,7 +166,6 @@ class Transaksi extends CI_Controller {
 			} else {
 				$Data['Transaksi']  = $DataTransaksiPerWP;
 			}
-			$Data['DataRekening'] = $this->db->get('Rekening')->result_array();
 			$Data['title'] = "Transaksi";
 			$Data['submenu'] = "Bulanan";
 			$this->load->view('Header',$Data);
@@ -209,7 +206,6 @@ class Transaksi extends CI_Controller {
 			} else {
 				$Data['Transaksi']  = $DataTransaksiPerWP;
 			}
-			$Data['DataRekening'] = $this->db->get('Rekening')->result_array();
 			$Data['title'] = "Transaksi";
 			$Data['submenu'] = "Harian";
 			$this->load->view('Header',$Data);
@@ -236,7 +232,6 @@ class Transaksi extends CI_Controller {
 			} else {
 				$Data['Transaksi']  = $DataTransaksiPerWP;
 			}
-			$Data['DataRekening'] = $this->db->get('Rekening')->result_array();
 			$Data['title'] = "Transaksi";
 			$Data['submenu'] = "Harian";
 			$this->load->view('Header',$Data);

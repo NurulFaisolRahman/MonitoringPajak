@@ -113,8 +113,6 @@ class Dashboard extends CI_Controller {
 		$Data['TotalPajakTahun'] = $this->Rupiah($TotalPajakTahun);
 		$Data['TotalTransaksiTahun'] = $this->Rupiah($TotalTransaksiTahun);
 		$Data['Top5'] = $Top5;
-		$Query = 'SELECT DISTINCT "JenisPajak"'.' FROM "Rekening"';
-		$Data['DataRekening'] = $this->db->query($Query)->result_array();
 		$Data['title'] = "Dashboard";
 		$Data['submenu'] = "";
 		$this->load->view('Header',$Data);
