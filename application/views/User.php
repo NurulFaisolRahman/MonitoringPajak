@@ -235,7 +235,7 @@
               <?php 
                 $WP = $this->db->get('WajibPajak')->result_array();
                 foreach ($WP as $key) { ?>
-                  <div class="col-6">
+                  <div class="col-6 <?=$key['Pemilik'];?>">
                     <div class="form-check">
                       <label class="form-check-label">
                       <input class="form-check-input <?=$key['Pemilik'];?>" type="checkbox" name="EditDaftarWP" value="<?=$key['NPWPD'];?>">
@@ -370,11 +370,13 @@
         document.getElementById('EditUsernameWP').value = Pisah[0];
         $('.'+Pisah[0]).prop('checked', true);
         $('.'+Pisah[0]).attr("disabled", false);
+        $('.'+Pisah[0]).css('display','block');
         $.post(BaseURL+"User/DaftarWP").done(function(Respon) {
           for (var key in JSON.parse(Respon)) {
             if (JSON.parse(Respon)[key].Pemilik != Pisah[0]) {
               $('.'+JSON.parse(Respon)[key].Pemilik).prop('checked', false);
               $('.'+JSON.parse(Respon)[key].Pemilik).attr("disabled", true);
+              $('.'+JSON.parse(Respon)[key].Pemilik).css('display','none');
             }
           }
         })

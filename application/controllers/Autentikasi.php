@@ -67,9 +67,9 @@ class Autentikasi extends CI_Controller {
 		if($CekLogin->num_rows() == 1){
 			if ($CekLogin->result_array()[0]['Status'] != 'Disable') {
 				if (password_verify($_POST['Password'], $CekLogin->result_array()[0]['Password'])) {
-					$this->db->where('NPWPD', $_POST['NPWPD']);
-					$this->db->update('WajibPajak', array('Status' => 'Online'));
 					if ($CekLogin->result_array()[0]['Koneksi'] == '') {
+						$this->db->where('NPWPD', $_POST['NPWPD']);
+						$this->db->update('WajibPajak', array('Status' => 'Enable'));
 						echo "ok";
 					} else {
 						echo $CekLogin->result_array()[0]['Koneksi'];
