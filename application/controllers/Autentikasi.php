@@ -48,6 +48,23 @@ class Autentikasi extends CI_Controller {
 		}
 	}
 
+	public function SignInDesktop(){
+		$Username = $_POST['Username'];
+	  	$Password = $_POST['Password'];
+		$CekLogin = $this->db->get_where('Akun', array('Username' => $Username,'JenisAkun' => '1'));
+		if($CekLogin->num_rows() == 0){
+			echo "Username Salah";
+	  	}
+	  	else {
+	  		$Akun = $CekLogin->result_array();
+			if (password_verify($Password, $Akun[0]['Password'])) {
+		  		echo 'ok';
+			} else {
+				echo "Password Salah";
+			}
+	  	}
+	}
+
 	public function SignOut(){
 		$this->Log('Sign Out');	
 		$this->session->sess_destroy();
@@ -150,16 +167,5 @@ class Autentikasi extends CI_Controller {
 		  		echo json_encode($Respon);
 			}
 		}
-	}
-
-	public function api(){
-		$Data = Array(0 => array("NomorTransaksi" => '3', 
-					  "SubNominal" => '150796', 
-					  "Service" => '0', 
-					  "Diskon" => '0', 
-					  "Pajak" => '15079', 
-					  "TotalTransaksi" => '199615', 
-					  "WaktuTransaksi" => '2019-12-15 15:07:00')); 	
-		echo json_encode($Data);
 	}
 }

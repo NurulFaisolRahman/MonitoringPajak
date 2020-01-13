@@ -23,6 +23,7 @@
                 <th style="width:10px;">No</th>
                 <th>Nama User</th>
                 <th>Aktifitas</th>
+                <th>IP Address</th>
                 <th>TanggalAkses</th>
               </tr>
               </thead>
@@ -32,6 +33,7 @@
                     <td align="center"><?=$Nomor?></td>
                     <td><?=$key['NamaUser']?></td>
                     <td><?=$key['Aktifitas']?></td>
+                    <td><?=$key['IP']?></td>
                     <td><?=$key['TanggalAkses']?></td>
                   </tr>
               <?php $Nomor++; } ?>
